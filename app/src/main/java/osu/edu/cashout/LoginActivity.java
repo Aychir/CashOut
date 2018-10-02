@@ -9,10 +9,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        //setContentView(R.layout.activity_login);
 
-        Button loginButton = findViewById(R.id.loginButton);
-        Button signupButton = findViewById(R.id.signupButton);
+        //Button loginButton = findViewById(R.id.loginButton);
+        //Button signupButton = findViewById(R.id.goToSignup);
 
     }
 }
