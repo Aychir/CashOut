@@ -1,7 +1,5 @@
 -Permission issues for camera
 
--Implement sign out on the camera screen, next to capture
-
 -Implement a back button from the sign up activity to go back to the login activity
 
 -Move a lot of the activity code out into corresponding fragments, keeping similar logic

@@ -1,8 +1,12 @@
 package osu.edu.cashout;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ScanActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final int CAMERA_PERMISSION = 200;
+
     private Camera mCamera;
     private CameraPreview mPreview;
 
@@ -21,11 +27,17 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
 
-        mCamera = getCameraInstance(this);
-
-        mPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
+        //In the case that the user hasn't permitted the camera at this point
+        if(ContextCompat.checkSelfPermission(ScanActivity.this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(ScanActivity.this,
+                    new String[]{Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION);
+        }
+        //If permission was granted then start the preview of the camera
+        else{
+            startCameraPreview();
+        }
 
         findViewById(R.id.signout_button).setOnClickListener(this);
     }
@@ -54,5 +66,37 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
             Intent loginIntent = new Intent(ScanActivity.this, LoginActivity.class);
             startActivity(loginIntent);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    startCameraPreview();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    //Don't need to do anything I don;t think
+                    Toast.makeText( ScanActivity.this,"Failed to access camera",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void startCameraPreview(){
+        mCamera = getCameraInstance(this);
+
+        mPreview = new CameraPreview(this, mCamera);
+        FrameLayout preview = findViewById(R.id.camera_preview);
+        preview.addView(mPreview);
     }
 }
