@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "396293752042",
+    "firebase_url": "https://cashout-5f9b9.firebaseio.com",
+    "project_id": "cashout-5f9b9",
+    "storage_bucket": "cashout-5f9b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396293752042:android:cb5a2c1e4028e4df",
+        "android_client_info": {
+          "package_name": "osu.edu.cashout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "396293752042-0jcbtb107r3mgekhlilrg0rurlr6r7s2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfXxDFFpzWTYMiAhsd2sWgKdNlmcsAEEM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
