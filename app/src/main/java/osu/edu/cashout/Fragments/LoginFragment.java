@@ -1,13 +1,18 @@
-package osu.edu.cashout;
+package osu.edu.cashout.Fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,27 +22,52 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+import osu.edu.cashout.Activities.LoginActivity;
+import osu.edu.cashout.Activities.ScanActivity;
+import osu.edu.cashout.Activities.SignupActivity;
+import osu.edu.cashout.R;
+
+public class LoginFragment extends Fragment implements View.OnClickListener{
+    //Member variables
     private FirebaseAuth mUserAuth;
     private FirebaseUser mCurrentUser;
 
     private EditText mEmailField;
     private EditText mPasswordField;
 
+    private Context mContext;
+
+    public LoginFragment(){
+
+    }
+
+    //Need to ensure fragment is attached to activity before anything so other activities can
+    //      start by using the context from loginActivity
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    public void onAttach(Context c){
+        super.onAttach(getContext());
+
+        mContext = c;
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.fragment_login, container, false);
 
         mUserAuth = FirebaseAuth.getInstance();
 
-        mEmailField = findViewById(R.id.email);
-        mPasswordField = findViewById(R.id.password);
+        mEmailField = v.findViewById(R.id.email);
+        mPasswordField = v.findViewById(R.id.password);
 
-        findViewById(R.id.signup_button).setOnClickListener(this);
-        findViewById(R.id.login_button).setOnClickListener(this);
+        //Set onclick listeners to the buttons on the screen
+        Button signup = v.findViewById(R.id.signup_button);
+        signup.setOnClickListener(this);
+
+        Button login = v.findViewById(R.id.login_button);
+        login.setOnClickListener(this);
+
+        return v;
     }
-
     @Override
     public void onStart(){
         super.onStart();
@@ -60,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         else if(selectedView == R.id.signup_button){
             //Want to launch sign up activity
-            Intent signupIntent = new Intent(LoginActivity.this, SignupActivity.class);
+            Intent signupIntent = new Intent(mContext, SignupActivity.class);
             startActivity(signupIntent);
         }
     }
@@ -71,16 +101,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         mUserAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the camera
-                            Intent cameraIntent = new Intent(LoginActivity.this, ScanActivity.class);
+                            Intent cameraIntent = new Intent(mContext, ScanActivity.class);
                             startActivity(cameraIntent);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Failed to sign you in.",
+                            Toast.makeText(getContext(), "Failed to sign you in.",
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -112,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void startScanActivity(){
-        Intent cameraIntent = new Intent(LoginActivity.this, ScanActivity.class);
+        Intent cameraIntent = new Intent(getActivity(), ScanActivity.class);
         startActivity(cameraIntent);
     }
 }

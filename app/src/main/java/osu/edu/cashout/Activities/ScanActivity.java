@@ -1,4 +1,4 @@
-package osu.edu.cashout;
+package osu.edu.cashout.Activities;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,6 +14,9 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import osu.edu.cashout.CameraPreview;
+import osu.edu.cashout.R;
 
 public class ScanActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -42,18 +45,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.signout_button).setOnClickListener(this);
     }
 
-    public static Camera getCameraInstance(Context context){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-            Toast.makeText( context,"Failed to access camera",
-                    Toast.LENGTH_SHORT).show();
-        }
-        return c; // returns null if camera is unavailable
-    }
 
     @Override
     public void onClick(View v){
@@ -76,18 +67,13 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted, open camera preview
                     startCameraPreview();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-
-                    //Don't need to do anything I don;t think
+                    // permission denied, tell the user we failed to access camera
                     Toast.makeText( ScanActivity.this,"Failed to access camera",
                             Toast.LENGTH_SHORT).show();
                 }
-                return;
             }
         }
     }
@@ -98,5 +84,18 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = findViewById(R.id.camera_preview);
         preview.addView(mPreview);
+    }
+
+    public static Camera getCameraInstance(Context context){
+        Camera c = null;
+        try {
+            c = Camera.open(); // attempt to get a Camera instance
+        }
+        catch (Exception e){
+            // Camera is not available (in use or does not exist)
+            Toast.makeText( context,"Failed to access camera",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return c; // returns null if camera is unavailable
     }
 }
