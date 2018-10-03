@@ -7,15 +7,14 @@ import android.view.View;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
+    //TODO: Check if user is signed in and skip directly to the scan activity
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //Button loginButton = findViewById(R.id.loginButton);
-        //Button signupButton = findViewById(R.id.goToSignup);
         findViewById(R.id.signup_button).setOnClickListener(this);
-
     }
 
     @Override
