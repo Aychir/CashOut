@@ -76,10 +76,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the camera
-                            startScanActivity();
+                            Intent cameraIntent = new Intent(LoginActivity.this, ScanActivity.class);
+                            startActivity(cameraIntent);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Failed to sign you in.",
                                     Toast.LENGTH_SHORT).show();
                         }
 
