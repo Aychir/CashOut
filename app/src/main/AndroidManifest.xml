@@ -16,13 +16,13 @@
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
-        <!--<activity android:name=".LoginActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".SignupActivity">
             <intent-filter>
                 <action android:name="osu.edu.cashout.Signup"/>
@@ -32,9 +32,9 @@
         </activity>
         <activity android:name=".ScanActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="osu.edu.cashout.Scan" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

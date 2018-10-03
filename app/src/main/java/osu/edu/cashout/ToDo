@@ -1,0 +1,8 @@
+-Implement sign out on the camera screen, next to capture
+
+-Implement a back button from the sign up activity to go back to the login activity
+
+-Move a lot of the activity code out into corresponding fragments, keeping similar logic
+
+-Implement any necessary lifecycle methods in both the activities and fragments
+    -Make the physical back button of the device destroy the activity in both Login and Scan

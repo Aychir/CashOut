@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,9 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
-
-    //TODO: Check if user is signed in and skip directly to the scan activity
-
     private FirebaseAuth mUserAuth;
     private FirebaseUser mCurrentUser;
 
@@ -47,8 +46,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //If there is a current user, sign in and skip authentication
         if(mCurrentUser != null){
-            Intent cameraIntent = new Intent(LoginActivity.this, ScanActivity.class);
-            startActivity(cameraIntent);
+            Log.d("User signed in", "USer");
+            startScanActivity();
         }
     }
 
@@ -67,13 +66,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void createUserSession(String email, String password){
+        if(!validateForms()){
+            return;
+        }
+
         mUserAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mUserAuth.getCurrentUser();
+                            // Sign in success, update UI with the camera
+                            startScanActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -82,5 +85,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     }
                 });
+    }
+
+    private boolean validateForms(){
+        boolean valid = true;
+
+        String email = mEmailField.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            mEmailField.setError("An email is required.");
+            valid = false;
+        }
+        //Check the format of the email address
+        else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            mEmailField.setError("Please enter a valid email.");
+            valid = false;
+        }
+
+        String password = mPasswordField.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            mPasswordField.setError("A password is required.");
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    private void startScanActivity(){
+        Intent cameraIntent = new Intent(LoginActivity.this, ScanActivity.class);
+        startActivity(cameraIntent);
     }
 }
