@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
 
+    //private Button mSignupButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +32,13 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         mAuth = FirebaseAuth.getInstance();
 
-        //mEmailField = (EditText) findViewById()
-        //mPasswordField = (EditText) findViewById()
-        //mConfirmPasswordField = (EditText) findViewById()
+        //Finding the forms from the layout
+        mEmailField = findViewById(R.id.email);
+        mPasswordField = findViewById(R.id.password);
+        mConfirmPasswordField = findViewById(R.id.password_confirmation);
+
+        //Set onclick listener for the signup button
+        findViewById(R.id.signup_button).setOnClickListener(this);
     }
 
     @Override
@@ -51,15 +58,18 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             //go back to login activity
         //}
 
-//        if(id == R.id.signupButton){
-//            create an account if the button was clicked
-//            createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
-//        }
+        if(id == R.id.signup_button){
+            //create an account if the button was clicked
+            createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
+        }
     }
 
+    /*
+    * Code from Firebase tutorial on creating an account with email and password
+    * */
     private void createAccount(String email, String password){
         //Check if format of information was valid
-        if(!validateForm()){
+        if(!validateForms()){
             return;
         }
 
@@ -72,6 +82,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             // Sign in success, update UI and launch Scan Activity
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            Toast.makeText(SignupActivity.this, "Authentication success!",
+                                    Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             //Update the UI in any way?
@@ -84,28 +96,52 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 });
     }
 
-    private boolean validateForm() {
-        //TODO: Modify this to check for validity of length for ALL fields, format of ALL fields, and matching passwords
+    /*
+      This method checks the validity of the form fields of the sign up layout,
+        if there are any errors, an account will not be created.
+     */
+    private boolean validateForms() {
         boolean valid = true;
 
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            mEmailField.setError("An email is required.");
             valid = false;
-        } else {
-            mEmailField.setError(null);
         }
+        //Check the format of the email address
+        else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            mEmailField.setError("Please enter a valid email.");
+            valid = false;
+        }
+//        else{
+//            mEmailField.setError(null);
+//        }
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            mPasswordField.setError("A password is required.");
             valid = false;
-        } else {
-            mPasswordField.setError(null);
         }
+        else if(password.length() < 6){
+            mEmailField.setError("Your password must be at least 6 characters long.");
+            valid = false;
+        }
+//        else {
+//            mPasswordField.setError(null);
+//        }
 
-        //Add passwordConfirmation checks
-
+        String passwordConfirmation = mConfirmPasswordField.getText().toString();
+        if (TextUtils.isEmpty(passwordConfirmation)) {
+            mConfirmPasswordField.setError("You must confirm your password.");
+            valid = false;
+        }
+        else if(!passwordConfirmation.equals(password)){
+            mConfirmPasswordField.setError("Your password entries did not match, please try again.");
+            valid = false;
+        }
+//        else {
+//            mConfirmPasswordField.setError(null);
+//        }
         return valid;
     }
 }
