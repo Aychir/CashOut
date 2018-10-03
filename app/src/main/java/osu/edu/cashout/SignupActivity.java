@@ -1,5 +1,6 @@
 package osu.edu.cashout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -84,6 +85,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             //updateUI(user);
                             Toast.makeText(SignupActivity.this, "Authentication success!",
                                     Toast.LENGTH_SHORT).show();
+
+                            Intent cameraIntent = new Intent(SignupActivity.this, ScanActivity.class);
+                            startActivity(cameraIntent);
                         } else {
                             // If sign in fails, display a message to the user.
                             //Update the UI in any way?
