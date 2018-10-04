@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,21 +23,16 @@ import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.Activities.SignupActivity;
 import osu.edu.cashout.R;
 
-public class LoginFragment extends Fragment implements View.OnClickListener{
-    //Member variables
-    private FirebaseAuth mUserAuth;
-
-    private EditText mEmailField;
-    private EditText mPasswordField;
+public class SignupFragment extends Fragment implements View.OnClickListener {
 
     private Context mContext;
 
-    public LoginFragment(){
+    private FirebaseAuth mAuth;
 
-    }
+    private EditText mEmailField;
+    private EditText mPasswordField;
+    private EditText mConfirmPasswordField;
 
-    //Need to ensure fragment is attached to activity before anything so other activities can
-    //      start by using the context from loginActivity
     @Override
     public void onAttach(Context c){
         super.onAttach(getContext());
@@ -49,84 +42,79 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        View v = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        mUserAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
+        //Finding the forms from the layout
         mEmailField = v.findViewById(R.id.email);
         mPasswordField = v.findViewById(R.id.password);
+        mConfirmPasswordField = v.findViewById(R.id.password_confirmation);
 
-        //Set onclick listeners to the buttons on the screen
-        Button signup = v.findViewById(R.id.signup_button);
-        signup.setOnClickListener(this);
-
-        Button login = v.findViewById(R.id.login_button);
-        login.setOnClickListener(this);
+        Button signupButton = v.findViewById(R.id.signup_button);
+        signupButton.setOnClickListener(this);
 
         return v;
     }
+
     @Override
-    public void onStart(){
-        super.onStart();
+    public void onClick(View view) {
+        int id = view.getId();
 
-        FirebaseUser currentUser = mUserAuth.getCurrentUser();
-
-        //If there is a current user, sign in and skip authentication
-        if(currentUser != null){
-            Log.d("User signed in", "USer");
-            startScanActivity();
+        if(id == R.id.signup_button){
+            //create an account if the button was clicked
+            createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
     }
 
-    @Override
-    public void onClick(View v){
-        int selectedView = v.getId();
-
-        if(selectedView == R.id.login_button){
-            createUserSession(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        }
-        else if(selectedView == R.id.signup_button){
-            //Want to launch sign up activity
-            Intent signupIntent = new Intent(mContext, SignupActivity.class);
-            startActivity(signupIntent);
-        }
-    }
-
-    private void createUserSession(String email, String password){
+    /*
+     * Code from Firebase tutorial on creating an account with email and password
+     * */
+    private void createAccount(String email, String password){
+        //Check if format of information was valid
         if(!validateForms()){
             return;
         }
 
+        // [START create_user_with_email]
         if(getActivity() != null) {
-            mUserAuth.signInWithEmailAndPassword(email, password)
+            mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the camera
+                                // Sign in success, update UI and launch Scan Activity
+                                Toast.makeText(mContext, "Authentication success!",
+                                        Toast.LENGTH_SHORT).show();
+
                                 Intent cameraIntent = new Intent(mContext, ScanActivity.class);
                                 startActivity(cameraIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast.makeText(getContext(), "Failed to sign in, please try again.",
+                                //Update the UI in any way?
+                                Toast.makeText(mContext, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
+                                //updateUI(null);
                             }
 
                         }
                     });
         }
         else{
-            Toast.makeText(getContext(), "Failed to attach activity.",
+            Toast.makeText(mContext, "Fragment not attached to activity.",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    //Validate the validity of the information submitted
-    private boolean validateForms(){
+    /*
+  This method checks the validity of the form fields of the sign up layout,
+    if there are any errors, an account will not be created.
+ */
+    private boolean validateForms() {
         boolean valid = true;
 
         String email = mEmailField.getText().toString();
-        if (TextUtils.isEmpty(email)) {
+        if (email.isEmpty()) {
             mEmailField.setError("An email is required.");
             valid = false;
         }
@@ -137,16 +125,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         }
 
         String password = mPasswordField.getText().toString();
-        if (TextUtils.isEmpty(password)) {
+        if (password.isEmpty()) {
             mPasswordField.setError("A password is required.");
             valid = false;
         }
+        else if(password.length() < 6){
+            mEmailField.setError("Your password must be at least 6 characters long.");
+            valid = false;
+        }
 
+        String passwordConfirmation = mConfirmPasswordField.getText().toString();
+        if (passwordConfirmation.isEmpty()) {
+            mConfirmPasswordField.setError("You must confirm your password.");
+            valid = false;
+        }
+        else if(!passwordConfirmation.equals(password)){
+            mConfirmPasswordField.setError("Your password entries did not match, please try again.");
+            valid = false;
+        }
         return valid;
-    }
-
-    private void startScanActivity(){
-        Intent cameraIntent = new Intent(getActivity(), ScanActivity.class);
-        startActivity(cameraIntent);
     }
 }
