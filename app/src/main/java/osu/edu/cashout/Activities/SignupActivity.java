@@ -37,6 +37,20 @@ public class SignupActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onStart(){
+        super.onStart();
+
+        Log.v(TAG, "Logging onStart() method");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        Log.v(TAG, "Logging onResume() method");
+    }
+
+    @Override
     protected void onPause(){
         super.onPause();
 
@@ -51,10 +65,16 @@ public class SignupActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onRestart(){
+        super.onRestart();
+
+        Log.v(TAG, "Logging onRestart() method");
+    }
+
+    @Override
     protected void onDestroy(){
         super.onDestroy();
 
         Log.v(TAG, "Logging onDestroy() method");
     }
-
 }

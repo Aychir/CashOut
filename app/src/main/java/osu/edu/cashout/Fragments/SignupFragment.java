@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +22,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.R;
 
+@SuppressWarnings({"LogNotTimber"})
 public class SignupFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = "SignupActivity";
+
     private Context mContext;
-
     private FirebaseAuth mAuth;
-
     private EditText mEmailField;
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
@@ -35,11 +37,15 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context c){
         super.onAttach(getContext());
 
+        Log.v(TAG, "Logging onAttach()");
+
         mContext = c;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        Log.v(TAG, "Logging onCreateView()");
+
         View v = inflater.inflate(R.layout.fragment_signup, container, false);
 
         mAuth = FirebaseAuth.getInstance();

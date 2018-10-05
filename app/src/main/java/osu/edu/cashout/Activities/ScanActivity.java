@@ -23,15 +23,27 @@ public class ScanActivity extends AppCompatActivity{
 
         FragmentManager fm = getSupportFragmentManager();
 
-        Fragment frag = fm.findFragmentById(R.id.fragment_container);
 
-        if(frag == null) {
             ScanFragment scanFragment = new ScanFragment();
 
             fm.beginTransaction()
                     .add(R.id.fragment_container, scanFragment)
                     .commit();
-        }
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        Log.v(TAG, "Logging onStart() method");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        Log.v(TAG, "Logging onResume() method");
     }
 
     @Override
@@ -46,6 +58,13 @@ public class ScanActivity extends AppCompatActivity{
         super.onStop();
 
         Log.v(TAG, "Logging onStop() method");
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+
+        Log.v(TAG, "Logging onRestart() method");
     }
 
     @Override

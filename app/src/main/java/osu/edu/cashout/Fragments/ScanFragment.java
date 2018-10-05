@@ -10,26 +10,26 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import osu.edu.cashout.Activities.LoginActivity;
-import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.CameraPreview;
 import osu.edu.cashout.R;
 
+@SuppressWarnings({"LogNotTimber"})
 public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final int CAMERA_PERMISSION = 200;
 
+    private static final String TAG = "ScanFragment";
     private Camera mCamera;
     private CameraPreview mPreview;
-
     private Context mContext;
     private View mView;
 
@@ -37,28 +37,39 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context c){
         super.onAttach(getContext());
 
+        Log.v(TAG, "Logging onAttach()");
+
         mContext = c;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        Log.v(TAG, "Logging onCreateView()");
         mView = inflater.inflate(R.layout.fragment_scan, container, false);
-
-        //In the case that the user hasn't permitted the camera at this point
-        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.CAMERA},
-                    CAMERA_PERMISSION);
-        }
-        //If permission was granted then start the preview of the camera
-        else{
-            startCameraPreview(mView);
-        }
 
         mView.findViewById(R.id.signout_button).setOnClickListener(this);
 
         return mView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "Logging onResume()");
+        if (getActivity() != null) {
+            //In the case that the user hasn't permitted the camera at this point
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_PERMISSION);
+
+            }
+            //If permission was granted then start the preview of the camera
+            else {
+                startCameraPreview(mView);
+            }
+        }
     }
 
     @Override

@@ -25,6 +25,7 @@ import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.Activities.SignupActivity;
 import osu.edu.cashout.R;
 
+@SuppressWarnings({"LogNotTimber"})
 public class LoginFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "LoginFragment";
@@ -47,14 +48,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onAttach(Context c){
         super.onAttach(getContext());
 
+        Log.v(TAG, "Logging onAttach()");
+
         mContext = c;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
-        Log.v(TAG, "Create View LoginFragment");
-
+        Log.v(TAG, "Logging onCreateView()");
 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 

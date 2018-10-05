@@ -43,6 +43,13 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+
+        Log.v(TAG, "Logging onResume() method");
+    }
+
+    @Override
     protected void onPause(){
         super.onPause();
 
@@ -68,12 +75,6 @@ public class LoginActivity extends AppCompatActivity{
         super.onDestroy();
 
         Log.v(TAG, "Logging onDestroy() method");
-
-        if (isFinishing()) {
-            // do stuff
-            Log.v(TAG, "Logging finishing");
-        }
-
     }
 
 }
