@@ -32,7 +32,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.ScanActivity">
+        <activity android:name=".Activities.ScanActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="osu.edu.cashout.Scan" />
 

@@ -26,6 +26,9 @@ import osu.edu.cashout.Activities.SignupActivity;
 import osu.edu.cashout.R;
 
 public class LoginFragment extends Fragment implements View.OnClickListener{
+
+    private static final String TAG = "LoginFragment";
+
     //Member variables
     private FirebaseAuth mUserAuth;
 
@@ -49,6 +52,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+
+        Log.v(TAG, "Create View LoginFragment");
+
+
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
         mUserAuth = FirebaseAuth.getInstance();
@@ -93,7 +100,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     private void createUserSession(String email, String password){
-        if(!validateForms()){
+        if(!validateForms(email, password)){
             return;
         }
 
@@ -122,10 +129,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     //Validate the validity of the information submitted
-    private boolean validateForms(){
+    private boolean validateForms(String email, String password){
         boolean valid = true;
 
-        String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
             mEmailField.setError("An email is required.");
             valid = false;
@@ -136,7 +142,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
             valid = false;
         }
 
-        String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             mPasswordField.setError("A password is required.");
             valid = false;
