@@ -38,9 +38,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
     private Context mContext;
 
-    public LoginFragment(){
-
-    }
 
     //Need to ensure fragment is attached to activity before anything so other activities can
     //      start by using the context from loginActivity
@@ -82,10 +79,27 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         //If there is a current user, sign in and skip authentication
         if(currentUser != null){
-            Log.d("User signed in", "USer");
+            Log.v("User signed in", "USer");
             startScanActivity();
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "Logging onResume()");
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "Logging onPause()");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "Logging onStop()");
+    }
+
+
 
     @Override
     public void onClick(View v){
@@ -155,5 +169,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     private void startScanActivity(){
         Intent cameraIntent = new Intent(getActivity(), ScanActivity.class);
         startActivity(cameraIntent);
+        if(getActivity() != null) {
+            getActivity().finish();
+        }
     }
 }

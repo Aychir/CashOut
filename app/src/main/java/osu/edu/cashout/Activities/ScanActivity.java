@@ -33,6 +33,12 @@ public class ScanActivity extends AppCompatActivity{
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
+    @Override
     protected void onStart(){
         super.onStart();
 

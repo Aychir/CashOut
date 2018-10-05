@@ -53,6 +53,12 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG, "Logging onStart()");
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Log.v(TAG, "Logging onResume()");
@@ -70,6 +76,16 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                 startCameraPreview(mView);
             }
         }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "Logging onPause()");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "Logging onStop()");
     }
 
     @Override

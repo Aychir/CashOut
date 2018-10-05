@@ -25,7 +25,7 @@ import osu.edu.cashout.R;
 @SuppressWarnings({"LogNotTimber"})
 public class SignupFragment extends Fragment implements View.OnClickListener {
 
-    private static final String TAG = "SignupActivity";
+    private static final String TAG = "SignupFragment";
 
     private Context mContext;
     private FirebaseAuth mAuth;
@@ -59,6 +59,28 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         signupButton.setOnClickListener(this);
 
         return v;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG, "Logging onStart()");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "Logging onPause()");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "Logging onStop()");
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "Logging onResume()");
     }
 
     @Override
