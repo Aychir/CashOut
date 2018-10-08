@@ -29,7 +29,6 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "ScanFragment";
     private Camera mCamera;
-    private CameraPreview mPreview;
     private Context mContext;
     private View mView;
 
@@ -48,6 +47,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         mView = inflater.inflate(R.layout.fragment_scan, container, false);
 
         mView.findViewById(R.id.signout_button).setOnClickListener(this);
+        mView.findViewById(R.id.button_capture).setOnClickListener(this);
 
         return mView;
     }
@@ -73,24 +73,31 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             }
             //If permission was granted then start the preview of the camera
             else {
+                //TODO: Think about moving this into a background process in the future
                 startCameraPreview(mView);
             }
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "Logging onPause()");
     }
+
     @Override
     public void onStop() {
         super.onStop();
+        //If we have an instance of the camera, release it when activity is no longer on screen
+        if(mCamera != null){
+            mCamera.release();
+        }
         Log.d(TAG, "Logging onStop()");
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case CAMERA_PERMISSION: {
                 // If request is cancelled, the result arrays are empty.
@@ -117,16 +124,40 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             Intent loginIntent = new Intent(mContext, LoginActivity.class);
             startActivity(loginIntent);
         }
+        else if(id == R.id.button_capture){
+            Log.v(TAG, "Camera null?");
+            if(mCamera != null){
+                Log.v(TAG, "Camera not null");
+                //Need to release camera in multiple places, look at onPictureTaken()
+                mCamera.takePicture(null, null, mPicture);
+            }
+        }
     }
 
+    //Interface that provides information on the image taken
+    Camera.PictureCallback mPicture = new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+            Log.v(TAG, "Picture taken " + data.length);
+            //TODO: Here release the camera and start a background process to contact the API
+            camera.release();
+
+            //TODO: Create some sort of progress box while we grab UPC code
+
+            //TODO: Once the asynctask returns, we launch a new activity to view the product info or restart camera preview (invalid response)
+        }
+    };
+
+    //Programmatically assign the camera preview to the FrameLayout in the layout
     private void startCameraPreview(View v){
         mCamera = getCameraInstance(mContext);
 
-        mPreview = new CameraPreview(mContext, mCamera);
+        CameraPreview mPreview = new CameraPreview(mContext, mCamera);
         FrameLayout preview = v.findViewById(R.id.camera_preview);
         preview.addView(mPreview);
     }
 
+    //Get an instance of the camera for the camera preview
     public static Camera getCameraInstance(Context context){
         Camera c = null;
         try {

@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent">
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"
@@ -21,13 +20,13 @@
             android:id="@+id/button_capture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Capture" />
+            android:text="@string/capture" />
 
         <Button
             android:id="@+id/signout_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Out" />
+            android:text="@string/sign_out" />
 
     </LinearLayout>
 </LinearLayout>

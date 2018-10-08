@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import static android.content.ContentValues.TAG;
 
+@SuppressWarnings({"LogNotTimber"})
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
     private Camera mCamera;
