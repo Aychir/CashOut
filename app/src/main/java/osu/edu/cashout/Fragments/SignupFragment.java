@@ -19,12 +19,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.R;
+import osu.edu.cashout.User;
 
 @SuppressWarnings({"LogNotTimber"})
 public class SignupFragment extends Fragment implements View.OnClickListener {
+
+    //TODO: Pressing back from scan will take us back here
 
     private static final String TAG = "SignupFragment";
 
@@ -38,6 +43,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private EditText mUsername;
     private DatePicker mDob;
 
+    private FirebaseFirestore mDatabase;
+    private CollectionReference mCollection;
 
     @Override
     public void onAttach(Context c){
@@ -55,6 +62,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_signup, container, false);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseFirestore.getInstance();
+        mCollection = mDatabase.collection("users");
 
         //Finding the forms from the layout
         mEmailField = v.findViewById(R.id.email);
@@ -122,6 +131,16 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                                 Toast.makeText(mContext, "Authentication success!",
                                         Toast.LENGTH_SHORT).show();
 
+                                //Here we want to create a user object for our database
+                                User user = createUser();
+
+                                // Get reference to the collection and set a user instance into the database
+                                if(mAuth.getUid() != null) {
+                                    Log.v(TAG, "Valid User ID " + mAuth.getUid());
+                                    mCollection.document(mAuth.getUid()).set(user);
+                                }
+
+                                //Launch the camera after user is authenticated and added to the database
                                 Intent cameraIntent = new Intent(mContext, ScanActivity.class);
                                 startActivity(cameraIntent);
                             } else {
@@ -179,5 +198,32 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
             valid = false;
         }
         return valid;
+    }
+
+    //Class to create a user instance in our db with the filled in fields
+    private User createUser(){
+        User newUser = new User();
+
+        String email = mEmailField.getText().toString();
+        if (!email.isEmpty()) {
+            newUser.setEmail(email);
+        }
+
+        String firstName = mFirstName.getText().toString();
+        if (!firstName.isEmpty()) {
+            newUser.setFirstName(firstName);
+        }
+
+        String lastName = mLastName.getText().toString();
+        if (!lastName.isEmpty()) {
+            newUser.setLastName(lastName);
+        }
+
+        String username = mUsername.getText().toString();
+        if (!username.isEmpty()) {
+            newUser.setUsername(username);
+        }
+
+        return newUser;
     }
 }
