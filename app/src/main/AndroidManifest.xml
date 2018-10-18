@@ -41,6 +41,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".Activities.AccountActivity">
+            <intent-filter>
+                <action android:name="osu.edu.cashout.Account"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

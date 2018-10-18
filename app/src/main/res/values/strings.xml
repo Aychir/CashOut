@@ -7,4 +7,8 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="capture">Capture</string>
     <string name="sign_out">Sign Out</string>
+    <string name="update_account">Update</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="new_password">New Password</string>
+    <string name="account">Account</string>
 </resources>

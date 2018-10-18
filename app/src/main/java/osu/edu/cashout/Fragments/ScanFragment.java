@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import osu.edu.cashout.Activities.AccountActivity;
 import osu.edu.cashout.Activities.LoginActivity;
 import osu.edu.cashout.CameraPreview;
 import osu.edu.cashout.R;
@@ -48,6 +49,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
 
         mView.findViewById(R.id.signout_button).setOnClickListener(this);
         mView.findViewById(R.id.button_capture).setOnClickListener(this);
+        mView.findViewById(R.id.account_button).setOnClickListener(this);
 
         return mView;
     }
@@ -131,6 +133,10 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                 //Need to release camera in multiple places, look at onPictureTaken()
                 mCamera.takePicture(null, null, mPicture);
             }
+        }
+        else if(id == R.id.account_button){
+            Intent accountIntent = new Intent(mContext, AccountActivity.class);
+            startActivity(accountIntent);
         }
     }
 
