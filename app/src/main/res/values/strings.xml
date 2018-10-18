@@ -11,4 +11,7 @@
     <string name="delete_account">Delete Account</string>
     <string name="new_password">New Password</string>
     <string name="account">Account</string>
+    <string name="username">Username</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
 </resources>

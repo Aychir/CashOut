@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +33,11 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private EditText mEmailField;
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
+    private EditText mFirstName;
+    private EditText mLastName;
+    private EditText mUsername;
+    private DatePicker mDob;
+
 
     @Override
     public void onAttach(Context c){
@@ -54,6 +60,9 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         mEmailField = v.findViewById(R.id.email);
         mPasswordField = v.findViewById(R.id.password);
         mConfirmPasswordField = v.findViewById(R.id.password_confirmation);
+        mFirstName = v.findViewById(R.id.first_name);
+        mLastName = v.findViewById(R.id.last_name);
+        mUsername = v.findViewById(R.id.username);
 
         Button signupButton = v.findViewById(R.id.signup_button);
         signupButton.setOnClickListener(this);
