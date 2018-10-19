@@ -10,6 +10,7 @@
     <string name="update_account">Update</string>
     <string name="delete_account">Delete Account</string>
     <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
     <string name="account">Account</string>
     <string name="username">Username</string>
     <string name="first_name">First Name</string>

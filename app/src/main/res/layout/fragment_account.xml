@@ -66,6 +66,15 @@
             android:maxWidth="250dp"
             android:layout_marginBottom="24dp" />
 
+        <EditText
+            android:id="@+id/confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/confirm_new_password"
+            android:maxWidth="250dp"
+            android:layout_marginBottom="24dp" />
+
 
     </LinearLayout>
 
