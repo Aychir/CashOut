@@ -1,5 +1,7 @@
 package osu.edu.cashout.Fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import osu.edu.cashout.Activities.SignupActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.User;
 
@@ -42,6 +45,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
     private User curUser;
+    private Context mContext;
+
+    @Override
+    public void onAttach(Context c){
+        super.onAttach(getContext());
+        mContext = c;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,13 +120,21 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     curUser.setFirstName(mFirstName.getText().toString());
                     curUser.setLastName(mLastName.getText().toString());
                     curUser.setUsername(mUsername.getText().toString());
-                    //May want to add some checks and/or listeners and/or toasts
+                    //May want to add some error handling/listeners
                     mUserAuth.getCurrentUser().updateEmail(curUser.getEmail());
                     if(!mPasswordField.getText().toString().isEmpty()) {
                         mUserAuth.getCurrentUser().updatePassword(mPasswordField.getText().toString());
                     }
                     mFirestore.collection("users").document(mUserAuth.getCurrentUser().getUid()).set(curUser);
                 }
+                break;
+            case R.id.delete_button:
+                String uid = mUserAuth.getCurrentUser().getUid();
+                mUserAuth.getCurrentUser().delete();
+                mFirestore.collection("users").document(uid).delete();
+                Intent loginIntent = new Intent(mContext, SignupActivity.class);
+                startActivity(loginIntent);
+                break;
         }
 
     }
@@ -137,7 +155,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
 
         String password = mPasswordField.getText().toString();
         if(!password.isEmpty() && password.length() < 6){
-            mEmailField.setError("Your password must be at least 6 characters long.");
+            mPasswordField.setError("Your password must be at least 6 characters long.");
             valid = false;
         }
 

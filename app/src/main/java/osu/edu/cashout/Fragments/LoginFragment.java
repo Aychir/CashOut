@@ -79,7 +79,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         //If there is a current user, sign in and skip authentication
         if(currentUser != null){
-            Log.v("User signed in", "USer");
+            Log.v("User signed in", "User");
             startScanActivity();
         }
     }
