@@ -190,7 +190,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
             valid = false;
         }
         //Check if email address is already taken
-        else if(userEmails.contains(email)){
+        else if(!email.equals(curUser.getEmail()) && userEmails.contains(email)){
             mEmailField.setError("An account with that email address already exists.");
             valid = false;
         }
