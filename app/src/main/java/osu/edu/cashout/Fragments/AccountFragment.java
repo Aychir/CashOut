@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import osu.edu.cashout.Activities.LoginActivity;
 import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.R;
@@ -31,6 +35,7 @@ import osu.edu.cashout.User;
 public class AccountFragment extends Fragment implements View.OnClickListener{
     private FirebaseAuth mUserAuth;
     private DatabaseReference mDbReference;
+    private DatabaseReference mDbReferenceUsers;
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mUsername;
@@ -39,6 +44,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private EditText mConfirmPasswordField;
     private User curUser;
     private Context mContext;
+    private Set<String> userEmails;
 
     @Override
     public void onAttach(Context c){
@@ -59,6 +65,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         mEmailField = v.findViewById(R.id.email);
         mPasswordField = v.findViewById(R.id.password);
         mConfirmPasswordField = v.findViewById(R.id.confirm_password);
+
+        userEmails = new HashSet<>();
 
         //Set on click listeners for the buttons
         mUpdateAccountButton.setOnClickListener(this);
@@ -91,6 +99,21 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                 }
             });
         }
+
+        mDbReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
+        mDbReferenceUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot user: dataSnapshot.getChildren()){
+                    userEmails.add(user.child("email").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return v;
     }
 
@@ -137,7 +160,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     //Delete the instance of the user in the realtime database
                     mDbReference.removeValue();
 
-                    //Terminate the session associated to the now delered user
+                    //Terminate the session associated to the now deleted user
                     FirebaseAuth.getInstance().signOut();
 
                     Intent loginIntent = new Intent(mContext, LoginActivity.class);
@@ -164,6 +187,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         //Check the format of the email address
         else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             mEmailField.setError("Please enter a valid email.");
+            valid = false;
+        }
+        //Check if email address is already taken
+        else if(userEmails.contains(email)){
+            mEmailField.setError("An account with that email address already exists.");
             valid = false;
         }
 
