@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,8 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.R;
@@ -41,10 +40,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mUsername;
-    private DatePicker mDob;
 
-    private FirebaseFirestore mDatabase;
-    private CollectionReference mCollection;
+    private DatabaseReference mDatabase;
 
     @Override
     public void onAttach(Context c){
@@ -62,8 +59,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_signup, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseFirestore.getInstance();
-        mCollection = mDatabase.collection("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         //Finding the forms from the layout
         mEmailField = v.findViewById(R.id.email);
@@ -137,7 +133,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                                 // Get reference to the collection and set a user instance into the database
                                 if(mAuth.getUid() != null) {
                                     Log.v(TAG, "Valid User ID " + mAuth.getUid());
-                                    mCollection.document(mAuth.getUid()).set(user);
+                                    mDatabase.child(mAuth.getUid()).setValue(user);
                                 }
 
                                 //Launch the camera after user is authenticated and added to the database
