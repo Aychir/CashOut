@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import osu.edu.cashout.Activities.LoginActivity;
+import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.User;
 
@@ -114,13 +115,18 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                         if (!mPasswordField.getText().toString().isEmpty()) {
                             mUserAuth.getCurrentUser().updatePassword(mPasswordField.getText().toString());
                         }
+
+                        //Set the value of the referenced user to the updated user values
+                        mDbReference.setValue(curUser);
+
+                        //Start the scan activity after a successful update
+                        Intent scanActivity = new Intent(getContext(), ScanActivity.class);
+                        startActivity(scanActivity);
                     }
                     else{
                         Toast.makeText(getActivity(), "Currently unable to update email and/or password, try again later.",
                                 Toast.LENGTH_SHORT).show();
                     }
-                    //Set the value of the referenced user to the updated user values
-                    mDbReference.setValue(curUser);
                 }
                 break;
             case R.id.delete_button:
