@@ -20,6 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.Activities.SignupActivity;
@@ -32,6 +37,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
     //Member variables
     private FirebaseAuth mUserAuth;
+    private FirebaseUser currentUser;
 
     private EditText mEmailField;
     private EditText mPasswordField;
@@ -69,17 +75,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         Button login = v.findViewById(R.id.login_button);
         login.setOnClickListener(this);
 
+        currentUser = mUserAuth.getCurrentUser();
+
         return v;
     }
+
     @Override
     public void onStart(){
         super.onStart();
-
-        FirebaseUser currentUser = mUserAuth.getCurrentUser();
-
         //If there is a current user, sign in and skip authentication
+
+        //Check for a current user and we need to check if the user is in the database
         if(currentUser != null){
-            Log.v("User signed in", "User");
+            Log.v("User signed in", "User not null ");
             startScanActivity();
         }
     }

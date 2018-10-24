@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,9 +29,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import osu.edu.cashout.Activities.LoginActivity;
 import osu.edu.cashout.Activities.SignupActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.User;
+
+import static android.content.ContentValues.TAG;
 
 public class AccountFragment extends Fragment implements View.OnClickListener{
     private FirebaseAuth mUserAuth;
@@ -54,7 +59,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_account, container, false);
 
         //Find views by ID
@@ -121,18 +126,35 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     curUser.setLastName(mLastName.getText().toString());
                     curUser.setUsername(mUsername.getText().toString());
                     //May want to add some error handling/listeners
-                    mUserAuth.getCurrentUser().updateEmail(curUser.getEmail());
+                    mUserAuth.getCurrentUser().updateEmail(curUser.getEmail())
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("TAG", "User email address updated.");
+                                    }
+                                }
+                            });
                     if(!mPasswordField.getText().toString().isEmpty()) {
                         mUserAuth.getCurrentUser().updatePassword(mPasswordField.getText().toString());
                     }
                     mFirestore.collection("users").document(mUserAuth.getCurrentUser().getUid()).set(curUser);
+                    mUserAuth.getCurrentUser().reauthenticate(EmailAuthProvider
+                            .getCredential(curUser.getEmail(), "password1234"));
                 }
                 break;
             case R.id.delete_button:
+                //This line is null after changing sign-in information
                 String uid = mUserAuth.getCurrentUser().getUid();
                 mUserAuth.getCurrentUser().delete();
                 mFirestore.collection("users").document(uid).delete();
-                Intent loginIntent = new Intent(mContext, SignupActivity.class);
+                //BUG: Updating the email will not delete the user from the firestore, need to see
+                //  how updating email is done or if mUserAuth needs to be updated
+
+                //Issue is because changing the login credentials requires that we re-sign in the user,
+                //  otherwise currentUser returns null
+                FirebaseAuth.getInstance().signOut();
+                Intent loginIntent = new Intent(mContext, LoginActivity.class);
                 startActivity(loginIntent);
                 break;
         }
