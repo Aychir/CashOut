@@ -1,4 +1,4 @@
-package osu.edu.cashout.Fragments;
+package osu.edu.cashout.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import osu.edu.cashout.Activities.ScanActivity;
-import osu.edu.cashout.Activities.SignupActivity;
+import osu.edu.cashout.activities.ScanActivity;
+import osu.edu.cashout.activities.SignupActivity;
 import osu.edu.cashout.R;
 
 @SuppressWarnings({"LogNotTimber"})

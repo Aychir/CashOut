@@ -1,36 +1,35 @@
-package osu.edu.cashout.Activities;
+package osu.edu.cashout.activities;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import osu.edu.cashout.Fragments.SignupFragment;
+import osu.edu.cashout.fragments.LoginFragment;
 import osu.edu.cashout.R;
 
 @SuppressWarnings({"LogNotTimber"})
-public class SignupActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity{
 
-    private static final String TAG = "SignupActivity";
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_login);
 
         Log.v(TAG, "Logging onCreate() method");
 
-        //If there is an existing state, we do not need to create a new fragment
         FragmentManager fm = getSupportFragmentManager();
-        //If there is an existing state, we do not need to create a new fragment
+
         Fragment frag = fm.findFragmentById(R.id.fragment_container);
 
         if(frag == null) {
-            SignupFragment signupFragment = new SignupFragment();
+            LoginFragment loginFragment = new LoginFragment();
 
             fm.beginTransaction()
-                    .add(R.id.fragment_container, signupFragment)
+                    .add(R.id.fragment_container, loginFragment)
                     .commit();
         }
 
@@ -77,4 +76,5 @@ public class SignupActivity extends AppCompatActivity{
 
         Log.v(TAG, "Logging onDestroy() method");
     }
+
 }

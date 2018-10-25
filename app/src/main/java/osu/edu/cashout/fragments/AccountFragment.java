@@ -1,4 +1,4 @@
-package osu.edu.cashout.Fragments;
+package osu.edu.cashout.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import osu.edu.cashout.Activities.LoginActivity;
-import osu.edu.cashout.Activities.ScanActivity;
+import osu.edu.cashout.activities.LoginActivity;
+import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.User;
 

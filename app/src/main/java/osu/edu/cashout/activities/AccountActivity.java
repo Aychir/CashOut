@@ -1,11 +1,11 @@
-package osu.edu.cashout.Activities;
+package osu.edu.cashout.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import osu.edu.cashout.Fragments.AccountFragment;
+import osu.edu.cashout.fragments.AccountFragment;
 import osu.edu.cashout.R;
 
 public class AccountActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package osu.edu.cashout.Fragments;
+package osu.edu.cashout.fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -17,10 +17,20 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
-import osu.edu.cashout.Activities.AccountActivity;
-import osu.edu.cashout.Activities.LoginActivity;
+import java.util.List;
+
+import osu.edu.cashout.activities.AccountActivity;
+import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.CameraPreview;
 import osu.edu.cashout.R;
 
@@ -148,6 +158,45 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             //TODO: Here release the camera and start a background process to contact the API
             camera.release();
 
+            FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
+                    .setWidth(480)   // 480x360 is typically sufficient for
+                    .setHeight(360)  // image recognition
+                    .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                    .build();
+
+
+            //Create firebase image object from the byte array
+            FirebaseVisionImage image = FirebaseVisionImage.fromByteArray(data, metadata);
+
+            Log.v(TAG, "" + image);
+
+            //Create an instance of the barcode detector
+            FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
+                    .getVisionBarcodeDetector();
+
+            //Attempt to retrieve the result from the detector
+            Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
+                    .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+                        @Override
+                        public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
+                            // Task completed successfully
+                            // ...
+                            Log.v(TAG, barcodes.size() + "");
+                            for(FirebaseVisionBarcode barcode: barcodes){
+                                Log.v(TAG, "" + barcode);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Task failed with an exception
+                            // ...
+                            Log.v(TAG, "FAILED");
+                        }
+                    });
+
+            Log.v(TAG, "Results " + result);
             //TODO: Create some sort of progress box while we grab UPC code
 
             //TODO: Once the asynctask returns, we launch a new activity to view the product info or restart camera preview (invalid response)
