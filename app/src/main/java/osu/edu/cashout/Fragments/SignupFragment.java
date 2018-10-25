@@ -18,8 +18,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import osu.edu.cashout.Activities.ScanActivity;
 import osu.edu.cashout.R;
@@ -40,6 +46,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mUsername;
+    private Set<String> mEmails;
+    private Set<String> mUsernames;
 
     private DatabaseReference mDatabase;
 
@@ -68,9 +76,27 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         mFirstName = v.findViewById(R.id.first_name);
         mLastName = v.findViewById(R.id.last_name);
         mUsername = v.findViewById(R.id.username);
+        mEmails = new HashSet<>();
+        mUsernames = new HashSet<>();
 
         Button signupButton = v.findViewById(R.id.signup_button);
         signupButton.setOnClickListener(this);
+
+        //Add all emails and usernames to a set to verify uniqueness of the attributes
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot user: dataSnapshot.getChildren()){
+                    mEmails.add(user.child("email").getValue(String.class));
+                    mUsernames.add(user.child("username").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         return v;
     }
@@ -173,7 +199,13 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
             mEmailField.setError("Please enter a valid email.");
             valid = false;
         }
+        //Check if email address is already taken
+        else if(mEmails.contains(email)){
+            mEmailField.setError("An account with that email address already exists.");
+            valid = false;
+        }
 
+        //Verify a long enough password and its confirmation
         String password = mPasswordField.getText().toString();
         if (password.isEmpty()) {
             mPasswordField.setError("A password is required.");
@@ -191,6 +223,17 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
         }
         else if(!passwordConfirmation.equals(password)){
             mConfirmPasswordField.setError("Your password entries did not match, please try again.");
+            valid = false;
+        }
+
+        //Validate existence and uniqueness of the username attribute
+        String username = mUsername.getText().toString();
+        if(username.isEmpty()){
+            mUsername.setError("A username is required.");
+            valid = false;
+        }
+        else if(mUsernames.contains(username)){
+            mUsername.setError("That username is already taken.");
             valid = false;
         }
         return valid;

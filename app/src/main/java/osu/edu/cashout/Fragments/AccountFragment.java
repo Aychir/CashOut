@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ import osu.edu.cashout.User;
 public class AccountFragment extends Fragment implements View.OnClickListener{
     private FirebaseAuth mUserAuth;
     private DatabaseReference mDbReference;
-    private DatabaseReference mDbReferenceUsers;
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mUsername;
@@ -45,6 +43,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private User curUser;
     private Context mContext;
     private Set<String> userEmails;
+    private Set<String> mUsernames;
 
     @Override
     public void onAttach(Context c){
@@ -67,6 +66,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         mConfirmPasswordField = v.findViewById(R.id.confirm_password);
 
         userEmails = new HashSet<>();
+        mUsernames = new HashSet<>();
 
         //Set on click listeners for the buttons
         mUpdateAccountButton.setOnClickListener(this);
@@ -100,12 +100,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
             });
         }
 
-        mDbReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
+        //get the reference of the entire set of users
+        DatabaseReference mDbReferenceUsers = FirebaseDatabase.getInstance().getReference("users");
+
+        //Add all emails and usernames to a set to verify uniqueness of the attributes
         mDbReferenceUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot user: dataSnapshot.getChildren()){
                     userEmails.add(user.child("email").getValue(String.class));
+                    mUsernames.add(user.child("username").getValue(String.class));
                 }
             }
 
@@ -141,6 +145,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
 
                         //Set the value of the referenced user to the updated user values
                         mDbReference.setValue(curUser);
+
+                        Toast.makeText(getActivity(), "Account successfully updated.",
+                                Toast.LENGTH_SHORT).show();
 
                         //Start the scan activity after a successful update
                         Intent scanActivity = new Intent(getContext(), ScanActivity.class);
@@ -195,6 +202,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
             valid = false;
         }
 
+        //Verify a long enough password and its confirmation
         String password = mPasswordField.getText().toString();
         if(!password.isEmpty() && password.length() < 6){
             mPasswordField.setError("Your password must be at least 6 characters long.");
@@ -210,6 +218,18 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
             mConfirmPasswordField.setError("Your password entries did not match, please try again.");
             valid = false;
         }
+
+        //Validate existence and uniqueness of the username attribute
+        String username = mUsername.getText().toString();
+        if(username.isEmpty()){
+            mUsername.setError("A username is required.");
+            valid = false;
+        }
+        else if(!username.equals(curUser.getUsername()) && mUsernames.contains(username)){
+            mUsername.setError("That username is already taken.");
+            valid = false;
+        }
+
         return valid;
     }
 }
