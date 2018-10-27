@@ -41,6 +41,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "ScanFragment";
     private Camera mCamera;
     private Context mContext;
+
     private View mView;
 
     @Override
