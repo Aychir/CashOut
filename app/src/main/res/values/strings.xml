@@ -17,5 +17,10 @@
     <string name="last_name">Last Name</string>
     <string name="create_review">Create Review</string>
     <string name="product_icon">Image of the product</string>
+    <string name="rating">Rating</string>
+    <string name="review_title">Review Title</string>
+    <string name="review_description">Review Description</string>
+    <string name="save">Save</string>
+    <string name="rating_info">/ 5.0</string>
 
 </resources>
