@@ -32,6 +32,8 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
 
     protected Product doInBackground(String... params){
 
+        Product product = new Product();
+
         try{
             //Create the connection to the url
             URL url = new URL("https://api.upcitemdb.com/prod/trial/lookup?upc=" + params[0]);
@@ -56,11 +58,14 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             String content = br.readLine();
             System.out.println(content);
 
-            JsonParser parser = new JsonParser();
-            Object object = parser.parse(content);
-            JSONArray array = (JSONArray) object;
-            Log.v(TAG, array.get(0).toString());
+            JSONObject object = new JSONObject(content);
+            Log.v(TAG, object.getString("items"));
 
+            JSONArray array = object.getJSONArray("items");
+            Log.v(TAG, array.getJSONObject(0).getString("title"));
+
+            product.setUpc(params[0]);
+            product.setName(array.getJSONObject(0).getString("title"));
 
             //Close our InputStream and Buffered reader
             streamReader.close();
@@ -70,7 +75,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             e.printStackTrace();
         }
 
-        return new Product();
+        return product;
     }
 
 
