@@ -11,37 +11,68 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.ml.vision.FirebaseVision;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
-import java.util.List;
 
+import osu.edu.cashout.BarcodeGraphic;
+import osu.edu.cashout.BarcodeGraphicTracker;
+import osu.edu.cashout.CameraSourcePreview;
+import osu.edu.cashout.GraphicOverlay;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.CameraPreview;
 import osu.edu.cashout.R;
+import osu.edu.cashout.BarcodeTrackerFactory;
+
+//TODO: Back button should re-open the camera, not close the app
+
 
 @SuppressWarnings({"LogNotTimber"})
-public class ScanFragment extends Fragment implements View.OnClickListener{
+public class ScanFragment extends Fragment implements View.OnClickListener, BarcodeGraphicTracker.BarcodeUpdateListener{
     private static final int CAMERA_PERMISSION = 200;
 
     private static final String TAG = "ScanFragment";
     private Camera mCamera;
     private Context mContext;
     private View mView;
+
+    // intent request code to handle updating play services if needed.
+    private static final int RC_HANDLE_GMS = 9001;
+
+    // permission request codes need to be < 256
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
+
+    // constants used to pass extra data in the intent
+    public static final String AutoFocus = "AutoFocus";
+    public static final String UseFlash = "UseFlash";
+    public static final String BarcodeObject = "Barcode";
+
+    private CameraSource mCameraSource;
+    private CameraSourcePreview mPreview;
+    private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
+
+    // helper objects for detecting taps and pinches.
+    private ScaleGestureDetector scaleGestureDetector;
+    private GestureDetector gestureDetector;
+
+    @Override
+    public void onBarcodeDetected(Barcode barcode) {
+        //do something with barcode data returned
+        Log.v(TAG, barcode + " barcode");
+    }
 
     @Override
     public void onAttach(Context c){
@@ -60,6 +91,24 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         mView.findViewById(R.id.signout_button).setOnClickListener(this);
         mView.findViewById(R.id.button_capture).setOnClickListener(this);
         mView.findViewById(R.id.account_button).setOnClickListener(this);
+
+        mPreview = mView.findViewById(R.id.camera_preview);
+
+        mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) mView.findViewById(R.id.graphicOverlay);
+
+//        BarcodeDetector detector = new BarcodeDetector.Builder(getContext()).build();
+//
+//        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, getContext());
+//        detector.setProcessor(
+//                new MultiProcessor.Builder<>(barcodeFactory).build());
+//
+//        if(!detector.isOperational()) {
+//            Log.v(TAG, "Could not set up the detector!");
+//        }
+
+        //Barcode b = barcodeFactory.returnBarcode();
+
+        //Log.v(TAG, "" + b);
 
         return mView;
     }
@@ -154,49 +203,65 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            Log.v(TAG, "Picture taken " + data.length);
+//            FirebaseVisionBarcodeDetectorOptions options =
+//                    new FirebaseVisionBarcodeDetectorOptions.Builder()
+//                            .setBarcodeFormats(
+//                                    FirebaseVisionBarcode.FORMAT_UPC_A,
+//                                    FirebaseVisionBarcode.FORMAT_UPC_E,
+//                                    FirebaseVisionBarcode.FORMAT_QR_CODE)
+//                            .build();
+
+//            Log.v(TAG, "Picture taken " + new String(Base64.getEncoder().encode(data)));
+
+            //Initialize the barcode detector
+//            BarcodeDetector detector = new BarcodeDetector.Builder(getContext()).build();
+//
+//            BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, getContext());
+//            detector.setProcessor(
+//                    new MultiProcessor.Builder<>(barcodeFactory).build());
+
+
             //TODO: Here release the camera and start a background process to contact the API
             camera.release();
 
-            FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
-                    .setWidth(480)   // 480x360 is typically sufficient for
-                    .setHeight(360)  // image recognition
-                    .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-                    .build();
-
-
-            //Create firebase image object from the byte array
-            FirebaseVisionImage image = FirebaseVisionImage.fromByteArray(data, metadata);
-
-            Log.v(TAG, "" + image);
-
-            //Create an instance of the barcode detector
-            FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
-                    .getVisionBarcodeDetector();
-
-            //Attempt to retrieve the result from the detector
-            Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
-                    .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
-                        @Override
-                        public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
-                            // Task completed successfully
-                            // ...
-                            Log.v(TAG, barcodes.size() + "");
-                            for(FirebaseVisionBarcode barcode: barcodes){
-                                Log.v(TAG, "" + barcode);
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Task failed with an exception
-                            // ...
-                            Log.v(TAG, "FAILED");
-                        }
-                    });
-
-            Log.v(TAG, "Results " + result);
+//            FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()// image recognition
+//                    .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+//                    .setRotation(FirebaseVisionImageMetadata.ROTATION_0)
+//                    .build();
+//
+//
+//            //Create firebase image object from the byte array
+//            FirebaseVisionImage image = FirebaseVisionImage.fromByteArray(data, metadata);
+//
+//            Log.v(TAG, "" + image);
+//
+//            //Create an instance of the barcode detector
+//            FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
+//                    .getVisionBarcodeDetector(options);
+//
+//            //Attempt to retrieve the result from the detector
+//            Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
+//                    .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+//                        @Override
+//                        public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
+//                            // Task completed successfully
+//                            // ...
+//                            Log.v(TAG, barcodes.size() + "");
+//                            for(FirebaseVisionBarcode barcode: barcodes){
+//                                Log.v(TAG, "" + barcode);
+//                            }
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            // Task failed with an exception
+//                            // ...
+//                            Log.v(TAG, "FAILED");
+//                        }
+//                    });
+//
+//            Log.v(TAG, "Results " + result);
             //TODO: Create some sort of progress box while we grab UPC code
 
             //TODO: Once the asynctask returns, we launch a new activity to view the product info or restart camera preview (invalid response)
@@ -207,8 +272,15 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     private void startCameraPreview(View v){
         mCamera = getCameraInstance(mContext);
 
+        BarcodeDetector detector = new BarcodeDetector.Builder(getContext()).build();
+
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay, getContext());
+        detector.setProcessor(
+                new MultiProcessor.Builder<>(barcodeFactory).build());
+
+
         CameraPreview mPreview = new CameraPreview(mContext, mCamera);
-        FrameLayout preview = v.findViewById(R.id.camera_preview);
+        CameraSourcePreview preview = v.findViewById(R.id.camera_preview);
         preview.addView(mPreview);
     }
 
@@ -225,4 +297,48 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         }
         return c; // returns null if camera is unavailable
     }
+
+    /**
+     * onTap returns the tapped barcode result to the calling Activity.
+     *
+     * @param rawX - the raw position of the tap
+     * @param rawY - the raw position of the tap.
+     * @return true if the activity is ending.
+     */
+    private boolean onTap(float rawX, float rawY) {
+        // Find tap point in preview frame coordinates.
+        int[] location = new int[2];
+        mGraphicOverlay.getLocationOnScreen(location);
+        float x = (rawX - location[0]) / mGraphicOverlay.getWidthScaleFactor();
+        float y = (rawY - location[1]) / mGraphicOverlay.getHeightScaleFactor();
+
+        // Find the barcode whose center is closest to the tapped point.
+        Barcode best = null;
+        float bestDistance = Float.MAX_VALUE;
+        for (BarcodeGraphic graphic : mGraphicOverlay.getGraphics()) {
+            Barcode barcode = graphic.getBarcode();
+            if (barcode.getBoundingBox().contains((int) x, (int) y)) {
+                // Exact hit, no need to keep looking.
+                best = barcode;
+                break;
+            }
+            float dx = x - barcode.getBoundingBox().centerX();
+            float dy = y - barcode.getBoundingBox().centerY();
+            float distance = (dx * dx) + (dy * dy);  // actually squared distance
+            if (distance < bestDistance) {
+                best = barcode;
+                bestDistance = distance;
+            }
+        }
+
+        if (best != null) {
+            Intent data = new Intent();
+            //data.putExtra(BarcodeObject, best);
+            //setResult(CommonStatusCodes.SUCCESS, data);
+            //finish();
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -3,12 +3,18 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <FrameLayout
+
+    <osu.edu.cashout.CameraSourcePreview
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1">
+
+        <osu.edu.cashout.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </osu.edu.cashout.CameraSourcePreview>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,5 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/sign_out" />
 
+
     </LinearLayout>
+
 </LinearLayout>
