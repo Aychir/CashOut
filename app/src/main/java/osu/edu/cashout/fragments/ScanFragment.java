@@ -24,6 +24,10 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.Result;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import osu.edu.cashout.AsyncFindProduct;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.R;
@@ -77,6 +81,12 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                     public void run() {
                         Toast.makeText(getActivity(), result.getText(), Toast.LENGTH_SHORT).show();
                         Log.v(TAG, result.getText());
+
+                        //TODO: Release the code scanner after finding a result
+                        mCodeScanner.releaseResources();
+
+                        AsyncFindProduct findProduct = new AsyncFindProduct();
+                        findProduct.execute(result.getText());
                     }
                 });
             }

@@ -29,7 +29,7 @@ import java.util.Set;
 
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.R;
-import osu.edu.cashout.User;
+import osu.edu.cashout.dataModels.User;
 
 @SuppressWarnings({"LogNotTimber"})
 public class SignupFragment extends Fragment implements View.OnClickListener {
