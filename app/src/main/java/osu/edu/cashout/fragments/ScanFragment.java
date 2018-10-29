@@ -113,10 +113,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                         CAMERA_PERMISSION);
 
             }
-            //If permission was granted then start the preview of the camera
+            //If permission was granted then start the preview of the scanner
             else {
-                //TODO: Think about moving this into a background process in the future
-                //startCameraPreview(view);
                 mCodeScanner.startPreview();
             }
         }

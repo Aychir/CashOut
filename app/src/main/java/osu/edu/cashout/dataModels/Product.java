@@ -3,19 +3,17 @@ package osu.edu.cashout.dataModels;
 import android.graphics.Bitmap;
 
 public class Product {
-
-    public Product(){
-
-    }
-    
     private String mUpc;
     private String mName;
     private double mLowestPrice;
     private double mHighestPrice;
     private double mRating;
+    private String mReview;
     private Bitmap mImage;
 
-    //TODO: Possible implementation of a thumbnail attribute
+    public Product(){
+
+    }
 
     public String getUpc() {
         return mUpc;
@@ -63,6 +61,14 @@ public class Product {
 
     public void setImage(Bitmap image) {
         this.mImage = image;
+    }
+
+    public String getReview() {
+        return mReview;
+    }
+
+    public void setReview(String review) {
+        this.mReview = review;
     }
 
 

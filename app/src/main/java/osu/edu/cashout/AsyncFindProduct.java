@@ -1,5 +1,7 @@
 package osu.edu.cashout;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 import android.util.Log;
@@ -12,8 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -66,14 +70,47 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             JSONArray array = object.getJSONArray("items");
             Log.v(TAG, array.getJSONObject(0).getString("title"));
 
+            //Set the item from the array of results
+            JSONObject firstItem = array.getJSONObject(0);
+
             //Set the upc of the product
             product.setUpc(params[0]);
 
-            //If a name is found, put it into the product
-            if(array.getJSONObject(0).getString("title") != null){
+            //Set the name of the product
+            if(firstItem.getString("title") != null){
                 product.setName(array.getJSONObject(0).getString("title"));
             }
-            //If a name cannot be found, then we cannot save the object
+
+            //Set the lowest recorded proce offered by the API
+            if(firstItem.getDouble("lowest_recorded_price") != 0.0){
+                product.setName(array.getJSONObject(0).getString("title"));
+            }
+
+            //Set the highest recorded proce offered by the API
+            if(firstItem.getDouble("highest_recorded_price") != 0.0){
+                product.setName(array.getJSONObject(0).getString("title"));
+            }
+
+            //Set the image for the product's thumbnail
+            JSONArray imageArray = firstItem.getJSONArray("images");
+
+            if(imageArray != null){
+                try{
+                    URL url = new URL(imageArray.getString(0));
+                    HttpURLConnection imageConnection = (HttpURLConnection) url.openConnection();
+                    imageConnection.setDoInput(true);
+                    imageConnection.connect();
+                    InputStream input = imageConnection.getInputStream();
+                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+                    product.setImage(myBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            //TODO: Check in our database for any reviews made for the product
 
             //Close our InputStream and Buffered reader
             streamReader.close();
@@ -84,7 +121,21 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             e.printStackTrace();
         }
 
+        //TODO: Add the scanned product to the database under the corresponding user if the name is not null
+
         return product;
+    }
+
+    protected void onPostExecute(Product product){
+        //TODO: Check if product name != null, if true then launch info activity, else go back to scan activity with a toast
+        String name = product.getName();
+        if(name != null){
+            //Launch info activity
+            Log.v(TAG, "Name not null");
+        }
+        else{
+            //Not sure if necessary, if it fails then it should go back to scan activity
+        }
     }
 
 
