@@ -32,6 +32,8 @@ import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.R;
 
+//TODO: Implementation of a button to manually type in upc code if camera does not work
+
 @SuppressWarnings({"LogNotTimber"})
 public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final int CAMERA_PERMISSION = 200;
@@ -60,18 +62,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
 
         CodeScannerView scannerView = view.findViewById(R.id.scanner_view);
 
-        Button b = new Button(getActivity());
-        b.setText(R.string.account);
-        b.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        b.setGravity(Gravity.CENTER);
-        b.setVisibility(View.VISIBLE);
-
-        scannerView.addView(b);
-
         mCodeScanner = new CodeScanner(getActivity(), scannerView);
-
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override

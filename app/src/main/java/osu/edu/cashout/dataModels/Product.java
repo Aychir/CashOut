@@ -1,5 +1,7 @@
 package osu.edu.cashout.dataModels;
 
+import android.graphics.Bitmap;
+
 public class Product {
 
     public Product(){
@@ -8,48 +10,59 @@ public class Product {
     
     private String mUpc;
     private String mName;
-    private double mPrice;
-    private double mAmazonRating;
-    private double mCashOutRating;
+    private double mLowestPrice;
+    private double mHighestPrice;
+    private double mRating;
+    private Bitmap mImage;
+
+    //TODO: Possible implementation of a thumbnail attribute
 
     public String getUpc() {
         return mUpc;
     }
 
-    public void setUpc(String Upc) {
-        this.mUpc = Upc;
+    public void setUpc(String upc) {
+        this.mUpc = upc;
     }
 
     public String getName() {
         return mName;
     }
 
-    public void setName(String Name) {
-        this.mName = Name;
+    public void setName(String name) {
+        this.mName = name;
     }
 
-    public double getPrice() {
-        return mPrice;
+    public double getLowestPrice() {
+        return mLowestPrice;
     }
 
-    public void setPrice(double Price) {
-        this.mPrice = Price;
+    public void setLowestPrice(double lowestPrice) {
+        this.mLowestPrice = lowestPrice;
     }
 
-    public double getAmazonRating() {
-        return mAmazonRating;
+    public double getHighestPrice() {
+        return mHighestPrice;
     }
 
-    public void setAmazonRating(double AmazonRating) {
-        this.mAmazonRating = AmazonRating;
+    public void setHighestPrice(double highestPrice) {
+        this.mHighestPrice = highestPrice;
     }
 
-    public double getCashOutRating() {
-        return mCashOutRating;
+    public double getRating() {
+        return mRating;
     }
 
-    public void setCashOutRating(double CashOutRating) {
-        this.mCashOutRating = CashOutRating;
+    public void setRating(double rating) {
+        this.mRating = rating;
+    }
+
+    public Bitmap getImage() {
+        return mImage;
+    }
+
+    public void setImage(Bitmap image) {
+        this.mImage = image;
     }
 
 

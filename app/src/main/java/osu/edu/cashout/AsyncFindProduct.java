@@ -35,9 +35,10 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
         Product product = new Product();
 
         try{
-            //Create the connection to the url
-            URL url = new URL("https://api.upcitemdb.com/prod/trial/lookup?upc=" + params[0]);
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            //Create the connection to the url to upcitemdb first
+
+            URL upcItemDbUrl = new URL("https://api.upcitemdb.com/prod/trial/lookup?upc=" + params[0]);
+            HttpsURLConnection connection = (HttpsURLConnection) upcItemDbUrl.openConnection();
 
             connection.setRequestMethod(REQUEST_METHOD);
             connection.setReadTimeout(READ_TIMEOUT);
@@ -61,14 +62,22 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             JSONObject object = new JSONObject(content);
             Log.v(TAG, object.getString("items"));
 
+            //We will assume that the first item in the list is accurate for now
             JSONArray array = object.getJSONArray("items");
             Log.v(TAG, array.getJSONObject(0).getString("title"));
 
+            //Set the upc of the product
             product.setUpc(params[0]);
-            product.setName(array.getJSONObject(0).getString("title"));
+
+            //If a name is found, put it into the product
+            if(array.getJSONObject(0).getString("title") != null){
+                product.setName(array.getJSONObject(0).getString("title"));
+            }
+            //If a name cannot be found, then we cannot save the object
 
             //Close our InputStream and Buffered reader
             streamReader.close();
+            br.close();
 
         } catch (Exception e){
             Log.d(TAG, "Unable to process the request");
