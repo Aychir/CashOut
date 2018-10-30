@@ -50,6 +50,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.ManualSearchActivity">
+            <intent-filter>
+                <action android:name="osu.edu.cashout.ManualSearch"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="capture">Capture</string>
+    <string name="type_upc">Type Code</string>
     <string name="sign_out">Sign Out</string>
     <string name="update_account">Update</string>
     <string name="delete_account">Delete Account</string>
