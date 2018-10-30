@@ -1,6 +1,7 @@
 package osu.edu.cashout.fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,12 +15,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
@@ -37,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -198,11 +196,19 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
 
         private WeakReference<FragmentActivity> activityReference;
 
+        private ProgressDialog progress;
+
         AsyncFindProduct(FragmentActivity activity){
             activityReference = new WeakReference<>(activity);
+            progress = new ProgressDialog(activityReference.get());
         }
 
         //Maybe implement something in onPreExecute to tell the user we are searching
+        @Override
+        protected void onPreExecute(){
+            progress.setMessage("Searching for this product...");
+            progress.show();
+        }
 
         protected Product doInBackground(String... params){
 
@@ -241,7 +247,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                     Log.v(TAG, "Title " + array.getJSONObject(0).getString("title"));
 
                     //Only want to create an object if there are results given from the scanning, otherwise stop creation
-                    if(array.length() >= 1) {
+                    if(array.length() > 0) {
                         //Set the item from the array of results
                         JSONObject firstItem = array.getJSONObject(0);
 
@@ -249,19 +255,19 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                         product.setUpc(params[0]);
 
                         //Set the name of the product
-                        if (firstItem.getString("title") != null) {
+                        if (firstItem.has("title")) {
                             product.setName(array.getJSONObject(0).getString("title"));
                             Log.v(TAG, "Title set");
                         }
 
-                        //Set the lowest recorded proce offered by the API
-                        if (firstItem.getDouble("lowest_recorded_price") != 0.0) {
+                        //Set the lowest recorded price offered by the API
+                        if (firstItem.has("lowest_recorded_price")) {
                             product.setLowestPrice(firstItem.getDouble("lowest_recorded_price"));
                             Log.v(TAG, "Lowest Price Set " + product.getLowestPrice());
                         }
 
                         //Set the highest recorded price offered by the API
-                        if (firstItem.getDouble("highest_recorded_price") != 0.0) {
+                        if (firstItem.has("highest_recorded_price")) {
                             product.setHighestPrice(firstItem.getDouble("highest_recorded_price"));
                             Log.v(TAG, "Highest Price Set " + firstItem.getDouble("highest_recorded_price"));
                         }
@@ -269,7 +275,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                         //Set the image for the product's thumbnail
                         JSONArray imageArray = firstItem.getJSONArray("images");
 
-                        if (imageArray != null) {
+                        if (imageArray.length() > 0) {
                             try {
                                 URL url = new URL(imageArray.getString(0));
                                 HttpURLConnection imageConnection = (HttpURLConnection) url.openConnection();
@@ -280,7 +286,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
 
                                 product.setImage(myBitmap);
                                 Log.v(TAG, "Thumbnail Set " + product.getImage().toString());
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 return null;
                             }
@@ -310,6 +316,10 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         }
 
         protected void onPostExecute(Product product){
+            if(progress.isShowing()){
+                progress.dismiss();
+            }
+
             FragmentActivity referencedActivity = activityReference.get();
 
             String name = product.getName();
