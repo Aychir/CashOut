@@ -15,4 +15,6 @@
     <string name="username">Username</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="search">Search</string>
+    <string name="manual_input_message">Please type in all numbers located on the product\'s barcode to search for it.</string>
 </resources>

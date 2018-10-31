@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,8 +22,11 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import osu.edu.cashout.activities.ManualSearchActivity;
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.Product;
+import osu.edu.cashout.fragments.ManualSearchFragment;
+import osu.edu.cashout.fragments.ScanFragment;
 
 /*
         Use of an inner class so that we may use the FragmentActivity of ScanFragment to print out
@@ -174,10 +178,19 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             Toast.makeText(referencedActivity.getApplicationContext(), "Couldn't find that product!",
                     Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(referencedActivity, ScanActivity.class);
-            //We call finish instead of recreate() so that the camera can resynchronize with the new activity
-            referencedActivity.finish();
-            referencedActivity.startActivity(intent);
+            Log.v(TAG, "Fragment type: " + referencedActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+
+            Fragment fragment = referencedActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+            if(fragment instanceof ScanFragment){
+                Intent intent = new Intent(referencedActivity, ScanActivity.class);
+                //We call finish instead of recreate() so that the camera can resynchronize with the new activity
+                referencedActivity.finish();
+                referencedActivity.startActivity(intent);
+            }
+            else if(fragment instanceof ManualSearchFragment){
+                referencedActivity.recreate();
+            }
         }
     }
 

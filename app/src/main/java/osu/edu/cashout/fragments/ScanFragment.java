@@ -25,9 +25,12 @@ import osu.edu.cashout.AsyncFindProduct;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.R;
+import osu.edu.cashout.activities.ManualSearchActivity;
 
 
 //TODO: Implementation of a button to manually type in upc code if camera does not work
+
+//TODO: Need to fix bug where config change messes up the text in textfields
 
 @SuppressWarnings({"LogNotTimber"})
 public class ScanFragment extends Fragment implements View.OnClickListener{
@@ -155,7 +158,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             startActivity(loginIntent);
         }
         else if(id == R.id.button_type_upc){
-            //TODO: create an activity to type in the code
+            Intent manualIntent = new Intent(mContext, ManualSearchActivity.class);
+            startActivity(manualIntent);
         }
         else if(id == R.id.account_button){
             Intent accountIntent = new Intent(mContext, AccountActivity.class);
