@@ -32,6 +32,8 @@ import osu.edu.cashout.activities.ManualSearchActivity;
 
 //TODO: Need to fix bug where config change messes up the text in textfields
 
+//TODO: Pressing back from login or signup after signing out comes back here (incorrectly)
+
 @SuppressWarnings({"LogNotTimber"})
 public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final int CAMERA_PERMISSION = 200;

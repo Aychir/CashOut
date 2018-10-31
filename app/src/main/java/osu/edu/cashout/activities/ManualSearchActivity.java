@@ -1,6 +1,7 @@
 package osu.edu.cashout.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,12 +21,27 @@ public class ManualSearchActivity extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
 
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
-        ManualSearchFragment searchFragment = new ManualSearchFragment();
+        if(fragment == null) {
+            ManualSearchFragment searchFragment = new ManualSearchFragment();
 
-        fm.beginTransaction()
-                .add(R.id.fragment_container, searchFragment)
-                .commit();
+            fm.beginTransaction()
+                    .add(R.id.fragment_container, searchFragment)
+                    .commit();
+        }
 
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Read values from the "savedInstanceState"-object and put them in your textview
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // Save the values you need from your textview into "outState"-object
+        super.onSaveInstanceState(outState);
     }
 }

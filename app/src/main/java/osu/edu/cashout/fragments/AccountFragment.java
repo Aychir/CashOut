@@ -45,6 +45,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private Set<String> userEmails;
     private Set<String> mUsernames;
 
+    //TODO: Rotating screen and being on first name field is wonky
+
     @Override
     public void onAttach(Context c){
         super.onAttach(getContext());
@@ -84,8 +86,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     //Called initially, and then any time the information in fields change
+
+                    //If there is a current user and all fields are empty (on fragment creation) will we want to pull info from the database
                     curUser = dataSnapshot.getValue(User.class);
-                    if (curUser != null){
+                    if (curUser != null && mFirstName.getText().toString().isEmpty() && mLastName.getText().toString().isEmpty()
+                            && mUsername.getText().toString().isEmpty() && mEmailField.getText().toString().isEmpty()){
                         mFirstName.setText(curUser.getFirstName());
                         mLastName.setText(curUser.getLastName());
                         mUsername.setText(curUser.getUsername());

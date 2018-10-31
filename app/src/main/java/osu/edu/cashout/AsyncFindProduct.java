@@ -174,14 +174,12 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
         }
         else{
             //If it fails, we must launch scan activity again
-            Log.v(TAG, "Object not found, relaunching the scanner");
+            Log.v(TAG, "Object not found, relaunching the fragment the user used to find the product");
             Toast.makeText(referencedActivity.getApplicationContext(), "Couldn't find that product!",
                     Toast.LENGTH_LONG).show();
 
-            Log.v(TAG, "Fragment type: " + referencedActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container));
-
+            //Find the fragment that called the asynctask and start it again
             Fragment fragment = referencedActivity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
             if(fragment instanceof ScanFragment){
                 Intent intent = new Intent(referencedActivity, ScanActivity.class);
                 //We call finish instead of recreate() so that the camera can resynchronize with the new activity

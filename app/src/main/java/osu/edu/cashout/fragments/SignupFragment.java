@@ -33,9 +33,6 @@ import osu.edu.cashout.dataModels.User;
 
 @SuppressWarnings({"LogNotTimber"})
 public class SignupFragment extends Fragment implements View.OnClickListener {
-
-    //TODO: Pressing back from scan will take us back here
-
     private static final String TAG = "SignupFragment";
 
     private Context mContext;

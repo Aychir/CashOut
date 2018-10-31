@@ -1,5 +1,6 @@
 package osu.edu.cashout.activities;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,13 +22,13 @@ public class ScanActivity extends AppCompatActivity{
         Log.v(TAG, "Logging onCreate() method");
 
         FragmentManager fm = getSupportFragmentManager();
-
-
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        if(fragment == null) {
             ScanFragment scanFragment = new ScanFragment();
-
             fm.beginTransaction()
                     .add(R.id.fragment_container, scanFragment)
                     .commit();
+        }
 
     }
 
