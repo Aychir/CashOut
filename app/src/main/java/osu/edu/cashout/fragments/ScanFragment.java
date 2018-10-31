@@ -28,12 +28,6 @@ import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ManualSearchActivity;
 
 
-//TODO: Implementation of a button to manually type in upc code if camera does not work
-
-//TODO: Need to fix bug where config change messes up the text in textfields
-
-//TODO: Pressing back from login or signup after signing out comes back here (incorrectly)
-
 @SuppressWarnings({"LogNotTimber"})
 public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final int CAMERA_PERMISSION = 200;
@@ -157,6 +151,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             FirebaseAuth.getInstance().signOut();
 
             Intent loginIntent = new Intent(mContext, LoginActivity.class);
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
         }
         else if(id == R.id.button_type_upc){

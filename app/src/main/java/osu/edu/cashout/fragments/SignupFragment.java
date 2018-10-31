@@ -160,8 +160,17 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                                 }
 
                                 //Launch the camera after user is authenticated and added to the database
-                                Intent cameraIntent = new Intent(mContext, ScanActivity.class);
-                                startActivity(cameraIntent);
+                                Intent scanIntent = new Intent(mContext, ScanActivity.class);
+                                /*
+                                * We do this because otherwise the login activity will remain in the stack
+                                * (unfinished) and when pressing the back button on the scan activity, it will go
+                                * back to the login activity that called the sign up activity. This arises because
+                                * we deliberately do not finish login activity upon starting sign up activity so
+                                * the user may go back to it using the back button. So we make the new activity
+                                * the root of a cleared activity stack.
+                                * */
+                                scanIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(scanIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 //Update the UI in any way?

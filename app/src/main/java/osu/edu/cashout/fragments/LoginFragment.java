@@ -130,8 +130,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the camera
-                                Intent cameraIntent = new Intent(mContext, ScanActivity.class);
-                                startActivity(cameraIntent);
+                                startScanActivity();
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(getContext(), "Failed to sign in, please try again.",
@@ -172,6 +171,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     private void startScanActivity(){
         Intent cameraIntent = new Intent(getActivity(), ScanActivity.class);
         startActivity(cameraIntent);
+
         if(getActivity() != null) {
             getActivity().finish();
         }
