@@ -19,13 +19,23 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.Result;
 
-import osu.edu.cashout.AsyncFindProduct;
+import java.util.HashSet;
+import java.util.Set;
+
+import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ManualSearchActivity;
+
+//TODO: Check what happens when a user denies access to camera
 
 
 @SuppressWarnings({"LogNotTimber"})
@@ -35,6 +45,9 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "ScanFragment";
     private Context mContext;
     private CodeScanner mCodeScanner;
+    private DatabaseReference mDatabase;
+    private Set<String> mListOfUpcs;
+    private Set<String> mListOfNames;
 
     @Override
     public void onAttach(Context c){
@@ -54,6 +67,25 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         view.findViewById(R.id.button_type_upc).setOnClickListener(this);
         view.findViewById(R.id.account_button).setOnClickListener(this);
 
+        mListOfUpcs = new HashSet<>();
+        mListOfNames = new HashSet<>();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference("products").push();
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot product: dataSnapshot.getChildren()){
+                    mListOfUpcs.add(product.child("upc").getValue(String.class));
+                    mListOfNames.add(product.child("name").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         CodeScannerView scannerView = view.findViewById(R.id.scanner_view);
 
         mCodeScanner = new CodeScanner(getActivity(), scannerView);
@@ -65,9 +97,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void run() {
                         Log.v(TAG, result.getText());
-                        AsyncFindProduct findProduct = new AsyncFindProduct(getActivity());
+                        AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mDatabase, mListOfUpcs, mListOfNames);
                         findProduct.execute(result.getText());
-                        Log.v(TAG, "Logging finished asynctask?");
                     }
                 });
             }
@@ -80,6 +111,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                 mCodeScanner.startPreview();
             }
         });
+
 
         return view;
     }
@@ -131,8 +163,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, open camera preview
-                    //startCameraPreview(view);
+                    // permission was granted, open scanner preview
                     mCodeScanner.startPreview();
                 } else {
                     // permission denied, tell the user we failed to access camera

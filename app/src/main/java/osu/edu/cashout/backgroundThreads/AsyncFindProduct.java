@@ -1,4 +1,4 @@
-package osu.edu.cashout;
+package osu.edu.cashout.backgroundThreads;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,19 +21,16 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import osu.edu.cashout.activities.ManualSearchActivity;
+import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.Product;
 import osu.edu.cashout.fragments.ManualSearchFragment;
 import osu.edu.cashout.fragments.ScanFragment;
 
-/*
-        Use of an inner class so that we may use the FragmentActivity of ScanFragment to print out
-        Toast messages and to launch a new activity based on the result of the API call.
-    */
 public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
 
     private static final String TAG = "AsyncFindProduct";
@@ -42,13 +41,19 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
     private WeakReference<FragmentActivity> activityReference;
 
     private ProgressDialog progress;
+    private DatabaseReference mReference;
+    private Set<String> mListOfUpcs;
+    private Set<String> mListOfNames;
 
-    public AsyncFindProduct(FragmentActivity activity){
+    public AsyncFindProduct(FragmentActivity activity, DatabaseReference reference, Set<String> listUpc, Set<String> listName){
         activityReference = new WeakReference<>(activity);
         progress = new ProgressDialog(activityReference.get());
+
+        mReference = reference;
+        mListOfUpcs = listUpc;
+        mListOfNames = listName;
     }
 
-    //Maybe implement something in onPreExecute to tell the user we are searching
     @Override
     protected void onPreExecute(){
         progress.setMessage("Searching for this product...");
@@ -117,25 +122,19 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                         Log.v(TAG, "Highest Price Set " + firstItem.getDouble("highest_recorded_price"));
                     }
 
-                    //Set the image for the product's thumbnail
+                    //Set the image for the product's thumbnail if the API offers it
                     JSONArray imageArray = firstItem.getJSONArray("images");
 
                     if (imageArray.length() > 0) {
-                        try {
-                            URL url = new URL(imageArray.getString(0));
-                            HttpURLConnection imageConnection = (HttpURLConnection) url.openConnection();
-                            imageConnection.setDoInput(true);
-                            imageConnection.connect();
-                            InputStream input = imageConnection.getInputStream();
-                            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-                            product.setImage(myBitmap);
-                            Log.v(TAG, "Thumbnail Set " + product.getImage().toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return null;
-                        }
+                         product.setImage(imageArray.getString(0));
                     }
+
+                    //TODO: Check if UPC and name together already exists
+                    //This is the scenario where db does not already have the upc and name of the product, so we create a new product
+                    if(!mListOfUpcs.contains(product.getUpc()) && !mListOfNames.contains(product.getName())){
+                        mReference.setValue(product);
+                    }
+                    //else, take the product from the database
                 }
                 //Could not establish connection to the API
                 else{

@@ -176,7 +176,6 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                                 //Update the UI in any way?
                                 Toast.makeText(mContext, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
                             }
 
                         }

@@ -1,6 +1,5 @@
 package osu.edu.cashout.dataModels;
 
-import android.graphics.Bitmap;
 
 public class Product {
     private String mUpc;
@@ -9,7 +8,9 @@ public class Product {
     private double mHighestPrice;
     private double mRating;
     private String mReview;
-    private Bitmap mImage;
+    private String mImage;
+
+    //TODO: Date scanned attribute?
 
     public Product(){
 
@@ -55,11 +56,29 @@ public class Product {
         this.mRating = rating;
     }
 
-    public Bitmap getImage() {
+//    public String getImageUrl(){
+//        try {
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            this.getImage().compress(Bitmap.CompressFormat.PNG, 100, baos);
+//            byte[] b = baos.toByteArray();
+//            String temp = Base64.encodeToString(b, Base64.DEFAULT);
+//            return temp;
+//        } catch (NullPointerException e) {
+//            return null;
+//        }
+//    }
+
+    /*
+    * Note:
+    *
+    *
+    * */
+
+    public String getImage() {
         return mImage;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         this.mImage = image;
     }
 
