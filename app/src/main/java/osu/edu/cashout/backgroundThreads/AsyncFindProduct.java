@@ -97,7 +97,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                 JSONObject object = new JSONObject(content);
                 Log.v(TAG, "Items: " + object.getString("items"));
 
-                //Get the first result from the array of possible results
+                //Get the first result from the array of possible items
                 JSONArray array = object.getJSONArray("items");
                 Log.v(TAG, "Title " + array.getJSONObject(0).getString("title"));
 
@@ -129,37 +129,42 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
 
                     //Set the image for the product's thumbnail if the API offers it
                     JSONArray imageArray = firstItem.getJSONArray("images");
-
                     if (imageArray.length() > 0) {
                          product.setImage(imageArray.getString(0));
                     }
 
-                    //TODO: Check if UPC and name together already exists
-                    //This is the scenario where db does not already have the upc and name of the product, so we create a new product
-                    if(!mListOfUpcs.contains(product.getUpc()) && !mListOfNames.contains(product.getName())){
-                        mReference.setValue(product);
-                    }
-                    //else, take the product from the database
+                    //TODO: Check in our database for any ratings and reviews made for the product and add it to the product
 
-                    //TODO: Check if user has scanned this product already
-                    //User hasn't scanned this product yet, add it to the table of user's scanned products
+                    //Add new product to the database if its UPC and Name are unique
+                    // and if the product has a name (and upc that must be passed and valid)
+                    if(product.getName() != null && !mListOfUpcs.contains(product.getUpc()) &&
+                            !mListOfNames.contains(product.getName())){
+                        mReference.push().setValue(product);
+                    }
+
+                    //TODO: Fix this, not adding to scanned products
+                    //User hasn't scanned this product yet, add it to the table of scanned products
                     if(!mListOfIds.contains(userId) && !mListOfUpcs.contains(product.getUpc())){
                         ScannedProducts scanned = new ScannedProducts();
                         scanned.setUid(userId);
                         scanned.setUpc(product.getUpc());
-                        mHistory.setValue(scanned);
+                        mHistory.push().setValue(scanned);
+                    }
+
+                    if(product.getName() != null){
+                        //Launch info activity
                     }
                 }
-                //Could not establish connection to the API
+                //API did not give any results for the product
                 else{
                     Log.v(TAG, "No results given by API.");
                 }
-                //TODO: Check in our database for any ratings made for the product and add it to the product we are creating
 
                 //Close our InputStream and Buffered reader
                 streamReader.close();
                 br.close();
             }
+            //Could not establish connection to the API
             else{
                 Log.v(TAG, "Could not successfully connect to the API.");
             }
@@ -167,8 +172,6 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             Log.d(TAG, "Unable to process the request");
             e.printStackTrace();
         }
-
-        //TODO: Add the scanned product to the database under the corresponding user if the name is not null
 
         return product;
     }

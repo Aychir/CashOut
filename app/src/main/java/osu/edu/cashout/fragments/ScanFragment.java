@@ -79,7 +79,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         mListOfUpcs = new HashSet<>();
         mListOfNames = new HashSet<>();
 
-        mProductsDatabase = FirebaseDatabase.getInstance().getReference("products").push();
+        mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
         mProductsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
