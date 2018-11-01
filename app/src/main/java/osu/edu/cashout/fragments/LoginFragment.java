@@ -169,8 +169,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     private void startScanActivity(){
-        Intent cameraIntent = new Intent(getActivity(), ScanActivity.class);
-        startActivity(cameraIntent);
+        Intent scanIntent = new Intent(getActivity(), ScanActivity.class);
+        scanIntent.putExtra("auth", mUserAuth.getUid());
+        startActivity(scanIntent);
 
         if(getActivity() != null) {
             getActivity().finish();

@@ -2,8 +2,6 @@ package osu.edu.cashout.backgroundThreads;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
@@ -28,6 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.Product;
+import osu.edu.cashout.dataModels.ScannedProducts;
 import osu.edu.cashout.fragments.ManualSearchFragment;
 import osu.edu.cashout.fragments.ScanFragment;
 
@@ -42,16 +40,23 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
 
     private ProgressDialog progress;
     private DatabaseReference mReference;
+    private DatabaseReference mHistory;
     private Set<String> mListOfUpcs;
     private Set<String> mListOfNames;
+    private Set<String> mListOfIds;
+    private String userId;
 
-    public AsyncFindProduct(FragmentActivity activity, DatabaseReference reference, Set<String> listUpc, Set<String> listName){
+    public AsyncFindProduct(FragmentActivity activity, DatabaseReference reference, Set<String> listUpc, Set<String> listName,
+    DatabaseReference historyReference, Set<String> nameList, String user){
         activityReference = new WeakReference<>(activity);
         progress = new ProgressDialog(activityReference.get());
 
         mReference = reference;
+        mHistory = historyReference;
         mListOfUpcs = listUpc;
         mListOfNames = listName;
+        mListOfIds = nameList;
+        userId = user;
     }
 
     @Override
@@ -135,6 +140,15 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                         mReference.setValue(product);
                     }
                     //else, take the product from the database
+
+                    //TODO: Check if user has scanned this product already
+                    //User hasn't scanned this product yet, add it to the table of user's scanned products
+                    if(!mListOfIds.contains(userId) && !mListOfUpcs.contains(product.getUpc())){
+                        ScannedProducts scanned = new ScannedProducts();
+                        scanned.setUid(userId);
+                        scanned.setUpc(product.getUpc());
+                        mHistory.setValue(scanned);
+                    }
                 }
                 //Could not establish connection to the API
                 else{

@@ -37,6 +37,7 @@ import osu.edu.cashout.activities.ManualSearchActivity;
 
 //TODO: Check what happens when a user denies access to camera
 
+//TODO: Abstract the database stuff out between here and manual search
 
 @SuppressWarnings({"LogNotTimber"})
 public class ScanFragment extends Fragment implements View.OnClickListener{
@@ -45,9 +46,17 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "ScanFragment";
     private Context mContext;
     private CodeScanner mCodeScanner;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mProductsDatabase;
     private Set<String> mListOfUpcs;
     private Set<String> mListOfNames;
+
+    private DatabaseReference mScannedDatabase;
+    private FirebaseAuth mAuth;
+    private String userId;
+    private Set<String> mListOfUserIds;
+
+    public ScanFragment(){
+    }
 
     @Override
     public void onAttach(Context c){
@@ -70,13 +79,39 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         mListOfUpcs = new HashSet<>();
         mListOfNames = new HashSet<>();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("products").push();
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mProductsDatabase = FirebaseDatabase.getInstance().getReference("products").push();
+        mProductsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot product: dataSnapshot.getChildren()){
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
                     mListOfNames.add(product.child("name").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //Get the auth from the previous activity
+        if(getActivity() != null) {
+            userId = getActivity().getIntent().getStringExtra("auth");
+        }
+        else{
+            mAuth = FirebaseAuth.getInstance();
+            userId = mAuth.getUid();
+        }
+
+        mListOfUserIds = new HashSet<>();
+
+        mScannedDatabase = FirebaseDatabase.getInstance().getReference("scanned-products");
+        mScannedDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot scans: dataSnapshot.getChildren()){
+                    mListOfUserIds.add(scans.child("uid").getValue(String.class));
                 }
             }
 
@@ -97,7 +132,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void run() {
                         Log.v(TAG, result.getText());
-                        AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mDatabase, mListOfUpcs, mListOfNames);
+                        AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
+                                mListOfUpcs, mListOfNames, mScannedDatabase, mListOfUserIds, userId);
                         findProduct.execute(result.getText());
                     }
                 });

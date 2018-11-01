@@ -24,9 +24,12 @@ import osu.edu.cashout.R;
 public class ManualSearchFragment extends Fragment implements View.OnClickListener{
 
     private EditText mSearchField;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mProductsDatabase;
     private Set<String> mListOfUpcs;
     private Set<String> mListOfNames;
+
+    private DatabaseReference mScannedDatabase;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,13 +43,28 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
         mListOfUpcs = new HashSet<>();
         mListOfNames = new HashSet<>();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("products");
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
+        mProductsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot product: dataSnapshot.getChildren()){
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
                     mListOfNames.add(product.child("name").getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mScannedDatabase = FirebaseDatabase.getInstance().getReference("scanned-products");
+        mScannedDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot scans: dataSnapshot.getChildren()){
+
                 }
             }
 
@@ -62,8 +80,8 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v){
         if(validateForm()){
-            AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mDatabase, mListOfUpcs, mListOfNames);
-            findProduct.execute(mSearchField.getText().toString());
+//            AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase, mListOfUpcs, mListOfNames);
+//            findProduct.execute(mSearchField.getText().toString());
         }
     }
 
