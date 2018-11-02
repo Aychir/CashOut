@@ -6,13 +6,15 @@ public class Product {
     private String mName;
     private double mLowestPrice;
     private double mHighestPrice;
+    private double mCurrentPrice;
+    private String mStore;
     private double mRating;
     private String mReview;
     private String mImage;
 
     //TODO: Date scanned attribute?
 
-    public Product(){
+    public Product() {
 
     }
 
@@ -48,6 +50,22 @@ public class Product {
         this.mHighestPrice = highestPrice;
     }
 
+    public double getCurrentPrice() {
+        return mCurrentPrice;
+    }
+
+    public void setCurrentPrice(double currentPrice) {
+        this.mCurrentPrice = currentPrice;
+    }
+
+    public String getStore(){
+        return mStore;
+    }
+
+    public void setStore(String store){
+        this.mStore = store;
+    }
+
     public double getRating() {
         return mRating;
     }
@@ -56,23 +74,6 @@ public class Product {
         this.mRating = rating;
     }
 
-//    public String getImageUrl(){
-//        try {
-//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            this.getImage().compress(Bitmap.CompressFormat.PNG, 100, baos);
-//            byte[] b = baos.toByteArray();
-//            String temp = Base64.encodeToString(b, Base64.DEFAULT);
-//            return temp;
-//        } catch (NullPointerException e) {
-//            return null;
-//        }
-//    }
-
-    /*
-    * Note:
-    *
-    *
-    * */
 
     public String getImage() {
         return mImage;

@@ -40,7 +40,7 @@ import osu.edu.cashout.activities.ManualSearchActivity;
 //TODO: Abstract the database stuff out between here and manual search
 
 @SuppressWarnings({"LogNotTimber"})
-public class ScanFragment extends Fragment implements View.OnClickListener{
+public class ScanFragment extends Fragment implements View.OnClickListener {
     private static final int CAMERA_PERMISSION = 200;
 
     private static final String TAG = "ScanFragment";
@@ -48,16 +48,12 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     private CodeScanner mCodeScanner;
     private DatabaseReference mProductsDatabase;
     private Set<String> mListOfUpcs;
-
     private DatabaseReference mScannedDatabase;
     private String userId;
     private Set<String> mListOfUserScans;
 
-    public ScanFragment(){
-    }
-
     @Override
-    public void onAttach(Context c){
+    public void onAttach(Context c) {
         super.onAttach(getContext());
 
         Log.v(TAG, "Logging onAttach()");
@@ -66,7 +62,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.v(TAG, "Logging onCreateView()");
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
 
@@ -75,19 +71,21 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         view.findViewById(R.id.account_button).setOnClickListener(this);
 
         mListOfUpcs = new HashSet<>();
+        mListOfUserScans = new HashSet<>();
 
+        //The database table associated with all scanned products
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
         mProductsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot product: dataSnapshot.getChildren()){
+                for (DataSnapshot product : dataSnapshot.getChildren()) {
+                    //Use this to check for uniqueness of the item being scanned (to avoid adding it again)
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -95,16 +93,18 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getUid();
 
-        mListOfUserScans = new HashSet<>();
-
+        //The database table associated with the products scanned and the users that scanned them
         mScannedDatabase = FirebaseDatabase.getInstance().getReference("scanned-products");
         mScannedDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot scans: dataSnapshot.getChildren()){
-                    //Get the user if from scanned products and add any products they may have scanned to check for its
-                    //  existence in the asynctask
-                    if(scans.child("uid").getValue(String.class).equals(userId)){
+                for (DataSnapshot scans : dataSnapshot.getChildren()) {
+                    /*
+                     * Find all children in the table with the current user's ID and
+                     * put all items they scanned into a list to verify uniqueness (to
+                     * avoid duplication)
+                     * */
+                    if (scans.child("uid").getValue(String.class).equals(userId)) {
                         mListOfUserScans.add(scans.child("upc").getValue(String.class));
                     }
                 }
@@ -112,14 +112,12 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
+        //Code necessary to use the barcode scanning API
         CodeScannerView scannerView = view.findViewById(R.id.scanner_view);
-
         mCodeScanner = new CodeScanner(getActivity(), scannerView);
-
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -134,8 +132,6 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                 });
             }
         });
-
-
         scannerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +144,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         Log.d(TAG, "Logging onStart()");
     }
@@ -198,7 +194,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                     mCodeScanner.startPreview();
                 } else {
                     // permission denied, tell the user we failed to access camera
-                    Toast.makeText( mContext,"Failed to access camera",
+                    Toast.makeText(mContext, "Failed to access camera",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -206,21 +202,19 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         int id = v.getId();
 
-        if(id == R.id.signout_button){
+        if (id == R.id.signout_button) {
             FirebaseAuth.getInstance().signOut();
 
             Intent loginIntent = new Intent(mContext, LoginActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
-        }
-        else if(id == R.id.button_type_upc){
+        } else if (id == R.id.button_type_upc) {
             Intent manualIntent = new Intent(mContext, ManualSearchActivity.class);
             startActivity(manualIntent);
-        }
-        else if(id == R.id.account_button){
+        } else if (id == R.id.account_button) {
             Intent accountIntent = new Intent(mContext, AccountActivity.class);
             startActivity(accountIntent);
         }

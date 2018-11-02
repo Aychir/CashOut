@@ -23,16 +23,12 @@ import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.R;
 
 public class ManualSearchFragment extends Fragment implements View.OnClickListener{
-
     private EditText mSearchField;
     private DatabaseReference mProductsDatabase;
     private Set<String> mListOfUpcs;
-    private Set<String> mListOfNames;
     private Set<String> mListOfUserScans;
     private String userId;
-
     private DatabaseReference mScannedDatabase;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,22 +40,20 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
         mSearchField = v.findViewById(R.id.input_upc);
 
         mListOfUpcs = new HashSet<>();
-        mListOfNames = new HashSet<>();
         mListOfUserScans = new HashSet<>();
 
+        //The database table associated with all scanned products
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
         mProductsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot product: dataSnapshot.getChildren()){
+                    //Use this to check for uniqueness of the item being scanned (to avoid adding it again)
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
-                    mListOfNames.add(product.child("name").getValue(String.class));
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -67,20 +61,24 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getUid();
 
+        //The database table associated with the products scanned and the users that scanned them
         mScannedDatabase = FirebaseDatabase.getInstance().getReference("scanned-products");
         mScannedDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot scans: dataSnapshot.getChildren()){
+                    /*
+                     * Find all children in the table with the current user's ID and
+                     * put all items they scanned into a list to verify uniqueness (to
+                     * avoid duplication)
+                     * */
                     if(scans.child("uid").getValue(String.class).equals(userId)){
                         mListOfUserScans.add(scans.child("upc").getValue(String.class));
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -96,6 +94,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    //Validate the user has attempted to search something in the first place
     private boolean validateForm(){
         boolean valid = true;
         if(mSearchField.getText().toString().isEmpty()){
