@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,8 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     private DatabaseReference mProductsDatabase;
     private Set<String> mListOfUpcs;
     private Set<String> mListOfNames;
+    private Set<String> mListOfUserScans;
+    private String userId;
 
     private DatabaseReference mScannedDatabase;
 
@@ -42,6 +45,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
 
         mListOfUpcs = new HashSet<>();
         mListOfNames = new HashSet<>();
+        mListOfUserScans = new HashSet<>();
 
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
         mProductsDatabase.addValueEventListener(new ValueEventListener() {
@@ -59,12 +63,18 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
             }
         });
 
+        //Get the current user's id
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getUid();
+
         mScannedDatabase = FirebaseDatabase.getInstance().getReference("scanned-products");
         mScannedDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot scans: dataSnapshot.getChildren()){
-
+                    if(scans.child("uid").getValue(String.class).equals(userId)){
+                        mListOfUserScans.add(scans.child("upc").getValue(String.class));
+                    }
                 }
             }
 
@@ -80,8 +90,9 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v){
         if(validateForm()){
-//            AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase, mListOfUpcs, mListOfNames);
-//            findProduct.execute(mSearchField.getText().toString());
+            AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase, mListOfUpcs,
+                    mScannedDatabase, mListOfUserScans, userId);
+            findProduct.execute(mSearchField.getText().toString());
         }
     }
 

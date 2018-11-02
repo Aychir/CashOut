@@ -48,12 +48,10 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
     private CodeScanner mCodeScanner;
     private DatabaseReference mProductsDatabase;
     private Set<String> mListOfUpcs;
-    private Set<String> mListOfNames;
 
     private DatabaseReference mScannedDatabase;
-    private FirebaseAuth mAuth;
     private String userId;
-    private Set<String> mListOfUserIds;
+    private Set<String> mListOfUserScans;
 
     public ScanFragment(){
     }
@@ -77,7 +75,6 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
         view.findViewById(R.id.account_button).setOnClickListener(this);
 
         mListOfUpcs = new HashSet<>();
-        mListOfNames = new HashSet<>();
 
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
         mProductsDatabase.addValueEventListener(new ValueEventListener() {
@@ -85,7 +82,6 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot product: dataSnapshot.getChildren()){
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
-                    mListOfNames.add(product.child("name").getValue(String.class));
                 }
             }
 
@@ -95,23 +91,22 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        //Get the auth from the previous activity
-        if(getActivity() != null) {
-            userId = getActivity().getIntent().getStringExtra("auth");
-        }
-        else{
-            mAuth = FirebaseAuth.getInstance();
-            userId = mAuth.getUid();
-        }
+        //Get the current user's id
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getUid();
 
-        mListOfUserIds = new HashSet<>();
+        mListOfUserScans = new HashSet<>();
 
         mScannedDatabase = FirebaseDatabase.getInstance().getReference("scanned-products");
         mScannedDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot scans: dataSnapshot.getChildren()){
-                    mListOfUserIds.add(scans.child("uid").getValue(String.class));
+                    //Get the user if from scanned products and add any products they may have scanned to check for its
+                    //  existence in the asynctask
+                    if(scans.child("uid").getValue(String.class).equals(userId)){
+                        mListOfUserScans.add(scans.child("upc").getValue(String.class));
+                    }
                 }
             }
 
@@ -133,7 +128,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener{
                     public void run() {
                         Log.v(TAG, result.getText());
                         AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
-                                mListOfUpcs, mListOfNames, mScannedDatabase, mListOfUserIds, userId);
+                                mListOfUpcs, mScannedDatabase, mListOfUserScans, userId);
                         findProduct.execute(result.getText());
                     }
                 });

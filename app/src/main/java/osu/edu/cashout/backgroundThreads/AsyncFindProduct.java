@@ -42,11 +42,10 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
     private DatabaseReference mReference;
     private DatabaseReference mHistory;
     private Set<String> mListOfUpcs;
-    private Set<String> mListOfNames;
-    private Set<String> mListOfIds;
+    private Set<String> mListOfScans;
     private String userId;
 
-    public AsyncFindProduct(FragmentActivity activity, DatabaseReference reference, Set<String> listUpc, Set<String> listName,
+    public AsyncFindProduct(FragmentActivity activity, DatabaseReference reference, Set<String> listUpc,
     DatabaseReference historyReference, Set<String> nameList, String user){
         activityReference = new WeakReference<>(activity);
         progress = new ProgressDialog(activityReference.get());
@@ -54,8 +53,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
         mReference = reference;
         mHistory = historyReference;
         mListOfUpcs = listUpc;
-        mListOfNames = listName;
-        mListOfIds = nameList;
+        mListOfScans = nameList;
         userId = user;
     }
 
@@ -135,25 +133,23 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
 
                     //TODO: Check in our database for any ratings and reviews made for the product and add it to the product
 
-                    //Add new product to the database if its UPC and Name are unique
-                    // and if the product has a name (and upc that must be passed and valid)
-                    if(product.getName() != null && !mListOfUpcs.contains(product.getUpc()) &&
-                            !mListOfNames.contains(product.getName())){
+                    //Add new product to the database if its UPC is not in the db and
+                    // if the product has a name (verification of existence)
+                    if(product.getName() != null && !mListOfUpcs.contains(product.getUpc())){
                         mReference.push().setValue(product);
                     }
 
-                    //TODO: Fix this, not adding to scanned products
                     //User hasn't scanned this product yet, add it to the table of scanned products
-                    if(!mListOfIds.contains(userId) && !mListOfUpcs.contains(product.getUpc())){
+                    if(!mListOfScans.contains(product.getUpc())){
                         ScannedProducts scanned = new ScannedProducts();
                         scanned.setUid(userId);
                         scanned.setUpc(product.getUpc());
                         mHistory.push().setValue(scanned);
                     }
 
-                    if(product.getName() != null){
+                    //if(product.getName() != null){
                         //Launch info activity
-                    }
+                    //}
                 }
                 //API did not give any results for the product
                 else{
