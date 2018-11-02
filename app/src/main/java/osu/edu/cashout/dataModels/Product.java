@@ -12,8 +12,6 @@ public class Product {
     private String mReview;
     private String mImage;
 
-    //TODO: Date scanned attribute?
-
     public Product() {
 
     }

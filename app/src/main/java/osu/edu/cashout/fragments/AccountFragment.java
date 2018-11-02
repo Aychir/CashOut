@@ -1,5 +1,6 @@
 package osu.edu.cashout.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private Context mContext;
     private Set<String> userEmails;
     private Set<String> mUsernames;
+    private ProgressDialog dialog;
 
     //TODO: Rotating screen and being on first name field is wonky
 
@@ -74,12 +76,17 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         mUpdateAccountButton.setOnClickListener(this);
         mDeleteAccountButton.setOnClickListener(this);
 
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("Getting your account info...");
+        dialog.show();
         //Set up necessary FireBase components
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
         if(currentUser != null) {
             //get the reference to the user that is signed-in
             mDbReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+
+
 
             //Read info from the database to display to the user
             mDbReference.addValueEventListener(new ValueEventListener() {
@@ -91,6 +98,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     curUser = dataSnapshot.getValue(User.class);
                     if (curUser != null && mFirstName.getText().toString().isEmpty() && mLastName.getText().toString().isEmpty()
                             && mUsername.getText().toString().isEmpty() && mEmailField.getText().toString().isEmpty()){
+
+                        if(dialog.isShowing()){
+                            dialog.dismiss();
+                        }
+
                         mFirstName.setText(curUser.getFirstName());
                         mLastName.setText(curUser.getLastName());
                         mUsername.setText(curUser.getUsername());
