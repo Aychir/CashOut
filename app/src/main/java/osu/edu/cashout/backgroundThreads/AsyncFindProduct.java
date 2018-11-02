@@ -18,6 +18,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -165,8 +168,13 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                     //User hasn't scanned this product yet, add it to the table of scanned products
                     if (!mListOfScans.contains(product.getUpc())) {
                         ScannedProducts scanned = new ScannedProducts();
+                        //Receiving the date that the object was scanned on
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                        String date = sdf.format(calendar.getTime());
                         scanned.setUid(userId);
                         scanned.setUpc(product.getUpc());
+                        scanned.setDate(date);
                         mHistory.push().setValue(scanned);
                     }
                 }

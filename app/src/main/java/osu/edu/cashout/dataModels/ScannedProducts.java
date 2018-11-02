@@ -3,8 +3,7 @@ package osu.edu.cashout.dataModels;
 public class ScannedProducts {
     private String mUpc;
     private String mUid;
-
-    //TODO: Implementation of date member and getter/setter
+    private String mDate;
 
     public ScannedProducts(){
 
@@ -25,5 +24,9 @@ public class ScannedProducts {
     public void setUid(String id){
         this.mUid = id;
     }
+
+    public String getDate(){ return this.mDate; }
+
+    public void setDate(String curDate){ this.mDate = curDate; }
 
 }
