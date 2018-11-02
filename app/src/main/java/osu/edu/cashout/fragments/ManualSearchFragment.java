@@ -16,7 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
@@ -29,6 +31,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     private Set<String> mListOfUserScans;
     private String userId;
     private DatabaseReference mScannedDatabase;
+    private Map mRatingMapping;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
 
         mListOfUpcs = new HashSet<>();
         mListOfUserScans = new HashSet<>();
+        mRatingMapping = new HashMap();
 
         //The database table associated with all scanned products
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
@@ -48,8 +52,11 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot product: dataSnapshot.getChildren()){
+                    String upc = product.child("upc").getValue(String.class);
                     //Use this to check for uniqueness of the item being scanned (to avoid adding it again)
-                    mListOfUpcs.add(product.child("upc").getValue(String.class));
+                    mListOfUpcs.add(upc);
+                    mRatingMapping.put(upc,
+                            product.child("rating").getValue(Double.class));
                 }
             }
             @Override
@@ -89,7 +96,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     public void onClick(View v){
         if(validateForm()){
             AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase, mListOfUpcs,
-                    mScannedDatabase, mListOfUserScans, userId);
+                    mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
             findProduct.execute(mSearchField.getText().toString());
         }
     }

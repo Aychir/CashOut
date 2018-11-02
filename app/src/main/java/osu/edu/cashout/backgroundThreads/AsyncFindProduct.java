@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -43,10 +44,11 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
     private Set<String> mListOfUpcs;
     private Set<String> mListOfScans;
     private String userId;
+    private Map mRatings;
 
     //Constructor setting all attributes necessary to save results to the necessary database tables
     public AsyncFindProduct(FragmentActivity activity, DatabaseReference reference, Set<String> listUpc,
-                            DatabaseReference historyReference, Set<String> nameList, String user) {
+                            DatabaseReference historyReference, Set<String> nameList, String user, Map ratings) {
         activityReference = new WeakReference<>(activity);
         progress = new ProgressDialog(activityReference.get());
         mReference = reference;
@@ -54,6 +56,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
         mListOfUpcs = listUpc;
         mListOfScans = nameList;
         userId = user;
+        mRatings = ratings;
     }
 
     @Override
@@ -146,7 +149,12 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                         product.setStore(merchantArray.getJSONObject(index).getString("merchant"));
                     }
 
-                    //TODO: Check in our database for any ratings and reviews(?) made for the product and add it to the product
+                    //Check if the product has a rating average in the database and set it
+                    if(mRatings.get(product.getUpc()) != null){
+                        product.setRating((Double) mRatings.get(product.getUpc()));
+                        Log.v(TAG, "Rating: " + product.getRating());
+                    }
+
 
                     //Add new product to the database if its UPC is not in the db and
                     // if the product has a name (verification of existence)
@@ -161,10 +169,6 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                         scanned.setUpc(product.getUpc());
                         mHistory.push().setValue(scanned);
                     }
-
-                    //if(product.getName() != null){
-                    //Launch info activity
-                    //}
                 }
                 //API did not give any results for the product
                 else {
@@ -180,7 +184,6 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                 Log.v(TAG, "Could not successfully connect to the API.");
             }
         } catch (Exception e) {
-            Log.d(TAG, "Unable to process the request");
             e.printStackTrace();
         }
 

@@ -26,7 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.Result;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
@@ -51,6 +53,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     private DatabaseReference mScannedDatabase;
     private String userId;
     private Set<String> mListOfUserScans;
+    private Map mRatingMapping;
 
     @Override
     public void onAttach(Context c) {
@@ -72,6 +75,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
 
         mListOfUpcs = new HashSet<>();
         mListOfUserScans = new HashSet<>();
+        mRatingMapping = new HashMap();
 
         //The database table associated with all scanned products
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
@@ -81,6 +85,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                 for (DataSnapshot product : dataSnapshot.getChildren()) {
                     //Use this to check for uniqueness of the item being scanned (to avoid adding it again)
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
+                    mRatingMapping.put(product.child("upc").getValue(String.class),
+                            product.child("rating").getValue(Double.class));
                 }
             }
 
@@ -126,7 +132,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                     public void run() {
                         Log.v(TAG, result.getText());
                         AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
-                                mListOfUpcs, mScannedDatabase, mListOfUserScans, userId);
+                                mListOfUpcs, mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
                         findProduct.execute(result.getText());
                     }
                 });
