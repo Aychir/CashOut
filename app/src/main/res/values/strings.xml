@@ -22,5 +22,6 @@
     <string name="review_description">Review Description</string>
     <string name="save">Save</string>
     <string name="rating_info">/ 5.0</string>
-
+    <string name="history">History</string>
+    <string name="scan">Scan</string>
 </resources>
