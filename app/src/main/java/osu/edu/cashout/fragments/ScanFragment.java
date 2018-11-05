@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -163,9 +162,9 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             //In the case that the user hasn't permitted the camera at this point
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.CAMERA},
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
                         CAMERA_PERMISSION);
+                Log.v(TAG, "Checking for permission");
 
             }
             //If permission was granted then start the preview of the scanner
@@ -191,6 +190,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
+        Log.v(TAG, "In this big method");
         switch (requestCode) {
             case CAMERA_PERMISSION: {
                 // If request is cancelled, the result arrays are empty.
@@ -202,6 +202,11 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                     // permission denied, tell the user we failed to access camera
                     Toast.makeText(mContext, "Failed to access camera",
                             Toast.LENGTH_SHORT).show();
+                    Intent manual = new Intent(mContext, ManualSearchActivity.class);
+                    if(getActivity() != null) {
+                        getActivity().finish();
+                    }
+                    startActivity(manual);
                 }
             }
         }

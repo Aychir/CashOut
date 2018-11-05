@@ -8,8 +8,6 @@ public class User {
     private String mUsername;
     private String mPassword;
 
-    //Note: We obviously do not want to store password of the user in this database
-    //  Also date of birth will have to wait, if we implement it at all
 
     public User(){
 

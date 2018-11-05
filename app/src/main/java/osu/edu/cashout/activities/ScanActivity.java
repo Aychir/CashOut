@@ -11,15 +11,12 @@ import osu.edu.cashout.R;
 
 @SuppressWarnings({"LogNotTimber"})
 public class ScanActivity extends AppCompatActivity{
-
     private static final String TAG = "ScanActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-
-        Log.v(TAG, "Logging onCreate() method");
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
@@ -29,6 +26,8 @@ public class ScanActivity extends AppCompatActivity{
                     .add(R.id.fragment_container, scanFragment)
                     .commit();
         }
+
+        Log.v(TAG, "Logging onCreate() method");
 
     }
 

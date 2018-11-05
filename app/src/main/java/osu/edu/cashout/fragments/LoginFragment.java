@@ -59,6 +59,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
         mUserAuth = FirebaseAuth.getInstance();
+        currentUser = mUserAuth.getCurrentUser();
+
 
         mEmailField = v.findViewById(R.id.email);
         mPasswordField = v.findViewById(R.id.password);
@@ -70,19 +72,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         Button login = v.findViewById(R.id.login_button);
         login.setOnClickListener(this);
 
-        currentUser = mUserAuth.getCurrentUser();
-
         return v;
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        //If there is a current user, sign in and skip authentication
 
         //Check for a current user and we need to check if the user is in the database
         if(currentUser != null){
-            Log.v("User signed in", "User not null ");
+            Log.v("TAG", "User signed in");
             startScanActivity();
         }
     }
@@ -100,6 +99,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onStop() {
         super.onStop();
         Log.d(TAG, "Logging onStop()");
+//        if (mAuthListener != null) {
+//            mUserAuth.removeAuthStateListener(mAuthListener);
+//        }
     }
 
 
@@ -130,6 +132,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the camera
+                                Log.v(TAG, "Successful Task");
                                 startScanActivity();
                             } else {
                                 // If sign in fails, display a message to the user.
