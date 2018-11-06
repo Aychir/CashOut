@@ -1,23 +1,18 @@
 package osu.edu.cashout;//import java.util.Date;
 
+import java.util.Date;
+
 public class Review {
 
-    private String mReviewId;
     private Float mScore;
     private String mTitle;
     private String mDescription;
-//    private Date mDateCreated;
+    private String mUserId;
+    private String mUpc;
+    private String mDateCreated;
 
     public Review(){
 
-    }
-
-    public String getReviewId() {
-        return mReviewId;
-    }
-
-    public void setReviewId(String mReviewId) {
-        this.mReviewId = mReviewId;
     }
 
     public Float getScore() {
@@ -42,6 +37,30 @@ public class Review {
 
     public void setDescription(String mDescription) {
         this.mDescription = mDescription;
+    }
+
+    public String getUserId() {
+        return mUserId;
+    }
+
+    public void setUserId(String id) {
+        this.mUserId = id;
+    }
+
+    public String getUpc(){
+        return mUpc;
+    }
+
+    public void setUpc(String upc) {
+        this.mUpc = upc;
+    }
+
+    public String getDate(){
+        return mDateCreated;
+    }
+
+    public void setDate(String date){
+        this.mDateCreated = date;
     }
 
 }
