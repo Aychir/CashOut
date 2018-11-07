@@ -1,5 +1,6 @@
 package osu.edu.cashout.activities;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import osu.edu.cashout.R;
 
 @SuppressWarnings({"LogNotTimber"})
 public class ScanActivity extends AppCompatActivity{
-
     private static final String TAG = "ScanActivity";
 
     @Override
@@ -18,16 +18,16 @@ public class ScanActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
 
-        Log.v(TAG, "Logging onCreate() method");
-
         FragmentManager fm = getSupportFragmentManager();
-
-
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        if(fragment == null) {
             ScanFragment scanFragment = new ScanFragment();
-
             fm.beginTransaction()
                     .add(R.id.fragment_container, scanFragment)
                     .commit();
+        }
+
+        Log.v(TAG, "Logging onCreate() method");
 
     }
 

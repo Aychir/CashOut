@@ -1,0 +1,326 @@
+Index: app/src/main/java/osu/edu/cashout/Activities/AccountActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Activities/AccountActivity.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/activities/AccountActivity.java	(date 1540486026000)
+@@ -1,11 +1,11 @@
+-package osu.edu.cashout.Activities;
++package osu.edu.cashout.activities;
+ 
+ import android.os.Bundle;
+ import android.support.v4.app.Fragment;
+ import android.support.v4.app.FragmentManager;
+ import android.support.v7.app.AppCompatActivity;
+ 
+-import osu.edu.cashout.Fragments.AccountFragment;
++import osu.edu.cashout.fragments.AccountFragment;
+ import osu.edu.cashout.R;
+ 
+ public class AccountActivity extends AppCompatActivity {
+Index: app/src/main/java/osu/edu/cashout/Activities/LoginActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Activities/LoginActivity.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/activities/LoginActivity.java	(date 1540486026000)
+@@ -1,4 +1,4 @@
+-package osu.edu.cashout.Activities;
++package osu.edu.cashout.activities;
+ 
+ import android.support.v4.app.Fragment;
+ import android.support.v4.app.FragmentManager;
+@@ -6,7 +6,7 @@
+ import android.support.v7.app.AppCompatActivity;
+ import android.util.Log;
+ 
+-import osu.edu.cashout.Fragments.LoginFragment;
++import osu.edu.cashout.fragments.LoginFragment;
+ import osu.edu.cashout.R;
+ 
+ @SuppressWarnings({"LogNotTimber"})
+Index: app/src/main/java/osu/edu/cashout/Activities/ScanActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Activities/ScanActivity.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/activities/ScanActivity.java	(date 1540486026000)
+@@ -1,11 +1,11 @@
+-package osu.edu.cashout.Activities;
++package osu.edu.cashout.activities;
+ 
+ import android.support.v4.app.FragmentManager;
+ import android.support.v7.app.AppCompatActivity;
+ import android.os.Bundle;
+ import android.util.Log;
+ 
+-import osu.edu.cashout.Fragments.ScanFragment;
++import osu.edu.cashout.fragments.ScanFragment;
+ import osu.edu.cashout.R;
+ 
+ @SuppressWarnings({"LogNotTimber"})
+Index: app/src/main/java/osu/edu/cashout/Activities/SignupActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Activities/SignupActivity.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/activities/SignupActivity.java	(date 1540486026000)
+@@ -1,4 +1,4 @@
+-package osu.edu.cashout.Activities;
++package osu.edu.cashout.activities;
+ 
+ import android.os.Bundle;
+ import android.support.v4.app.Fragment;
+@@ -6,7 +6,7 @@
+ import android.support.v7.app.AppCompatActivity;
+ import android.util.Log;
+ 
+-import osu.edu.cashout.Fragments.SignupFragment;
++import osu.edu.cashout.fragments.SignupFragment;
+ import osu.edu.cashout.R;
+ 
+ @SuppressWarnings({"LogNotTimber"})
+Index: app/src/main/java/osu/edu/cashout/Fragments/AccountFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Fragments/AccountFragment.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/fragments/AccountFragment.java	(date 1540486026000)
+@@ -1,4 +1,4 @@
+-package osu.edu.cashout.Fragments;
++package osu.edu.cashout.fragments;
+ 
+ import android.content.Context;
+ import android.content.Intent;
+@@ -25,8 +25,8 @@
+ import java.util.HashSet;
+ import java.util.Set;
+ 
+-import osu.edu.cashout.Activities.LoginActivity;
+-import osu.edu.cashout.Activities.ScanActivity;
++import osu.edu.cashout.activities.LoginActivity;
++import osu.edu.cashout.activities.ScanActivity;
+ import osu.edu.cashout.R;
+ import osu.edu.cashout.User;
+ 
+Index: app/src/main/java/osu/edu/cashout/Fragments/LoginFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Fragments/LoginFragment.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/fragments/LoginFragment.java	(date 1540486026000)
+@@ -1,4 +1,4 @@
+-package osu.edu.cashout.Fragments;
++package osu.edu.cashout.fragments;
+ 
+ import android.content.Context;
+ import android.content.Intent;
+@@ -21,8 +21,8 @@
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseUser;
+ 
+-import osu.edu.cashout.Activities.ScanActivity;
+-import osu.edu.cashout.Activities.SignupActivity;
++import osu.edu.cashout.activities.ScanActivity;
++import osu.edu.cashout.activities.SignupActivity;
+ import osu.edu.cashout.R;
+ 
+ @SuppressWarnings({"LogNotTimber"})
+Index: app/src/main/java/osu/edu/cashout/Fragments/ScanFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Fragments/ScanFragment.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/fragments/ScanFragment.java	(date 1540488180000)
+@@ -1,4 +1,4 @@
+-package osu.edu.cashout.Fragments;
++package osu.edu.cashout.fragments;
+ 
+ import android.Manifest;
+ import android.content.Context;
+@@ -17,10 +17,20 @@
+ import android.widget.FrameLayout;
+ import android.widget.Toast;
+ 
++import com.google.android.gms.tasks.OnFailureListener;
++import com.google.android.gms.tasks.OnSuccessListener;
++import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.ml.vision.FirebaseVision;
++import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
++import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
++import com.google.firebase.ml.vision.common.FirebaseVisionImage;
++import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+ 
+-import osu.edu.cashout.Activities.AccountActivity;
+-import osu.edu.cashout.Activities.LoginActivity;
++import java.util.List;
++
++import osu.edu.cashout.activities.AccountActivity;
++import osu.edu.cashout.activities.LoginActivity;
+ import osu.edu.cashout.CameraPreview;
+ import osu.edu.cashout.R;
+ 
+@@ -148,6 +158,45 @@
+             //TODO: Here release the camera and start a background process to contact the API
+             camera.release();
+ 
++            FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
++                    .setWidth(480)   // 480x360 is typically sufficient for
++                    .setHeight(360)  // image recognition
++                    .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
++                    .build();
++
++
++            //Create firebase image object from the byte array
++            FirebaseVisionImage image = FirebaseVisionImage.fromByteArray(data, metadata);
++
++            Log.v(TAG, "" + image);
++
++            //Create an instance of the barcode detector
++            FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
++                    .getVisionBarcodeDetector();
++
++            //Attempt to retrieve the result from the detector
++            Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
++                    .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
++                        @Override
++                        public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
++                            // Task completed successfully
++                            // ...
++                            Log.v(TAG, barcodes.size() + "");
++                            for(FirebaseVisionBarcode barcode: barcodes){
++                                Log.v(TAG, "" + barcode);
++                            }
++                        }
++                    })
++                    .addOnFailureListener(new OnFailureListener() {
++                        @Override
++                        public void onFailure(@NonNull Exception e) {
++                            // Task failed with an exception
++                            // ...
++                            Log.v(TAG, "FAILED");
++                        }
++                    });
++
++            Log.v(TAG, "Results " + result);
+             //TODO: Create some sort of progress box while we grab UPC code
+ 
+             //TODO: Once the asynctask returns, we launch a new activity to view the product info or restart camera preview (invalid response)
+Index: app/src/main/java/osu/edu/cashout/Fragments/SignupFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/osu/edu/cashout/Fragments/SignupFragment.java	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/java/osu/edu/cashout/fragments/SignupFragment.java	(date 1540486026000)
+@@ -1,4 +1,4 @@
+-package osu.edu.cashout.Fragments;
++package osu.edu.cashout.fragments;
+ 
+ import android.content.Context;
+ import android.content.Intent;
+@@ -27,7 +27,7 @@
+ import java.util.HashSet;
+ import java.util.Set;
+ 
+-import osu.edu.cashout.Activities.ScanActivity;
++import osu.edu.cashout.activities.ScanActivity;
+ import osu.edu.cashout.R;
+ import osu.edu.cashout.User;
+ 
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/src/main/AndroidManifest.xml	(date 1540486026000)
+@@ -16,7 +16,7 @@
+         <meta-data
+             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+             android:value="barcode" />
+-        <activity android:name=".Activities.LoginActivity">
++        <activity android:name=".activities.LoginActivity">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+ 
+@@ -24,7 +24,7 @@
+             </intent-filter>
+         </activity>
+ 
+-        <activity android:name=".Activities.SignupActivity">
++        <activity android:name=".activities.SignupActivity">
+             <intent-filter>
+                 <action android:name="osu.edu.cashout.Signup"/>
+ 
+@@ -32,7 +32,7 @@
+             </intent-filter>
+         </activity>
+ 
+-        <activity android:name=".Activities.ScanActivity"
++        <activity android:name=".activities.ScanActivity"
+             android:screenOrientation="portrait" >
+             <intent-filter>
+                 <action android:name="osu.edu.cashout.Scan" />
+@@ -41,7 +41,7 @@
+             </intent-filter>
+         </activity>
+ 
+-        <activity android:name=".Activities.AccountActivity">
++        <activity android:name=".activities.AccountActivity">
+             <intent-filter>
+                 <action android:name="osu.edu.cashout.Account"/>
+ 
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision 20385e7500604b23666d4cc674b36a9cbf106c3d)
++++ app/build.gradle	(date 1540489049000)
+@@ -21,6 +21,7 @@
+ dependencies {
+     implementation fileTree(dir: 'libs', include: ['*.jar'])
+     implementation 'com.android.support:appcompat-v7:27.1.1'
++//    implementation 'com.android.support:exifinterface-26.1.0'
+     implementation 'com.android.support:support-media-compat:27.1.1'
+     implementation 'com.android.support:support-v4:27.1.1'
+     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+@@ -28,11 +29,11 @@
+     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+     implementation 'com.google.firebase:firebase-core:16.0.4'
+-    implementation 'com.google.firebase:firebase-ml-vision:17.0.1'
+-    implementation 'com.google.firebase:firebase-auth:16.0.4'
+-    implementation 'com.google.firebase:firebase-firestore:17.1.1'
++    implementation 'com.google.firebase:firebase-ml-vision:18.0.1'
++    implementation 'com.google.firebase:firebase-auth:16.0.5'
++    implementation 'com.google.firebase:firebase-firestore:17.1.2'
+     implementation "android.arch.core:runtime:1.1.1"
+-    implementation 'com.google.firebase:firebase-database:16.0.3'
++    implementation 'com.google.firebase:firebase-database:16.0.4'
+ }
+ 
+ apply plugin: 'com.google.gms.google-services'
+diff --git .idea/caches/build_file_checksums.ser .idea/caches/build_file_checksums.ser
+index 00464f340738c9b70e73e4ffca678677f2972ef5..07db20430796c8762997864723c956da8ea1bf40
+GIT binary patch
+literal 537
+zc${1FmVvdnh`~NNKUXg?FQq6yGexf?KR>5fFEb@IQ7^qHF(oHeub?PDD>b=9F91S2
+zm1gFoxMk*~I%lLNXBU^|7Q2L-Ts|(GuF1r}<i#MFTj`TnT;dMa8(f)}9Fm!vT3nKt
+zTj0aMpIeEdv4nx&Co8cmQNOe#Ge_SyvB0{bfPsNAZH;f^ZJ@gZL2`N^IX#cW;tZfX
+zEBmd3hs6>uGBYr_F>vMNC#JY1CYR(Fc`|U8WE7<qXXNLkR20}dFn|D0IR}sw0Ae<v
+zMa8KlC7F5Y#ZX_B7BMhIJFWRF{)3Gp<N*@{1IT6uf#v_C4o}S7`cxw-E;vnJRl0;h
+zLqD`QwWwG>IU}<uGcj2os$U-wI0dOiC7G$krG*T23~V4nuE_S>>}S}-^0I+*#+x5b
+zbtMcuNuWT3Sq)eC!ftk|sPW-vqITCBuXx(NC}9xD$xlwq!ES1nk3jVQ$muV;X3w-d
+z`}I-@gCHI^2<$EkIR94jhs7#~g9V?G^npev78K}XcZUp1zPhyoA5SUAwI}lxB9~VH
+E096gUIRF3v
+

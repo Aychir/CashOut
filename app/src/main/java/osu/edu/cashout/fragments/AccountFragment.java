@@ -1,5 +1,6 @@
 package osu.edu.cashout.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ import java.util.Set;
 import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.R;
-import osu.edu.cashout.User;
+import osu.edu.cashout.dataModels.User;
 
 
 public class AccountFragment extends Fragment implements View.OnClickListener{
@@ -44,6 +45,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private Context mContext;
     private Set<String> userEmails;
     private Set<String> mUsernames;
+    private ProgressDialog dialog;
+
+    //TODO: Rotating screen and being on first name field is wonky
 
     @Override
     public void onAttach(Context c){
@@ -72,6 +76,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         mUpdateAccountButton.setOnClickListener(this);
         mDeleteAccountButton.setOnClickListener(this);
 
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("Getting your account info...");
+        dialog.show();
         //Set up necessary FireBase components
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
@@ -79,13 +86,23 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
             //get the reference to the user that is signed-in
             mDbReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
 
+
+
             //Read info from the database to display to the user
             mDbReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     //Called initially, and then any time the information in fields change
+
+                    //If there is a current user and all fields are empty (on fragment creation) will we want to pull info from the database
                     curUser = dataSnapshot.getValue(User.class);
-                    if (curUser != null){
+                    if (curUser != null && mFirstName.getText().toString().isEmpty() && mLastName.getText().toString().isEmpty()
+                            && mUsername.getText().toString().isEmpty() && mEmailField.getText().toString().isEmpty()){
+
+                        if(dialog.isShowing()){
+                            dialog.dismiss();
+                        }
+
                         mFirstName.setText(curUser.getFirstName());
                         mLastName.setText(curUser.getLastName());
                         mUsername.setText(curUser.getUsername());

@@ -1,4 +1,0 @@
--Move a lot of the activity code out into corresponding fragments, keeping similar logic
-
--Implement any necessary lifecycle methods in both the activities and fragments
-    -Make the physical back button of the device destroy the activity in both Login and Scan

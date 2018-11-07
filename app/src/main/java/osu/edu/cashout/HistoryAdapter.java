@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import osu.edu.cashout.dataModels.Product;
+
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
     private Product[] mDataset;
 
