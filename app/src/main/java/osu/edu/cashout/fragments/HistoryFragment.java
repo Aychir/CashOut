@@ -30,6 +30,7 @@ import java.util.Set;
 
 import osu.edu.cashout.HistoryAdapter;
 import osu.edu.cashout.R;
+import osu.edu.cashout.dataModels.Product;
 
 public class HistoryFragment extends Fragment implements View.OnClickListener {
     private RecyclerView mRecyclerView;
@@ -70,7 +71,7 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         if(currentUser != null) {
             mScannedProductsReference = FirebaseDatabase.getInstance().getReference("scanned-products");
             mProductsReference = FirebaseDatabase.getInstance().getReference("products");
-            mRatingsReference = FirebaseDatabase.getInstance().getReference("reviews");
+            //mRatingsReference = FirebaseDatabase.getInstance().getReference("reviews");
 
             //
             mScannedProductsReference.orderByChild("uid").equalTo(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {

@@ -30,6 +30,7 @@ import java.util.Set;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.Review;
+import osu.edu.cashout.dataModels.Product;
 
 
 public class MakeReviewFragment extends Fragment implements View.OnClickListener {
@@ -43,6 +44,8 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private DatabaseReference mDbReference;
     private Set<Review> setOfReviews;
     private Set<String> setOfReviewIds;
+
+    private static final String TAG = "MakeReviewFragment";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -165,23 +168,64 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                     }
 
                     //Set or update the average rating of a product after making the review
-//                    DatabaseReference productDatabase = FirebaseDatabase.getInstance().getReference("products");
-//                    productDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot product : dataSnapshot.getChildren()) {
-//                                if(product.child("upc").equals(upcCode)){
-//
-//                                }
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                        }
-//                    });
-//                    Intent historyActivity = new Intent(getContext(), HistoryActivity.class);
-//                    startActivity(historyActivity);
+                    final DatabaseReference productDatabase = FirebaseDatabase.getInstance().getReference("products");
+                    productDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.v(TAG, "Start of on data change");
+                                for (DataSnapshot product : dataSnapshot.getChildren()) {
+                                    if (product.child("upc").getValue(String.class).equals(upcCode)) {
+                                        Log.v(TAG, "Found a match");
+                                        //Find the product user is reviewing and get its id
+                                        final Product prod = product.getValue(Product.class);
+                                        final String prodId = product.getKey();
+                                        Log.v(TAG, prod.getRating() + "");
+                                        //Product has a rating, so we update the rating
+                                        if (prod.getRating() > 0.0) {
+                                            Log.v(TAG, "Object has a rating");
+                                            //Get reference to entire database of reviews
+                                            DatabaseReference reviewReference = FirebaseDatabase.getInstance().getReference("reviews");
+                                            reviewReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    int count = 0;
+                                                    double sum = 0.0;
+                                                    for (DataSnapshot review : dataSnapshot.getChildren()) {
+                                                        if (review.child("upc").getValue(String.class).equals(upcCode)) {
+                                                            count+=1;
+                                                            sum += review.child("score").getValue(Double.class);
+                                                        }
+                                                    }
+                                                    double average = sum/count;
+                                                    prod.setRating(average);
+                                                    Map<String, Object> newRating = new HashMap<>();
+                                                    newRating.put("rating", average);
+                                                    productDatabase.child(prodId).updateChildren(newRating);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                }
+                                            });
+                                        }
+                                        //Product doesn't have a rating, so set it to the only score it has been given
+                                        else{
+                                            Log.v(TAG, "Object has no rating");
+                                            Map<String, Object> newRating = new HashMap<>();
+                                            newRating.put("rating", mReview.getScore());
+                                            productDatabase.child(prodId).updateChildren(newRating);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                    //Intent historyActivity = new Intent(getContext(), HistoryActivity.class);
+//                  startActivity(historyActivity);
                 }
                 break;
         }
@@ -211,7 +255,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         double ratingValue = Double.parseDouble(rating);
         mReview.setScore(ratingValue);
 
-        //TODO: Check if rating is less than or equal to 5.0
+        //TODO: Check if rating is less than or equal to 5.0 and greater than 0.0
 
         //Set the description
         String description = mDescription.getText().toString();

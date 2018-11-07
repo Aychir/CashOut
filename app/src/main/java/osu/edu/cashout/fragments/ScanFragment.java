@@ -36,8 +36,6 @@ import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ManualSearchActivity;
 
-//TODO: Check what happens when a user denies access to camera
-
 //TODO: Abstract the database stuff out between here and manual search
 
 @SuppressWarnings({"LogNotTimber"})

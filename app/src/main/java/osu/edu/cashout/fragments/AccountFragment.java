@@ -49,6 +49,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
 
     //TODO: Rotating screen and being on first name field is wonky
 
+    //TODO: Add signout button onto here
+
     @Override
     public void onAttach(Context c){
         super.onAttach(getContext());
