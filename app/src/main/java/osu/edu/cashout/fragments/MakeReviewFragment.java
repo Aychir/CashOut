@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -47,9 +48,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private Set<String> setOfReviewIds;
 
     private static final String TAG = "MakeReviewFragment";
-
-    //TODO: Fix formatting of rating field
-
+    
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_review, container, false);
@@ -118,7 +117,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         //loop through the set, set edit text fields if the user has made a review for the product
         for (Review rev : setOfReviews) {
             if (rev.getUpc().equals(upcCode)) {
-                mRating.setText(String.format(Locale.getDefault(), "%f%n", rev.getScore()));
+                DecimalFormat format = new DecimalFormat("#.##");
+                String formatted = format.format(rev.getScore());
+                mRating.setText(formatted);
                 mTitle.setText(rev.getTitle());
                 if (rev.getDescription() != null) {
                     mDescription.setText(rev.getDescription());
