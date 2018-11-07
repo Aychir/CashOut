@@ -16,19 +16,38 @@
         android:id="@+id/input_upc"
         android:freezesText="true"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/history_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/history"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"/>
+
+        <Button
             android:id="@+id/manual_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search" />
+            android:text="@string/search"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/account_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/account"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
 
 </LinearLayout>

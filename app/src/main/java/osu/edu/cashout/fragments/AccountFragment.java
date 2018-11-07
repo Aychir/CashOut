@@ -27,8 +27,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import osu.edu.cashout.activities.LoginActivity;
-import osu.edu.cashout.activities.ScanActivity;
+//import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.R;
+import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.User;
 
 
@@ -62,6 +63,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         //Find views by ID
         Button mUpdateAccountButton = v.findViewById(R.id.update_button);
         Button mDeleteAccountButton = v.findViewById(R.id.delete_button);
+        Button mSignoutButton = v.findViewById(R.id.signout_button);
         mFirstName = v.findViewById(R.id.first_name);
         mLastName = v.findViewById(R.id.last_name);
         mUsername = v.findViewById(R.id.username);
@@ -75,6 +77,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         //Set on click listeners for the buttons
         mUpdateAccountButton.setOnClickListener(this);
         mDeleteAccountButton.setOnClickListener(this);
+        mSignoutButton.setOnClickListener(this);
 
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage("Getting your account info...");
@@ -194,9 +197,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     Toast.makeText(getActivity(), "Currently unable to delete your account, try again later.",
                             Toast.LENGTH_SHORT).show();
                 }
+            case R.id.signout_button:
+                FirebaseAuth.getInstance().signOut();
+
+                Intent loginIntent = new Intent(mContext, LoginActivity.class);
+                loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(loginIntent);
 
                 break;
         }
+
 
     }
 

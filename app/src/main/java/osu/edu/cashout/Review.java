@@ -1,25 +1,25 @@
-package osu.edu.cashout;//import java.util.Date;
+package osu.edu.cashout;
 
-import java.util.Date;
 
 public class Review {
 
-    private Float mScore;
+    private double mScore;
     private String mTitle;
     private String mDescription;
     private String mUserId;
     private String mUpc;
     private String mDateCreated;
+    private String mReviewId;
 
     public Review(){
 
     }
 
-    public Float getScore() {
+    public double getScore() {
         return mScore;
     }
 
-    public void setScore(Float mScore) {
+    public void setScore(Double mScore) {
         this.mScore = mScore;
     }
 
@@ -61,6 +61,14 @@ public class Review {
 
     public void setDate(String date){
         this.mDateCreated = date;
+    }
+
+    public String getReviewId(){
+        return mReviewId;
+    }
+
+    public void setReviewId(String id){
+        this.mReviewId = id;
     }
 
 }

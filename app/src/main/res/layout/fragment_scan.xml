@@ -21,11 +21,11 @@
             android:layout_alignParentBottom="true"/>
 
         <Button
-            android:id="@+id/signout_button"
+            android:id="@+id/history_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_out"
-            android:layout_alignParentEnd="true"
+            android:text="@string/history"
+            android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"/>
 
         <Button
@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/account"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"/>
 
         <com.budiyev.android.codescanner.CodeScannerView
