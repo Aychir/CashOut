@@ -72,8 +72,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             holder.mItemIcon.setImageResource(R.drawable.test_icon);
         }
         holder.mItemName.setText(mDataset[position].getName());
-        holder.mItemRating.setText("Average Rating: " + Double.toString(mDataset[position].getRating()) + "/5.0");
-
+        if(mDataset[position].getRating() == 0.0){
+            holder.mItemRating.setText("Average Rating: N/A");
+        }
+        else{
+            holder.mItemRating.setText("Average Rating: " + Double.toString(mDataset[position].getRating()) + "/5.0");
+        }
     }
 
     @Override

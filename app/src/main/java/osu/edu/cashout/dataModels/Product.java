@@ -7,8 +7,8 @@ public class Product {
     private double mLowestPrice;
     private double mHighestPrice;
     private double mCurrentPrice;
-    private String mStore;
     private double mRating;
+    private String mStore;
     private String mReview;
     private String mImage;
 
@@ -56,14 +56,6 @@ public class Product {
         this.mCurrentPrice = currentPrice;
     }
 
-    public String getStore(){
-        return mStore;
-    }
-
-    public void setStore(String store){
-        this.mStore = store;
-    }
-
     public double getRating() {
         return mRating;
     }
@@ -71,7 +63,6 @@ public class Product {
     public void setRating(double rating) {
         this.mRating = rating;
     }
-
 
     public String getImage() {
         return mImage;
@@ -87,6 +78,14 @@ public class Product {
 
     public void setReview(String review) {
         this.mReview = review;
+    }
+
+    public String getStore(){
+        return mStore;
+    }
+
+    public void setStore(String merchant){
+        this.mStore = merchant;
     }
 
 
