@@ -122,11 +122,10 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
             case (R.id.scan_button):
                 Intent scanIntent = new Intent(getActivity(), ScanActivity.class);
                 startActivity(scanIntent);
-
+                break;
             case (R.id.account_button):
                 Intent accountIntent = new Intent(getActivity(), AccountActivity.class);
                 startActivity(accountIntent);
-
                 break;
         }
     }

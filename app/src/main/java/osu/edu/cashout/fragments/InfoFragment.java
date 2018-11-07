@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import osu.edu.cashout.R;
+import osu.edu.cashout.activities.AccountActivity;
+import osu.edu.cashout.activities.HistoryActivity;
 import osu.edu.cashout.activities.MakeReviewActivity;
 import osu.edu.cashout.dataModels.Product;
 
@@ -30,6 +33,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     private TextView mCurrentPrice;
     private TextView mCustomerReview;
     private Button mCreateReviewButton;
+    private Button mHistoryButton;
+    private Button mAccountButton;
     private Product mProduct;
     private String mProductUPC;
     private FirebaseAuth mUserAuth;
@@ -45,6 +50,12 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         //Set onclick listeners to the buttons on the screen
         mCreateReviewButton = v.findViewById(R.id.create_review_button);
         mCreateReviewButton.setOnClickListener(this);
+
+        mHistoryButton = v.findViewById(R.id.history_button);
+        mHistoryButton.setOnClickListener(this);
+
+        mAccountButton = v.findViewById(R.id.account_button);
+        mAccountButton.setOnClickListener(this);
 
         mProductTitle = v.findViewById(R.id.productTitle);
         mHighPrice = v.findViewById(R.id.highPrice);
@@ -83,8 +94,21 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        Log.v("InfoFragment", v.toString() + "");
+        int id = v.getId();
+        switch (id) {
+            case R.id.history_button:
+                Log.v("InfoFragment",   "in history");
+                Intent historyIntent = new Intent(getContext(), HistoryActivity.class);
+                startActivity(historyIntent);
+                break;
+            case R.id.account_button:
+                Log.v("InfoFragment",   "in account");
+                Intent accountIntent = new Intent(getContext(), AccountActivity.class);
+                startActivity(accountIntent);
+                break;
             case R.id.create_review_button:
+                Log.v("InfoFragment",   "in create review");
                 Intent makeReviewActivity = new Intent(getContext(), MakeReviewActivity.class);
                 makeReviewActivity.putExtra("upc", mProductUPC);
                 startActivity(makeReviewActivity);

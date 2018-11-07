@@ -191,12 +191,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     FirebaseAuth.getInstance().signOut();
 
                     Intent loginIntent = new Intent(mContext, LoginActivity.class);
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(loginIntent);
                 }
                 else{
                     Toast.makeText(getActivity(), "Currently unable to delete your account, try again later.",
                             Toast.LENGTH_SHORT).show();
                 }
+                break;
             case R.id.signout_button:
                 FirebaseAuth.getInstance().signOut();
 
