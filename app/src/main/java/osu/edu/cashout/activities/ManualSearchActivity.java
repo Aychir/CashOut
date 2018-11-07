@@ -16,7 +16,7 @@ public class ManualSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_search);
-
+        setTitle("Manual Product Search");
         Log.v(TAG, "Logging onCreate() method");
 
         FragmentManager fm = getSupportFragmentManager();
