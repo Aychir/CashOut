@@ -215,7 +215,6 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
 
         if (id == R.id.history_button) {
             Intent historyIntent = new Intent(mContext, HistoryActivity.class);
-            historyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(historyIntent);
         } else if (id == R.id.button_type_upc) {
             Intent manualIntent = new Intent(mContext, ManualSearchActivity.class);
