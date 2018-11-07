@@ -48,7 +48,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private Set<String> setOfReviewIds;
 
     private static final String TAG = "MakeReviewFragment";
-    
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_review, container, false);
