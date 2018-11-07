@@ -39,7 +39,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position){
         Log.v("OnBindViewHolder", holder.toString());
-//        holder.mItemIcon.setImageResource(R.drawable.common_full_open_on_phone);
 //        holder.mItemName.setText();
 //        holder.mItemRating.setText();
     }

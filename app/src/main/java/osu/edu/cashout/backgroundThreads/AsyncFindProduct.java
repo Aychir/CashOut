@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 
 import osu.edu.cashout.R;
+import osu.edu.cashout.activities.InfoActivity;
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.Product;
 import osu.edu.cashout.dataModels.ScannedProducts;
@@ -209,6 +210,9 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
         if (name != null) {
             //Launch info activity because we found a valid object
             Log.v(TAG, "Object found, launching product info");
+            Intent infoActivity = new Intent(activityReference.get(), InfoActivity.class);
+            infoActivity.putExtra("upc", product.getUpc());
+            referencedActivity.startActivity(infoActivity);
         } else {
             //If it fails, we must launch scan activity again
             Log.v(TAG, "Object not found, relaunching the fragment the user used to find the product");

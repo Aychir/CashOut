@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             tools:drawableStart="@tools:sample/avatars"
             android:gravity="center"
-            tools:text="Text Here" />
+            android:textSize="20sp"/>
 
     </LinearLayout>
 
@@ -29,22 +29,36 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/productPrice"
+            android:id="@+id/lowPrice"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/amazonReview"
+            android:id="@+id/highPrice"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/currentPrice"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/customerReview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/create_review_button"
