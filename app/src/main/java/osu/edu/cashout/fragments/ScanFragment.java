@@ -30,9 +30,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import osu.edu.cashout.activities.HistoryActivity;
 import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.activities.AccountActivity;
-import osu.edu.cashout.activities.LoginActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ManualSearchActivity;
 
@@ -66,7 +66,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
         Log.v(TAG, "Logging onCreateView()");
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
 
-        view.findViewById(R.id.signout_button).setOnClickListener(this);
+        view.findViewById(R.id.history_button).setOnClickListener(this);
         view.findViewById(R.id.button_type_upc).setOnClickListener(this);
         view.findViewById(R.id.account_button).setOnClickListener(this);
 
@@ -188,7 +188,6 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
-        Log.v(TAG, "In this big method");
         switch (requestCode) {
             case CAMERA_PERMISSION: {
                 // If request is cancelled, the result arrays are empty.
@@ -214,12 +213,10 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.signout_button) {
-            FirebaseAuth.getInstance().signOut();
-
-            Intent loginIntent = new Intent(mContext, LoginActivity.class);
-            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(loginIntent);
+        if (id == R.id.history_button) {
+            Intent historyIntent = new Intent(mContext, HistoryActivity.class);
+            historyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(historyIntent);
         } else if (id == R.id.button_type_upc) {
             Intent manualIntent = new Intent(mContext, ManualSearchActivity.class);
             startActivity(manualIntent);
