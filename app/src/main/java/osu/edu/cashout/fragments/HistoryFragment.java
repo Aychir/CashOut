@@ -29,6 +29,8 @@ import java.util.Set;
 
 import osu.edu.cashout.HistoryAdapter;
 import osu.edu.cashout.R;
+import osu.edu.cashout.activities.AccountActivity;
+import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.Product;
 
 public class HistoryFragment extends Fragment implements View.OnClickListener {
@@ -90,7 +92,9 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
                             mRecyclerView.hasFixedSize();
                             mLayoutManager = new LinearLayoutManager(getActivity());
                             mRecyclerView.setLayoutManager(mLayoutManager);
-                            mAdapter = new HistoryAdapter(mProductArray);
+                            if(getActivity() != null) {
+                                mAdapter = new HistoryAdapter(mProductArray, getActivity().getApplicationContext());
+                            }
                             mRecyclerView.setAdapter(mAdapter);
                             mAdapter.notifyDataSetChanged();
                         }
@@ -114,6 +118,15 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        switch(v.getId()){
+            case (R.id.scan_button):
+                Intent scanIntent = new Intent(getActivity(), ScanActivity.class);
+                startActivity(scanIntent);
+                break;
+            case (R.id.account_button):
+                Intent accountIntent = new Intent(getActivity(), AccountActivity.class);
+                startActivity(accountIntent);
+                break;
+        }
     }
 }
