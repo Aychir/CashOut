@@ -1,13 +1,14 @@
 package osu.edu.cashout;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
-    private String[] mDataset;
+    private Product[] mDataset;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView mItemIcon;
@@ -22,7 +23,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         }
     }
 
-    public HistoryAdapter(String[] myDataset) {
+    public HistoryAdapter(Product[] myDataset) {
         mDataset = myDataset;
     }
 
@@ -35,7 +36,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position){
-        String str = mDataset[position];
+        Log.v("OnBindViewHolder", holder.toString());
+//        holder.mItemIcon.setImageResource(R.drawable.common_full_open_on_phone);
+//        holder.mItemName.setText();
+//        holder.mItemRating.setText();
     }
 
     @Override

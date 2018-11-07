@@ -24,9 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import osu.edu.cashout.HistoryAdapter;
 import osu.edu.cashout.R;
 
 public class HistoryFragment extends Fragment implements View.OnClickListener {
@@ -40,11 +42,9 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mUserAuth;
     private DatabaseReference mScannedProductsReference;
-    private ArrayList<String> mScannedProducts;
+    private Set<String> mScannedProducts;
     private DatabaseReference mProductsReference;
-    private ArrayList<String> mProducts;
-    private DatabaseReference mRatingsReference;
-    private Map<String, Double> mRatings;
+    private Set<Product> mProducts;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -57,9 +57,13 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         mScanButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
 
-        mScannedProducts = new ArrayList<>();
-        mProducts = new ArrayList<>();
-        mRatings = new HashMap<>();
+        mRecyclerView = v.findViewById(R.id.my_recycler_view);
+        mRecyclerView.hasFixedSize();
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mScannedProducts = new HashSet<>();
+        mProducts = new HashSet<>();
 
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
@@ -68,12 +72,30 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
             mProductsReference = FirebaseDatabase.getInstance().getReference("products");
             mRatingsReference = FirebaseDatabase.getInstance().getReference("reviews");
 
+            //
             mScannedProductsReference.orderByChild("uid").equalTo(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot sp : dataSnapshot.getChildren()){
+                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
                         mScannedProducts.add(sp.getValue(String.class));
+                        mProductsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot product : dataSnapshot.getChildren()) {
+                                    if (mScannedProducts.contains(product.child("upc").getValue(String.class))) {
+                                        mProducts.add(product.getValue(Product.class));
+                                    }
+                                }
+                                Product[] data = mProducts.toArray(new Product[mProducts.size()]);
+                                mAdapter = new HistoryAdapter(data);
+                                mRecyclerView.setAdapter(mAdapter);
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                //Lol
+                            }
+                        });
                     }
                 }
 
@@ -83,13 +105,6 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
                 }
             });
         }
-
-        mRecyclerView = v.findViewById(R.id.my_recycler_view);
-        mRecyclerView.hasFixedSize();
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mAdapter = new HistoryAdapter(data);
-//        mRecyclerView.setAdapter(mAdapter);
 
         return v;
     }
