@@ -111,7 +111,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
             Intent historyIntent = new Intent(getActivity(), HistoryActivity.class);
             historyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(historyIntent);
-        } else if (id == R.id.button_type_upc) {
+        } else if (id == R.id.manual_search_button) {
             if (validateForm()) {
                 AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase, mListOfUpcs,
                         mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
