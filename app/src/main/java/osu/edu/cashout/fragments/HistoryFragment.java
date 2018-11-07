@@ -35,6 +35,8 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Product[] mProductArray;
+    private String mCurrentUserUID;
 
     private Button mHistoryButton;
     private Button mScanButton;
@@ -42,14 +44,15 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mUserAuth;
     private DatabaseReference mScannedProductsReference;
-    private Set<String> mScannedProducts;
+    private Set<Product> mScannedProducts;
     private DatabaseReference mProductsReference;
-    private Set<Product> mProducts;
+    private Map<String, Product> mProducts;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_history, container, false);
 
+        mRecyclerView = v.findViewById(R.id.my_recycler_view);
         mHistoryButton = v.findViewById(R.id.history_button);
         mScanButton = v.findViewById(R.id.scan_button);
         mAccountButton = v.findViewById(R.id.account_button);
@@ -57,55 +60,57 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         mScanButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
 
-        mRecyclerView = v.findViewById(R.id.my_recycler_view);
-        mRecyclerView.hasFixedSize();
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
         mScannedProducts = new HashSet<>();
-        mProducts = new HashSet<>();
+        mProducts = new HashMap<>();
 
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
-        if(currentUser != null) {
+
+        if (currentUser != null) {
+            mCurrentUserUID = currentUser.getUid();
             mScannedProductsReference = FirebaseDatabase.getInstance().getReference("scanned-products");
             mProductsReference = FirebaseDatabase.getInstance().getReference("products");
 
-            mScannedProductsReference.orderByChild("uid").equalTo(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mProductsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot sp : dataSnapshot.getChildren()) {
-                        mScannedProducts.add(sp.getValue(String.class));
-                        mProductsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot product : dataSnapshot.getChildren()) {
-                                    if (mScannedProducts.contains(product.child("upc").getValue(String.class))) {
-                                        mProducts.add(product.getValue(Product.class));
-                                    }
-                                }
-                                Product[] data = mProducts.toArray(new Product[mProducts.size()]);
-                                mAdapter = new HistoryAdapter(data);
-                                mRecyclerView.setAdapter(mAdapter);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                //Lol
-                            }
-                        });
+                    for (DataSnapshot product : dataSnapshot.getChildren()) {
+                        mProducts.put(product.child("upc").getValue(String.class), product.getValue(Product.class));
                     }
+                    mScannedProductsReference.orderByChild("uid").equalTo(mCurrentUserUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot scannedProduct : dataSnapshot.getChildren()){
+                                mScannedProducts.add(mProducts.get(scannedProduct.child("upc").getValue(String.class)));
+                                Log.v("SCANNED: ", mScannedProducts.toString());
+
+                            }
+                            Log.v("SCANNED PRODUCTS Set: ", mScannedProducts.toString());
+                            mProductArray = mScannedProducts.toArray(new Product[mScannedProducts.size()]);
+                            mRecyclerView.hasFixedSize();
+                            mLayoutManager = new LinearLayoutManager(getActivity());
+                            mRecyclerView.setLayoutManager(mLayoutManager);
+                            mAdapter = new HistoryAdapter(mProductArray);
+                            mRecyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            //stuff
+                        }
+                    });
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    //Do something here?
+                    //stuff
                 }
             });
         }
-
         return v;
     }
+
 
     @Override
     public void onClick(View v) {
