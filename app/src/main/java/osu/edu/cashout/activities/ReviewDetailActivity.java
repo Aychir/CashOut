@@ -19,6 +19,7 @@ public class ReviewDetailActivity extends AppCompatActivity {
         Fragment frag = fm.findFragmentById(R.id.fragment_container);
         if(frag == null){
             ReviewDetailFragment reviewDetailFragment = new ReviewDetailFragment();
+            reviewDetailFragment.setArguments(getIntent().getExtras());
             fm.beginTransaction().add(R.id.fragment_container, reviewDetailFragment).commit();
         }
 

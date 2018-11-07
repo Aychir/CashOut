@@ -25,5 +25,7 @@
     <string name="history">History</string>
     <string name="scan">Scan</string>
     <string name="search">Search</string>
+    <string name="read_reviews">Read Reviews</string>
+    <string name="default_review_description">No description provided.</string>
     <string name="manual_input_message">Please type in all numbers located on the product\'s barcode to search for it.</string>
 </resources>

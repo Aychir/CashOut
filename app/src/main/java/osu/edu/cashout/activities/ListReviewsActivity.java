@@ -19,6 +19,7 @@ public class ListReviewsActivity extends AppCompatActivity {
         Fragment frag = fm.findFragmentById(R.id.fragment_container);
         if(frag == null){
             ListReviewsFragment listReviewsFragment = new ListReviewsFragment();
+            listReviewsFragment.setArguments(getIntent().getExtras());
             fm.beginTransaction().add(R.id.fragment_container, listReviewsFragment).commit();
         }
     }
