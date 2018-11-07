@@ -21,7 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import osu.edu.cashout.activities.ScanActivity;
+import osu.edu.cashout.activities.MakeReviewActivity;
+//import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.activities.SignupActivity;
 import osu.edu.cashout.R;
 
@@ -81,7 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         //Check for a current user and we need to check if the user is in the database
         if(currentUser != null){
-            Log.v("TAG", "User signed in");
+            Log.v("User signed in", "User not null ");
             startScanActivity();
         }
     }
@@ -99,9 +100,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onStop() {
         super.onStop();
         Log.d(TAG, "Logging onStop()");
-//        if (mAuthListener != null) {
-//            mUserAuth.removeAuthStateListener(mAuthListener);
-//        }
     }
 
 
@@ -132,8 +130,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the camera
-                                Log.v(TAG, "Successful Task");
-                                startScanActivity();
+//                                Intent cameraIntent = new Intent(mContext, ScanActivity.class);
+//                                startActivity(cameraIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(getContext(), "Failed to sign in, please try again.",
@@ -172,11 +170,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     private void startScanActivity(){
-        Intent scanIntent = new Intent(getActivity(), ScanActivity.class);
-        startActivity(scanIntent);
-
-        if(getActivity() != null) {
-            getActivity().finish();
-        }
+//        Intent cameraIntent = new Intent(getActivity(), ScanActivity.class);
+//        startActivity(cameraIntent);
+//        if(getActivity() != null) {
+//            getActivity().finish();
+//        }
+        //Temporary change to test product reviewing
+        Intent reviewIntent = new Intent(getActivity(), MakeReviewActivity.class);
+        reviewIntent.putExtra("upc", "684782117776");
+        startActivity(reviewIntent);
     }
 }
