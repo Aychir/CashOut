@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import osu.edu.cashout.backgroundThreads.AsyncFindImage;
+//import osu.edu.cashout.backgroundThreads.AsyncFindImage;
 import osu.edu.cashout.dataModels.Product;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
@@ -45,7 +45,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position){
         Log.v("OnBindViewHolder", holder.toString());
         if(mDataset[position].getImage() != null) {
-            Picasso.get().load(mDataset[position].getImage()).into(holder.mItemIcon);
+            Picasso.get().load(mDataset[position].getImage()).fit().into(holder.mItemIcon);
         }
         else {
             holder.mItemIcon.setImageResource(R.drawable.test_icon);
