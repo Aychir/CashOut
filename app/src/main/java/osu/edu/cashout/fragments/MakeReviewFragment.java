@@ -30,6 +30,7 @@ import java.util.Set;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.Review;
+import osu.edu.cashout.activities.HistoryActivity;
 import osu.edu.cashout.dataModels.Product;
 
 
@@ -46,6 +47,8 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private Set<String> setOfReviewIds;
 
     private static final String TAG = "MakeReviewFragment";
+
+    //TODO: Fix formatting of rating field
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -221,8 +224,8 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
-                    //Intent historyActivity = new Intent(getContext(), HistoryActivity.class);
-//                  startActivity(historyActivity);
+                    Intent historyActivity = new Intent(getContext(), HistoryActivity.class);
+                    startActivity(historyActivity);
                 }
                 break;
         }
