@@ -86,6 +86,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.create_review_button:
                 Intent makeReviewActivity = new Intent(getContext(), MakeReviewActivity.class);
+                makeReviewActivity.putExtra("upc", mProductUPC);
                 startActivity(makeReviewActivity);
                 break;
         }
