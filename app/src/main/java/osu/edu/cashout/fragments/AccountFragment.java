@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import osu.edu.cashout.activities.LoginActivity;
-import osu.edu.cashout.activities.ScanActivity;
+//import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.User;
 
@@ -150,8 +150,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                                 Toast.LENGTH_SHORT).show();
 
                         //Start the scan activity after a successful update
-                        Intent scanActivity = new Intent(getContext(), ScanActivity.class);
-                        startActivity(scanActivity);
+//                        Intent scanActivity = new Intent(getContext(), ScanActivity.class);
+//                        startActivity(scanActivity);
                     }
                     else{
                         Toast.makeText(getActivity(), "Currently unable to update email and/or password, try again later.",

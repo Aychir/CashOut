@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import osu.edu.cashout.activities.ScanActivity;
+//import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.User;
 
@@ -163,8 +163,8 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                                 }
 
                                 //Launch the camera after user is authenticated and added to the database
-                                Intent cameraIntent = new Intent(mContext, ScanActivity.class);
-                                startActivity(cameraIntent);
+//                                Intent cameraIntent = new Intent(mContext, ScanActivity.class);
+//                                startActivity(cameraIntent);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 //Update the UI in any way?

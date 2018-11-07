@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.Review;
-import osu.edu.cashout.activities.HistoryActivity;
-import osu.edu.cashout.activities.MakeReviewActivity;
 
 
 public class MakeReviewFragment extends Fragment implements View.OnClickListener {
@@ -38,9 +38,11 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private EditText mDescription;
     private Review mReview;
     private String upcCode;
+    private String userId;
     private FirebaseAuth mUserAuth;
     private DatabaseReference mDbReference;
     private Set<Review> setOfReviews;
+    private Set<String> setOfReviewIds;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -48,14 +50,18 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
 
         //Get the current user
         mUserAuth = FirebaseAuth.getInstance();
-        final FirebaseUser currentUser = mUserAuth.getCurrentUser();
+        FirebaseUser currentUser = mUserAuth.getCurrentUser();
+        if(currentUser != null) {
+            userId = currentUser.getUid();
+        }
 
         //Initialization of various member variables
         mReview = new Review();
         mRating = v.findViewById(R.id.rating);
-        mTitle = v.findViewById(R.id.review_title);
+        mTitle = v.findViewById(R.id.title);
         mDescription = v.findViewById(R.id.description);
         setOfReviews = new HashSet<>();
+        setOfReviewIds = new HashSet<>();
 
         //Set onclick listeners to the buttons on the screen
         Button mSaveReviewButton = v.findViewById(R.id.save_review_button);
@@ -71,10 +77,22 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         mDbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.v("onDataChange", "in here");
                 for (DataSnapshot product : dataSnapshot.getChildren()) {
                     //Create the set of reviews the user has created
-                    if(product.child("userId").getValue(String.class).equals(currentUser.getUid())){
-                        setOfReviews.add(product.getValue(Review.class));
+                    if(product.child("userId").getValue(String.class) != null && userId != null) {
+                        if(product.child("userId").getValue(String.class).equals(userId)) {
+                            if(setOfReviews.size() > 0){
+                                setOfReviews.clear();
+                            }
+                            setOfReviews.add(product.getValue(Review.class));
+
+                            if(setOfReviewIds.size() > 0){
+                                setOfReviewIds.clear();
+                            }
+                            //Add the key of each review the user has made into a set
+                            setOfReviewIds.add(product.getKey());
+                        }
                     }
                 }
                 //After all reviews are gathered, fill in the edit text fields if the user has already made a review for this product
@@ -90,6 +108,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     }
 
     private void setEditTexts(){
+        Log.v("Make Review", setOfReviews.size() + "");
         //loop through the set, set edit text fields if the user has made a review for the product
         for(Review rev: setOfReviews){
             if(rev.getUpc().equals(upcCode)){
@@ -116,9 +135,14 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
 
                     //Product has been reviewed by the user if we find the upc of the product in the set of reviews they made
                     boolean isReviewed = false;
-                    for(Review rev: setOfReviews){
-                        if(rev.getUpc().equals(upcCode)){
+                    Iterator i = setOfReviews.iterator();
+                    Iterator i2 = setOfReviewIds.iterator();
+                    while(i.hasNext() && i2.hasNext()){
+                        Review r = (Review) i.next();
+                        String reviewId = i2.next().toString();
+                        if(r.getUpc().equals(upcCode)){
                             isReviewed = true;
+                            mReview.setReviewId(reviewId);
                         }
                     }
 
@@ -136,8 +160,26 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                         map.put("upc", mReview.getUpc());
                         map.put("date", mReview.getDate());
 
-                        mDbReference.updateChildren(map);
+                        DatabaseReference specificReview = FirebaseDatabase.getInstance().getReference("reviews").child(mReview.getReviewId());
+                        specificReview.updateChildren(map);
                     }
+
+                    //Set or update the average rating of a product after making the review
+//                    DatabaseReference productDatabase = FirebaseDatabase.getInstance().getReference("products");
+//                    productDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            for (DataSnapshot product : dataSnapshot.getChildren()) {
+//                                if(product.child("upc").equals(upcCode)){
+//
+//                                }
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//                        }
+//                    });
 //                    Intent historyActivity = new Intent(getContext(), HistoryActivity.class);
 //                    startActivity(historyActivity);
                 }
@@ -162,15 +204,17 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     //Prepare the review to be updated or added to the database
     private void prepareReview(){
         //Set the title of the review
-        mReview.setTitle(mRating.getText().toString());
+        mReview.setTitle(mTitle.getText().toString());
 
         //Set the rating
         String rating = mRating.getText().toString();
-        float ratingFloat = Float.parseFloat(rating);
-        mReview.setScore(ratingFloat);
+        double ratingValue = Double.parseDouble(rating);
+        mReview.setScore(ratingValue);
+
+        //TODO: Check if rating is less than or equal to 5.0
 
         //Set the description
-        String description = mRating.getText().toString();
+        String description = mDescription.getText().toString();
         if(!description.isEmpty()){
             mReview.setDescription(description);
         }

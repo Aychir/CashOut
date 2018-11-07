@@ -1,82 +1,82 @@
-package osu.edu.cashout.activities;
-
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-
-import osu.edu.cashout.fragments.ScanFragment;
-import osu.edu.cashout.R;
-
-@SuppressWarnings({"LogNotTimber"})
-public class ScanActivity extends AppCompatActivity{
-
-    private static final String TAG = "ScanActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan);
-
-        Log.v(TAG, "Logging onCreate() method");
-
-        FragmentManager fm = getSupportFragmentManager();
-
-
-            ScanFragment scanFragment = new ScanFragment();
-
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, scanFragment)
-                    .commit();
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-
-        Log.v(TAG, "Logging onStart() method");
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        Log.v(TAG, "Logging onResume() method");
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-
-        Log.v(TAG, "Logging onPause() method");
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-
-        Log.v(TAG, "Logging onStop() method");
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-
-        Log.v(TAG, "Logging onRestart() method");
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-
-        Log.v(TAG, "Logging onDestroy() method");
-    }
-
-}
+//package osu.edu.cashout.activities;
+//
+//import android.support.v4.app.FragmentManager;
+//import android.support.v7.app.AppCompatActivity;
+//import android.os.Bundle;
+//import android.util.Log;
+//
+//import osu.edu.cashout.fragments.ScanFragment;
+//import osu.edu.cashout.R;
+//
+//@SuppressWarnings({"LogNotTimber"})
+//public class ScanActivity extends AppCompatActivity{
+//
+//    private static final String TAG = "ScanActivity";
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_scan);
+//
+//        Log.v(TAG, "Logging onCreate() method");
+//
+//        FragmentManager fm = getSupportFragmentManager();
+//
+//
+//            ScanFragment scanFragment = new ScanFragment();
+//
+//            fm.beginTransaction()
+//                    .add(R.id.fragment_container, scanFragment)
+//                    .commit();
+//
+//    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        this.finish();
+//    }
+//
+//    @Override
+//    protected void onStart(){
+//        super.onStart();
+//
+//        Log.v(TAG, "Logging onStart() method");
+//    }
+//
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+//
+//        Log.v(TAG, "Logging onResume() method");
+//    }
+//
+//    @Override
+//    protected void onPause(){
+//        super.onPause();
+//
+//        Log.v(TAG, "Logging onPause() method");
+//    }
+//
+//    @Override
+//    protected void onStop(){
+//        super.onStop();
+//
+//        Log.v(TAG, "Logging onStop() method");
+//    }
+//
+//    @Override
+//    protected void onRestart(){
+//        super.onRestart();
+//
+//        Log.v(TAG, "Logging onRestart() method");
+//    }
+//
+//    @Override
+//    protected void onDestroy(){
+//        super.onDestroy();
+//
+//        Log.v(TAG, "Logging onDestroy() method");
+//    }
+//
+//}
