@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,12 +24,10 @@ import java.util.Set;
 import osu.edu.cashout.R;
 import osu.edu.cashout.Review;
 import osu.edu.cashout.ReviewAdapter;
-import osu.edu.cashout.dataModels.User;
 
 public class ListReviewsFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private Set<Review> mReviews;
     private Map<String, String> mUIDToUsername;
@@ -39,11 +36,6 @@ public class ListReviewsFragment extends Fragment{
 
     private TextView mAverageRating;
     private TextView mProductName;
-
-    private FirebaseAuth mUserAuth;
-    private DatabaseReference mReviewsDbReference;
-    private DatabaseReference mProductDbReference;
-    private DatabaseReference mUsersDbReference;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -54,16 +46,18 @@ public class ListReviewsFragment extends Fragment{
 
         mRecyclerView = v.findViewById(R.id.my_recycler_view);
         mRecyclerView.hasFixedSize();
-        mLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         Bundle arguments = getArguments();
-        mProductUPC = arguments.getString("upc");
+        if(arguments != null) {
+            mProductUPC = arguments.getString("upc");
+        }
 
         mReviews = new HashSet<>();
         mUIDToUsername = new HashMap<>();
 
-        mUsersDbReference = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference mUsersDbReference = FirebaseDatabase.getInstance().getReference("users");
         mUsersDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -71,7 +65,7 @@ public class ListReviewsFragment extends Fragment{
                     mUIDToUsername.put(user.getKey(), user.child("username").getValue(String.class));
                 }
 
-                mReviewsDbReference = FirebaseDatabase.getInstance().getReference("reviews");
+                DatabaseReference mReviewsDbReference = FirebaseDatabase.getInstance().getReference("reviews");
                 mReviewsDbReference.orderByChild("upc").equalTo(mProductUPC).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -98,7 +92,7 @@ public class ListReviewsFragment extends Fragment{
             }
         });
 
-        mProductDbReference = FirebaseDatabase.getInstance().getReference("products");
+        DatabaseReference mProductDbReference = FirebaseDatabase.getInstance().getReference("products");
         mProductDbReference.orderByChild("upc").equalTo(mProductUPC).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -3,7 +3,6 @@ package osu.edu.cashout.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,14 +38,8 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
     private Product[] mProductArray;
     private String mCurrentUserUID;
 
-    private Button mHistoryButton;
-    private Button mScanButton;
-    private Button mAccountButton;
-
-    private FirebaseAuth mUserAuth;
     private DatabaseReference mScannedProductsReference;
     private Set<Product> mScannedProducts;
-    private DatabaseReference mProductsReference;
     private Map<String, Product> mProducts;
 
     @Override
@@ -55,9 +47,9 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment_history, container, false);
 
         mRecyclerView = v.findViewById(R.id.my_recycler_view);
-        mHistoryButton = v.findViewById(R.id.history_button);
-        mScanButton = v.findViewById(R.id.scan_button);
-        mAccountButton = v.findViewById(R.id.account_button);
+        Button mHistoryButton = v.findViewById(R.id.history_button);
+        Button mScanButton = v.findViewById(R.id.scan_button);
+        Button mAccountButton = v.findViewById(R.id.account_button);
         mHistoryButton.setOnClickListener(this);
         mScanButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
@@ -65,13 +57,13 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         mScannedProducts = new HashSet<>();
         mProducts = new HashMap<>();
 
-        mUserAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
 
         if (currentUser != null) {
             mCurrentUserUID = currentUser.getUid();
             mScannedProductsReference = FirebaseDatabase.getInstance().getReference("scanned-products");
-            mProductsReference = FirebaseDatabase.getInstance().getReference("products");
+            DatabaseReference mProductsReference = FirebaseDatabase.getInstance().getReference("products");
 
             mProductsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

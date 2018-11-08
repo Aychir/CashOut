@@ -234,7 +234,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                                                 prod.setRating(average);
                                                 Map<String, Object> newRating = new HashMap<>();
                                                 newRating.put("rating", average);
-                                                productDatabase.child(prodId).updateChildren(newRating);
+                                                if(prodId != null) {
+                                                    productDatabase.child(prodId).updateChildren(newRating);
+                                                }
                                             }
 
                                             @Override
@@ -247,7 +249,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                                         Log.v(TAG, "Object has no rating");
                                         Map<String, Object> newRating = new HashMap<>();
                                         newRating.put("rating", mReview.getScore());
-                                        productDatabase.child(prodId).updateChildren(newRating);
+                                        if(prodId != null) {
+                                            productDatabase.child(prodId).updateChildren(newRating);
+                                        }
                                     }
                                 }
                             }

@@ -21,8 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import osu.edu.cashout.activities.MakeReviewActivity;
-//import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.activities.SignupActivity;
 import osu.edu.cashout.R;
