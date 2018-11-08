@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
+
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.HistoryActivity;
@@ -115,7 +117,9 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                         mCustomerReview.setText("Average Rating: N/A");
                     }
                     else{
-                        mCustomerReview.setText("Average Rating: " + mProduct.getRating());
+                        DecimalFormat format = new DecimalFormat("#.##");
+                        String formatted = format.format(mProduct.getRating());
+                        mCustomerReview.setText("Average Rating: " + formatted + "/5.0");
                     }
                 }
 

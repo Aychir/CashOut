@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 //import osu.edu.cashout.backgroundThreads.AsyncFindImage;
+import java.text.DecimalFormat;
+
 import osu.edu.cashout.activities.InfoActivity;
 import osu.edu.cashout.dataModels.Product;
 
@@ -76,7 +78,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             holder.mItemRating.setText("Average Rating: N/A");
         }
         else{
-            holder.mItemRating.setText("Average Rating: " + Double.toString(mDataset[position].getRating()) + "/5.0");
+            DecimalFormat format = new DecimalFormat("#.##");
+            String formatted = format.format(mDataset[position].getRating());
+            holder.mItemRating.setText("Average Rating: " + formatted + "/5.0");
         }
     }
 

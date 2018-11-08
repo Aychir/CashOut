@@ -146,7 +146,6 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     }
 
     private void setEditTexts() {
-        Log.v("Make Review", setOfReviews.size() + "");
         //loop through the set, set edit text fields if the user has made a review for the product
         for (Review rev : setOfReviews) {
             if (rev.getUpc().equals(upcCode)) {
