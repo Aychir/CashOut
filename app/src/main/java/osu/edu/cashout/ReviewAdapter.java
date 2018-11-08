@@ -46,9 +46,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
         public void onClick(View v){
             Intent reviewIntent = new Intent(mContext, ReviewDetailActivity.class);
             Review review = mReviewList[getAdapterPosition()];
-            reviewIntent.putExtra("upc", review.getUpc());
-            reviewIntent.putExtra("uid", review.getUserId());
+            reviewIntent.putExtra("rating", Double.toString(review.getScore()));
+            reviewIntent.putExtra("title", review.getTitle());
             reviewIntent.putExtra("username", mUidToUsername.get(review.getUserId()));
+            String desc;
+            if(review.getDescription() != null){
+                desc = review.getDescription();
+            }
+            else{
+                desc = "";
+            }
+            reviewIntent.putExtra("description", desc);
             mContext.startActivity(reviewIntent);
         }
 

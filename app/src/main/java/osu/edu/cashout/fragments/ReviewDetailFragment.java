@@ -25,12 +25,13 @@ public class ReviewDetailFragment extends Fragment{
     private TextView mReviewRating;
     private TextView mReviewDescription;
 
-    private String mProductUPC;
-    private String mUID;
+    private String mTitle;
+    private String mRating;
     private String mUsername;
+    private String mDescription;
 
-    private FirebaseAuth mUserAuth;
-    private DatabaseReference mReviewDbReference;
+//    private FirebaseAuth mUserAuth;
+//    private DatabaseReference mReviewDbReference;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -41,32 +42,17 @@ public class ReviewDetailFragment extends Fragment{
         mReviewDescription = v.findViewById(R.id.review_description);
 
         Bundle arguments = getArguments();
-        mProductUPC = arguments.getString("upc");
-        mUID = arguments.getString("uid");
+        mRating = arguments.getString("rating");
+        mTitle = arguments.getString("title");
         mUsername = arguments.getString("username");
+        mDescription = arguments.getString("description");
 
-        mReviewDbReference = FirebaseDatabase.getInstance().getReference("reviews");
-        mReviewDbReference.orderByChild("upc").equalTo(mProductUPC).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot review : dataSnapshot.getChildren()){
-                    if(review.child("userId").getValue(String.class).equals(mUID)){
-                        mReviewerUsername.setText(mUsername);
-                        mReviewTitle.setText(review.child("title").getValue(String.class));
-                        mReviewRating.setText(Double.toString(review.child("score").getValue(Double.class)));
-                        if(review.hasChild("description")){
-                            mReviewDescription.setText(review.child("description").getValue(String.class));
-                        }
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //:P
-            }
-        });
+        mReviewerUsername.setText(mUsername);
+        mReviewTitle.setText(mTitle);
+        mReviewRating.setText(mRating);
+        if(!mDescription.equals("")){
+            mReviewDescription.setText(mDescription);
+        }
 
         return v;
     }
