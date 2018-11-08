@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.HistoryActivity;
+import osu.edu.cashout.activities.ListReviewsActivity;
 import osu.edu.cashout.activities.MakeReviewActivity;
 import osu.edu.cashout.dataModels.Product;
 
@@ -35,6 +36,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     private TextView mCurrentPrice;
     private TextView mCustomerReview;
     private ImageView mProductImage;
+    private Button mReadReviewsButton;
     private Button mCreateReviewButton;
     private Button mHistoryButton;
     private Button mAccountButton;
@@ -51,6 +53,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
 
         //Set onclick listeners to the buttons on the screen
+        mReadReviewsButton = v.findViewById(R.id.read_reviews_button);
+        mReadReviewsButton.setOnClickListener(this);
         mCreateReviewButton = v.findViewById(R.id.create_review_button);
         mCreateReviewButton.setOnClickListener(this);
 
@@ -132,20 +136,25 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.history_button:
-                Log.v("InfoFragment",   "in history");
+                Log.v("InfoFragment", "in history");
                 Intent historyIntent = new Intent(getContext(), HistoryActivity.class);
                 startActivity(historyIntent);
                 break;
             case R.id.account_button:
-                Log.v("InfoFragment",   "in account");
+                Log.v("InfoFragment", "in account");
                 Intent accountIntent = new Intent(getContext(), AccountActivity.class);
                 startActivity(accountIntent);
                 break;
             case R.id.create_review_button:
-                Log.v("InfoFragment",   "in create review");
+                Log.v("InfoFragment", "in create review");
                 Intent makeReviewActivity = new Intent(getContext(), MakeReviewActivity.class);
                 makeReviewActivity.putExtra("upc", mProductUPC);
                 startActivity(makeReviewActivity);
+                break;
+            case R.id.read_reviews_button:
+                Intent listReviewsActivity = new Intent(getContext(), ListReviewsActivity.class);
+                listReviewsActivity.putExtra("upc", mProductUPC);
+                startActivity(listReviewsActivity);
                 break;
         }
     }
