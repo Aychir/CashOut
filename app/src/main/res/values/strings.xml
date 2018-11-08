@@ -28,4 +28,9 @@
     <string name="read_reviews">Read Reviews</string>
     <string name="default_review_description">No description provided.</string>
     <string name="manual_input_message">Please type in all numbers located on the product\'s barcode to search for it.</string>
+    <string name="no_lowest_price">Lowest Price: N/A</string>
+    <string name="no_highest_price">Highest Price: N/A</string>
+    <string name="no_current_price">Current Price: N/A</string>
+    <string name="no_average_rating">Average Rating: N/A</string>
+    <string name="price_at_store"></string>
 </resources>

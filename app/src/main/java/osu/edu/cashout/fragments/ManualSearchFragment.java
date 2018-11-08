@@ -24,7 +24,6 @@ import java.util.Set;
 
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.HistoryActivity;
-import osu.edu.cashout.activities.ManualSearchActivity;
 import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.R;
 
@@ -65,8 +64,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
                     String upc = product.child("upc").getValue(String.class);
                     //Use this to check for uniqueness of the item being scanned (to avoid adding it again)
                     mListOfUpcs.add(upc);
-                    mRatingMapping.put(upc,
-                            product.child("rating").getValue(Double.class));
+                    mRatingMapping.put(upc, product.child("rating").getValue(Double.class));
                 }
             }
 

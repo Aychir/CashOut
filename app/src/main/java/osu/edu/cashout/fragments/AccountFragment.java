@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private Set<String> mUsernames;
     private ProgressDialog dialog;
 
+    private static final String TAG = "AccountFragment";
+
     //TODO: Rotating screen and being on first name field is wonky
 
     @Override
@@ -59,6 +62,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_account, container, false);
+
+        Log.v(TAG, "onCreateView()");
 
         //Find views by ID
         Button mUpdateAccountButton = v.findViewById(R.id.update_button);
@@ -89,12 +94,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
             //get the reference to the user that is signed-in
             mDbReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
 
-
-
             //Read info from the database to display to the user
-            mDbReference.addValueEventListener(new ValueEventListener() {
+            mDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Log.v(TAG, "onDataChange");
                     //Called initially, and then any time the information in fields change
 
                     //If there is a current user and all fields are empty (on fragment creation) will we want to pull info from the database
@@ -110,6 +114,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                         mLastName.setText(curUser.getLastName());
                         mUsername.setText(curUser.getUsername());
                         mEmailField.setText(curUser.getEmail());
+                    }
+                    else{
+                        if(dialog.isShowing()){
+                            dialog.dismiss();
+                        }
                     }
                 }
 

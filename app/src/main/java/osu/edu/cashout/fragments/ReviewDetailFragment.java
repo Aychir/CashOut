@@ -3,9 +3,6 @@ package osu.edu.cashout.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,35 +20,32 @@ import com.squareup.picasso.Picasso;
 import osu.edu.cashout.R;
 
 public class ReviewDetailFragment extends Fragment{
-    private TextView mReviewerUsername;
-    private TextView mReviewTitle;
-    private TextView mReviewRating;
-    private TextView mReviewDescription;
-    private ImageView mProductImage;
-
     private String mTitle;
     private String mRating;
     private String mUsername;
     private String mDescription;
     private String mUPC;
+    private ImageView mProductImage;
 
     private DatabaseReference mProductDbReference;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_review_detail, container, false);
-        mReviewerUsername = v.findViewById(R.id.reviewer_username);
-        mReviewTitle = v.findViewById(R.id.review_title);
-        mReviewRating = v.findViewById(R.id.review_rating);
-        mReviewDescription = v.findViewById(R.id.review_description);
+        TextView mReviewerUsername = v.findViewById(R.id.reviewer_username);
+        TextView mReviewTitle = v.findViewById(R.id.review_title);
+        TextView mReviewRating = v.findViewById(R.id.review_rating);
+        TextView mReviewDescription = v.findViewById(R.id.review_description);
         mProductImage = v.findViewById(R.id.product_image);
 
         Bundle arguments = getArguments();
-        mRating = arguments.getString("rating");
-        mTitle = arguments.getString("title");
-        mUsername = arguments.getString("username");
-        mDescription = arguments.getString("description");
-        mUPC = arguments.getString("upc");
+        if(arguments != null){
+            mRating = arguments.getString("rating");
+            mTitle = arguments.getString("title");
+            mUsername = arguments.getString("username");
+            mDescription = arguments.getString("description");
+            mUPC = arguments.getString("upc");
+        }
 
         mReviewerUsername.setText("User: " + mUsername);
         mReviewTitle.setText("Title: " + mTitle);

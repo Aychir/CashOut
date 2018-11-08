@@ -112,7 +112,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
 
         //Set up an instance to the database and get some of the data
         mDbReference = FirebaseDatabase.getInstance().getReference("reviews");
-        mDbReference.addValueEventListener(new ValueEventListener() {
+        mDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.v("onDataChange", "in here");
@@ -146,7 +146,6 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     }
 
     private void setEditTexts() {
-        Log.v("Make Review", setOfReviews.size() + "");
         //loop through the set, set edit text fields if the user has made a review for the product
         for (Review rev : setOfReviews) {
             if (rev.getUpc().equals(upcCode)) {
@@ -235,7 +234,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                                                 prod.setRating(average);
                                                 Map<String, Object> newRating = new HashMap<>();
                                                 newRating.put("rating", average);
-                                                productDatabase.child(prodId).updateChildren(newRating);
+                                                if(prodId != null) {
+                                                    productDatabase.child(prodId).updateChildren(newRating);
+                                                }
                                             }
 
                                             @Override
@@ -248,7 +249,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                                         Log.v(TAG, "Object has no rating");
                                         Map<String, Object> newRating = new HashMap<>();
                                         newRating.put("rating", mReview.getScore());
-                                        productDatabase.child(prodId).updateChildren(newRating);
+                                        if(prodId != null) {
+                                            productDatabase.child(prodId).updateChildren(newRating);
+                                        }
                                     }
                                 }
                             }

@@ -1,7 +1,6 @@
 package osu.edu.cashout.fragments;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,14 +12,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
@@ -36,32 +36,23 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     private TextView mCurrentPrice;
     private TextView mCustomerReview;
     private ImageView mProductImage;
-    private Button mReadReviewsButton;
-    private Button mCreateReviewButton;
-    private Button mHistoryButton;
-    private Button mAccountButton;
     private Product mProduct;
     private String mProductUPC;
-    private FirebaseAuth mUserAuth;
-    private DatabaseReference mDbReference;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_info, container, false);
 
-        mUserAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mUserAuth.getCurrentUser();
-
         //Set onclick listeners to the buttons on the screen
-        mReadReviewsButton = v.findViewById(R.id.read_reviews_button);
+        Button mReadReviewsButton = v.findViewById(R.id.read_reviews_button);
         mReadReviewsButton.setOnClickListener(this);
-        mCreateReviewButton = v.findViewById(R.id.create_review_button);
+        Button mCreateReviewButton = v.findViewById(R.id.create_review_button);
         mCreateReviewButton.setOnClickListener(this);
 
-        mHistoryButton = v.findViewById(R.id.history_button);
+        Button mHistoryButton = v.findViewById(R.id.history_button);
         mHistoryButton.setOnClickListener(this);
 
-        mAccountButton = v.findViewById(R.id.account_button);
+        Button mAccountButton = v.findViewById(R.id.account_button);
         mAccountButton.setOnClickListener(this);
 
         mProductTitle = v.findViewById(R.id.productTitle);
@@ -72,8 +63,10 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         mProductImage = v.findViewById(R.id.item_icon);
 
         Bundle arguments = getArguments();
-        mProductUPC = arguments.getString("upc");
-        mDbReference = FirebaseDatabase.getInstance().getReference("products");
+        if(arguments != null){
+            mProductUPC = arguments.getString("upc");
+        }
+        DatabaseReference mDbReference = FirebaseDatabase.getInstance().getReference("products");
         mDbReference.orderByChild("upc").equalTo(mProductUPC).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -91,31 +84,33 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                     }
                     mProductTitle.setText(mProduct.getName());
                     if(mProduct.getHighestPrice() == 0.0){
-                        mHighPrice.setText("Highest Price: N/A");
+                        mHighPrice.setText(R.string.no_highest_price);
                     }
                     else{
-                        mHighPrice.setText("Highest Price: $" + mProduct.getHighestPrice());
+                        mHighPrice.setText(String.format(Locale.getDefault(),"Highest Price: $%.2f", mProduct.getHighestPrice()));
                     }
                     if(mProduct.getLowestPrice() == 0.0){
-                        mLowPrice.setText("Lowest Price: N/A");
+                        mLowPrice.setText(R.string.no_lowest_price);
                     }
                     else{
-                        mLowPrice.setText("Lowest Price: $" + mProduct.getLowestPrice());
+                        mLowPrice.setText(String.format(Locale.getDefault(),"Lowest Price: $%.2f", mProduct.getLowestPrice()));
                     }
                     if(mProduct.getCurrentPrice() == 0.0){
-                        mCurrentPrice.setText("Current Price: N/A");
+                        mCurrentPrice.setText(R.string.no_current_price);
                     }
                     else if (mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() != null){
-                        mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice() + " at " + mProduct.getStore());
+                        mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()) + " at " + mProduct.getStore());
                     }
                     else if(mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() == null){
-                        mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice());
+                        mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()));
                     }
                     if(mProduct.getRating() == 0.0){
-                        mCustomerReview.setText("Average Rating: N/A");
+                        mCustomerReview.setText(R.string.no_average_rating);
                     }
                     else{
-                        mCustomerReview.setText("Average Rating: " + mProduct.getRating());
+                        DecimalFormat format = new DecimalFormat("#.##");
+                        String formatted = format.format(mProduct.getRating());
+                        mCustomerReview.setText("Average Rating: " + formatted + "/5.0");
                     }
                 }
 
