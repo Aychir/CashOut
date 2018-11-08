@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
@@ -96,22 +97,22 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                         mHighPrice.setText("Highest Price: N/A");
                     }
                     else{
-                        mHighPrice.setText("Highest Price: $" + mProduct.getHighestPrice());
+                        mHighPrice.setText(String.format(Locale.getDefault(),"Highest Price: $%.2f", mProduct.getHighestPrice()));
                     }
                     if(mProduct.getLowestPrice() == 0.0){
                         mLowPrice.setText("Lowest Price: N/A");
                     }
                     else{
-                        mLowPrice.setText("Lowest Price: $" + mProduct.getLowestPrice());
+                        mLowPrice.setText(String.format(Locale.getDefault(),"Lowest Price: $%.2f", mProduct.getLowestPrice()));
                     }
                     if(mProduct.getCurrentPrice() == 0.0){
                         mCurrentPrice.setText("Current Price: N/A");
                     }
                     else if (mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() != null){
-                        mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice() + " at " + mProduct.getStore());
+                        mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()) + " at " + mProduct.getStore());
                     }
                     else if(mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() == null){
-                        mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice());
+                        mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()));
                     }
                     if(mProduct.getRating() == 0.0){
                         mCustomerReview.setText("Average Rating: N/A");
