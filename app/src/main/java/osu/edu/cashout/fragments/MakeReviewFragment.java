@@ -112,7 +112,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
 
         //Set up an instance to the database and get some of the data
         mDbReference = FirebaseDatabase.getInstance().getReference("reviews");
-        mDbReference.addValueEventListener(new ValueEventListener() {
+        mDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.v("onDataChange", "in here");
