@@ -87,7 +87,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                         Picasso.get().load(mProduct.getImage()).into(mProductImage);
                     }
                     else{
-                        Picasso.get().load(R.drawable.test_icon).into(mProductImage);
+                        Picasso.get().load(R.drawable.no_image).into(mProductImage);
                     }
                     mProductTitle.setText(mProduct.getName());
                     if(mProduct.getHighestPrice() == 0.0){

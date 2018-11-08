@@ -23,6 +23,11 @@
         android:gravity="center"
         android:textSize="20sp"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000000" />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"

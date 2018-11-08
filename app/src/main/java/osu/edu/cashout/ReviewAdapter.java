@@ -57,6 +57,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
                 desc = "";
             }
             reviewIntent.putExtra("description", desc);
+            reviewIntent.putExtra("upc", review.getUpc());
             mContext.startActivity(reviewIntent);
         }
 
@@ -78,8 +79,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position){
         holder.mReviewerUsername.setText(mUIDToUsername.get(mDataset[position].getUserId()));
-        holder.mReviewTitle.setText(mDataset[position].getTitle());
-        holder.mReviewRating.setText(Double.toString(mDataset[position].getScore()));
+        holder.mReviewTitle.setText("Title: " + mDataset[position].getTitle());
+        holder.mReviewRating.setText("Rating: " + Double.toString(mDataset[position].getScore()));
     }
 
     @Override

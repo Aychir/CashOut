@@ -103,7 +103,7 @@ public class ListReviewsFragment extends Fragment{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot product : dataSnapshot.getChildren()){
-                    mAverageRating.setText(Double.toString(product.child("rating").getValue(Double.class)));
+                    mAverageRating.setText("Average Rating: " + Double.toString(product.child("rating").getValue(Double.class)) + "/5.0");
                     mProductName.setText(product.child("name").getValue(String.class));
                     break;
                 }

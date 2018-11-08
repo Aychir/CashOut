@@ -3,61 +3,51 @@
     android:id="@+id/reviewDetailFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFFFFF">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/reviewer_username"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:paddingBottom="20dp"/>
 
-        <TextView
-            android:id="@+id/reviewer_username"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Username"
-            android:textSize="15sp"
-            android:gravity="center"/>
+    <TextView
+        android:id="@+id/review_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/review_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Review Title"
-                android:textSize="15sp"
-                android:paddingBottom="10dp"
-                android:gravity="center"/>
-
-            <TextView
-                android:id="@+id/review_rating"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="X/5.0"
-                android:textSize="15sp"
-                android:paddingTop="10dp"
-                android:gravity="center"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/review_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black"/>
+        android:layout_height="2dp"
+        android:background="#D3D3D3" />
+
+    <ImageView
+        android:id="@+id/product_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="50dp"/>
 
     <TextView
         android:id="@+id/review_description"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:text="@string/default_review_description"
-        android:textSize="15sp"/>
-    
+        android:textSize="20sp"
+        android:gravity="center"/>
+
 </LinearLayout>

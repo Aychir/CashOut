@@ -97,7 +97,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                                 Picasso.get().load(product.child("image").getValue(String.class)).into(mProductImage);
                             }
                             else{
-                                Picasso.get().load(R.drawable.test_icon).into(mProductImage);
+                                Picasso.get().load(R.drawable.no_image).into(mProductImage);
                             }
                             mProductName.setText(product.child("name").getValue(String.class));
                         }
