@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -39,6 +42,8 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private EditText mRating;
     private EditText mTitle;
     private EditText mDescription;
+    private ImageView mProductImage;
+    private TextView mProductName;
     private Review mReview;
     private String upcCode;
     private String userId;
@@ -65,6 +70,8 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         mRating = v.findViewById(R.id.rating);
         mTitle = v.findViewById(R.id.title);
         mDescription = v.findViewById(R.id.description);
+        mProductImage = v.findViewById(R.id.item_icon);
+        mProductName = v.findViewById(R.id.productTitle);
         setOfReviews = new HashSet<>();
         setOfReviewIds = new HashSet<>();
 
@@ -76,6 +83,32 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
             Intent called = getActivity().getIntent();
             upcCode = called.getStringExtra("upc");
         }
+
+        DatabaseReference productDatabase = FirebaseDatabase.getInstance().getReference("products");
+        productDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.v("onDataChange", "in here");
+                for (DataSnapshot product : dataSnapshot.getChildren()) {
+                    //Find the product and get its information to show in make review
+                    if (product.child("upc").getValue(String.class) != null && upcCode != null) {
+                        if (product.child("upc").getValue(String.class).equals(upcCode)) {
+                            if(product.child("image").getValue(String.class) != null) {
+                                Picasso.get().load(product.child("image").getValue(String.class)).into(mProductImage);
+                            }
+                            else{
+                                Picasso.get().load(R.drawable.test_icon).into(mProductImage);
+                            }
+                            mProductName.setText(product.child("name").getValue(String.class));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
         //Set up an instance to the database and get some of the data
         mDbReference = FirebaseDatabase.getInstance().getReference("reviews");

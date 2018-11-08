@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/makeReviewFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.3"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            tools:srcCompat="@tools:sample/avatars[11]" />
 
         <TextView
             android:id="@+id/productTitle"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            tools:drawableStart="@tools:sample/avatars"
+            android:layout_weight="4"
             android:gravity="center"
             tools:text="Text Here" />
 
@@ -24,9 +35,11 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -38,16 +51,16 @@
                 android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
                 android:hint="@string/rating"
-                android:inputType="numberDecimal"
-                android:layout_marginEnd="8dp"/>
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/rating_info"
                 android:gravity="center"
-                android:textSize="24sp"/>
+                android:text="@string/rating_info"
+                android:textSize="24sp" />
 
         </LinearLayout>
 
@@ -57,7 +70,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:hint="@string/review_title"
-            android:inputType="text"/>
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/description"
@@ -65,15 +78,15 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:hint="@string/review_description"
-            android:inputType="textCapSentences|textMultiLine"/>
+            android:inputType="textCapSentences|textMultiLine" />
 
         <Button
             android:id="@+id/save_review_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:text="@string/save"/>
+            android:text="@string/save" />
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

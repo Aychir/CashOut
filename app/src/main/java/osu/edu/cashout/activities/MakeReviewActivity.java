@@ -14,6 +14,7 @@ public class MakeReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_review);
+        setTitle("Create Review");
         FragmentManager fm = getSupportFragmentManager();
         Fragment frag = fm.findFragmentById(R.id.fragment_container);
         if(frag == null) {

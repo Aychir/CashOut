@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
@@ -33,6 +35,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     private TextView mLowPrice;
     private TextView mCurrentPrice;
     private TextView mCustomerReview;
+    private ImageView mProductImage;
     private Button mReadReviewsButton;
     private Button mCreateReviewButton;
     private Button mHistoryButton;
@@ -66,6 +69,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         mLowPrice = v.findViewById(R.id.lowPrice);
         mCurrentPrice = v.findViewById(R.id.currentPrice);
         mCustomerReview = v.findViewById(R.id.customerReview);
+        mProductImage = v.findViewById(R.id.item_icon);
 
         Bundle arguments = getArguments();
         mProductUPC = arguments.getString("upc");
@@ -78,13 +82,43 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                     break;
                 }
 
-                Drawable image = getContext().getResources().getDrawable(R.drawable.common_google_signin_btn_icon_dark);
-                mProductTitle.setCompoundDrawablesWithIntrinsicBounds( image, null, null, null);
-                mProductTitle.setText(mProduct.getName());
-                mHighPrice.setText("Highest Price: $" + mProduct.getHighestPrice());
-                mLowPrice.setText("Lowest Price: $" + mProduct.getLowestPrice());
-                mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice());
-                mCustomerReview.setText("Average Rating: " + mProduct.getRating() + "/5.0");
+                if(mProduct != null){
+                    if(mProduct.getImage() != null) {
+                        Picasso.get().load(mProduct.getImage()).into(mProductImage);
+                    }
+                    else{
+                        Picasso.get().load(R.drawable.test_icon).into(mProductImage);
+                    }
+                    mProductTitle.setText(mProduct.getName());
+                    if(mProduct.getHighestPrice() == 0.0){
+                        mHighPrice.setText("Highest Price: N/A");
+                    }
+                    else{
+                        mHighPrice.setText("Highest Price: $" + mProduct.getHighestPrice());
+                    }
+                    if(mProduct.getLowestPrice() == 0.0){
+                        mLowPrice.setText("Lowest Price: N/A");
+                    }
+                    else{
+                        mLowPrice.setText("Lowest Price: $" + mProduct.getLowestPrice());
+                    }
+                    if(mProduct.getCurrentPrice() == 0.0){
+                        mCurrentPrice.setText("Current Price: N/A");
+                    }
+                    else if (mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() != null){
+                        mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice() + " at " + mProduct.getStore());
+                    }
+                    else if(mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() == null){
+                        mCurrentPrice.setText("Current Price: $" + mProduct.getCurrentPrice());
+                    }
+                    if(mProduct.getRating() == 0.0){
+                        mCustomerReview.setText("Average Rating: N/A");
+                    }
+                    else{
+                        mCustomerReview.setText("Average Rating: " + mProduct.getRating());
+                    }
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
