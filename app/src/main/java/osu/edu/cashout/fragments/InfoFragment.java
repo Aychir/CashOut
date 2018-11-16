@@ -65,61 +65,55 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         Bundle arguments = getArguments();
         if(arguments != null){
             mProductUPC = arguments.getString("upc");
+            mProduct = new Product();
+            mProduct.setUpc(arguments.getString("upc"));
+            mProduct.setName(arguments.getString("name"));
+            mProduct.setStore(arguments.getString("merchant"));
+            mProduct.setImage(arguments.getString("image"));
+            mProduct.setRating(arguments.getDouble("rating"));
+            mProduct.setCurrentPrice(arguments.getDouble("current"));
+            mProduct.setLowestPrice(arguments.getDouble("lowest"));
+            mProduct.setHighestPrice(arguments.getDouble("highest"));
         }
-        DatabaseReference mDbReference = FirebaseDatabase.getInstance().getReference("products");
-        mDbReference.orderByChild("upc").equalTo(mProductUPC).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data : dataSnapshot.getChildren()){
-                    mProduct = data.getValue(Product.class);
-                    break;
-                }
 
-                if(mProduct != null){
-                    if(mProduct.getImage() != null) {
-                        Picasso.get().load(mProduct.getImage()).into(mProductImage);
-                    }
-                    else{
-                        Picasso.get().load(R.drawable.no_image).into(mProductImage);
-                    }
-                    mProductTitle.setText(mProduct.getName());
-                    if(mProduct.getHighestPrice() == 0.0){
-                        mHighPrice.setText(R.string.no_highest_price);
-                    }
-                    else{
-                        mHighPrice.setText(String.format(Locale.getDefault(),"Highest Price: $%.2f", mProduct.getHighestPrice()));
-                    }
-                    if(mProduct.getLowestPrice() == 0.0){
-                        mLowPrice.setText(R.string.no_lowest_price);
-                    }
-                    else{
-                        mLowPrice.setText(String.format(Locale.getDefault(),"Lowest Price: $%.2f", mProduct.getLowestPrice()));
-                    }
-                    if(mProduct.getCurrentPrice() == 0.0){
-                        mCurrentPrice.setText(R.string.no_current_price);
-                    }
-                    else if (mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() != null){
-                        mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()) + " at " + mProduct.getStore());
-                    }
-                    else if(mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() == null){
-                        mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()));
-                    }
-                    if(mProduct.getRating() == 0.0){
-                        mCustomerReview.setText(R.string.no_average_rating);
-                    }
-                    else{
-                        DecimalFormat format = new DecimalFormat("#.##");
-                        String formatted = format.format(mProduct.getRating());
-                        mCustomerReview.setText("Average Rating: " + formatted + "/5.0");
-                    }
-                }
-
+        if(mProduct != null){
+            if(mProduct.getImage() != null) {
+                Picasso.get().load(mProduct.getImage()).into(mProductImage);
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //Something
+            else{
+                Picasso.get().load(R.drawable.no_image).into(mProductImage);
             }
-        });
+            mProductTitle.setText(mProduct.getName());
+            if(mProduct.getHighestPrice() == 0.0){
+                mHighPrice.setText(R.string.no_highest_price);
+            }
+            else{
+                mHighPrice.setText(String.format(Locale.getDefault(),"Highest Price: $%.2f", mProduct.getHighestPrice()));
+            }
+            if(mProduct.getLowestPrice() == 0.0){
+                mLowPrice.setText(R.string.no_lowest_price);
+            }
+            else{
+                mLowPrice.setText(String.format(Locale.getDefault(),"Lowest Price: $%.2f", mProduct.getLowestPrice()));
+            }
+            if(mProduct.getCurrentPrice() == 0.0){
+                mCurrentPrice.setText(R.string.no_current_price);
+            }
+            else if (mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() != null){
+                mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()) + " at " + mProduct.getStore());
+            }
+            else if(mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() == null){
+                mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()));
+            }
+            if(mProduct.getRating() == 0.0){
+                mCustomerReview.setText(R.string.no_average_rating);
+            }
+            else{
+                DecimalFormat format = new DecimalFormat("#.##");
+                String formatted = format.format(mProduct.getRating());
+                mCustomerReview.setText("Average Rating: " + formatted + "/5.0");
+            }
+        }
 
 
         return v;

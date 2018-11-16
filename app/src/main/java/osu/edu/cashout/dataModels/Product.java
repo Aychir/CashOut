@@ -9,7 +9,6 @@ public class Product {
     private double mCurrentPrice;
     private double mRating;
     private String mStore;
-    private String mReview;
     private String mImage;
 
     public Product() {
@@ -70,14 +69,6 @@ public class Product {
 
     public void setImage(String image) {
         this.mImage = image;
-    }
-
-    public String getReview() {
-        return mReview;
-    }
-
-    public void setReview(String review) {
-        this.mReview = review;
     }
 
     public String getStore(){

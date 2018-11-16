@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.activities.HistoryActivity;
+import osu.edu.cashout.activities.InfoActivity;
 import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.R;
@@ -128,9 +129,16 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         Log.v(TAG, result.getText());
-                        AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
-                                mListOfUpcs, mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
-                        findProduct.execute(result.getText());
+                        if(mListOfUserScans.contains(result.getText())){
+                            Intent infoActivity = new Intent(getContext(), InfoActivity.class);
+                            infoActivity.putExtra("upc", result.getText());
+                            getActivity().startActivity(infoActivity);
+                        }
+                        else {
+                            AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
+                                    mListOfUpcs, mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
+                            findProduct.execute(result.getText());
+                        }
                     }
                 });
             }

@@ -212,6 +212,13 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
             Log.v(TAG, "Object found, launching product info");
             Intent infoActivity = new Intent(activityReference.get(), InfoActivity.class);
             infoActivity.putExtra("upc", product.getUpc());
+            infoActivity.putExtra("name", product.getName());
+            infoActivity.putExtra("merchant", product.getStore());
+            infoActivity.putExtra("image", product.getImage());
+            infoActivity.putExtra("rating", product.getRating());
+            infoActivity.putExtra("current", product.getCurrentPrice());
+            infoActivity.putExtra("lowest", product.getLowestPrice());
+            infoActivity.putExtra("highest", product.getHighestPrice());
             referencedActivity.startActivity(infoActivity);
         } else {
             //If it fails, we must launch scan activity again
