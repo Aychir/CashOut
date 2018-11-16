@@ -1,4 +1,4 @@
-package osu.edu.cashout;
+package osu.edu.cashout.dataModels;
 
 
 public class Review {

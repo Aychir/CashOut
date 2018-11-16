@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.R;
-import osu.edu.cashout.Review;
-import osu.edu.cashout.ReviewAdapter;
+import osu.edu.cashout.dataModels.Review;
+import osu.edu.cashout.adapters.ReviewAdapter;
 
 public class ListReviewsFragment extends Fragment {
     private RecyclerView mRecyclerView;

@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import osu.edu.cashout.HistoryAdapter;
+import osu.edu.cashout.adapters.HistoryAdapter;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.ScanActivity;

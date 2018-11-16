@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.R;
-import osu.edu.cashout.Review;
+import osu.edu.cashout.dataModels.Review;
 import osu.edu.cashout.activities.HistoryActivity;
 import osu.edu.cashout.dataModels.Product;
 
