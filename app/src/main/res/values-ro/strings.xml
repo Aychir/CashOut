@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Cash Out</string>
+    <string name="login">Intra in Cont</string>
+    <string name="sign_up">Inregistreaza-te</string>
+    <string name="email">Email</string>
+    <string name="password">Parola</string>
+    <string name="confirm_password">Confirma Parola</string>
+    <string name="type_upc">Scrie Codul</string>
+    <string name="sign_out">Iesi din Cont</string>
+    <string name="update_account">Actualizati</string>
+    <string name="delete_account">Stergi Contul</string>
+    <string name="new_password">Parola noua</string>
+    <string name="confirm_new_password">Confirma Noua Parola</string>
+    <string name="account">Cont</string>
+    <string name="username">Porecla</string>
+    <string name="first_name">Nume</string>
+    <string name="last_name">Nume de Familie</string>
+    <string name="create_review">Creati Recenzie</string>
+    <string name="product_icon">Imagina Produsului</string>
+    <string name="rating">Evaluare</string>
+    <string name="review_title">Titlu de Recenzie</string>
+    <string name="review_description">Descriere de Recenzie</string>
+    <string name="save">Salvati</string>
+    <string name="rating_info">/ 5.0</string>
+    <string name="history">Istorie</string>
+    <string name="scan">Scanati</string>
+    <string name="search">Cauta</string>
+    <string name="read_reviews">Citesti Recenzii</string>
+    <string name="default_review_description">Fara Descriere</string>
+    <string name="manual_input_message">Scrie toate numerele aflate pe codul de bare al produsului pentru ao cauta.</string>
+    <string name="no_lowest_price">Cel Mai Mic Pret: N/A</string>
+    <string name="no_highest_price">Cel Mai Mare Pret: N/A</string>
+    <string name="no_current_price">Pretul Curent: N/A</string>
+    <string name="no_average_rating">Evaluarea Medie: N/A</string>
+</resources>
