@@ -37,11 +37,6 @@
             android:paddingTop="15dp"
             android:textSize="15sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#D3D3D3" />
-
     </LinearLayout>
 
 </LinearLayout>
