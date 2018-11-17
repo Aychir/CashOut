@@ -32,6 +32,11 @@
     <string name="no_highest_price">Cel Mai Mare Pret: N/A</string>
     <string name="no_current_price">Pretul Curent: N/A</string>
     <string name="no_average_rating">Evaluarea Medie: N/A</string>
+    <string name="average_rating">Evaluarea Medie: %1s/5.0</string>
+    <string name="lowest_price">Cel Mai Mic Pret: $%1.2f</string>
+    <string name="highest_price">Cel Mai Mare Pret: $%1.2f</string>
+    <string name="current_price_no_merchant">Pretul Curent: $%1.2f</string>
+    <string name="current_price_with_merchant">Pretul Curent: $%1.2f la %2s</string>
     <string name="accountActivity">Informatie de Cont</string>
     <string name="historyActivity">Produse Scanate</string>
     <string name="infoActivity">Informatiile Produsului</string>

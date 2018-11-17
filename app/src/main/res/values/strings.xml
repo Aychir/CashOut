@@ -32,6 +32,11 @@
     <string name="no_highest_price">Highest Price: N/A</string>
     <string name="no_current_price">Current Price: N/A</string>
     <string name="no_average_rating">Average Rating: N/A</string>
+    <string name="average_rating">Average Rating: %1s/5.0</string>
+    <string name="lowest_price">Lowest Price: $%1.2f</string>
+    <string name="highest_price">Highest Price: $%1.2f</string>
+    <string name="current_price_no_merchant">Current Price: $%1.2f</string>
+    <string name="current_price_with_merchant">Current Price: $%1.2f at %2s</string>
     <string name="accountActivity">Account Information</string>
     <string name="historyActivity">Previously Scanned Products</string>
     <string name="infoActivity">Product Information</string>

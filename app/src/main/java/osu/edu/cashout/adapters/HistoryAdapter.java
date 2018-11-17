@@ -2,6 +2,7 @@ package osu.edu.cashout.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,14 +25,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     private Context mContext;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView mItemIcon;
-        public TextView mItemName;
-        public TextView mItemRating;
+        ImageView mItemIcon;
+        TextView mItemName;
+        TextView mItemRating;
 
         private Context mContext;
         private Product[] mProductList;
 
-        public MyViewHolder(View v, Product[] list, Context context){
+        MyViewHolder(View v, Product[] list, Context context){
             super(v);
             mItemIcon = v.findViewById(R.id.item_icon);
             mItemName = v.findViewById(R.id.item_name);
@@ -64,16 +65,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         mContext = c;
     }
 
+    @NonNull
     @Override
-    public HistoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public HistoryAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         Log.v("HistoryAdapter: ", "In onCreateVH");
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_history_item, parent, false);
-        MyViewHolder vh = new MyViewHolder(v, mDataset, mContext);
-        return vh;
+        return new MyViewHolder(v, mDataset, mContext);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position){
         Log.v("OnBindViewHolder", holder.toString());
         if(mDataset[position].getImage() != null) {
             Picasso.get().load(mDataset[position].getImage()).fit().into(holder.mItemIcon);
@@ -83,12 +84,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         }
         holder.mItemName.setText(mDataset[position].getName());
         if(mDataset[position].getRating() == 0.0){
-            holder.mItemRating.setText("Average Rating: N/A");
+            holder.mItemRating.setText(R.string.no_average_rating);
         }
         else{
             DecimalFormat format = new DecimalFormat("#.##");
             String formatted = format.format(mDataset[position].getRating());
-            holder.mItemRating.setText("Average Rating: " + formatted + "/5.0");
+            holder.mItemRating.setText(mContext.getString(R.string.average_rating, formatted));
         }
     }
 

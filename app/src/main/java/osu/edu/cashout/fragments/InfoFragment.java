@@ -12,15 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
-import java.util.Locale;
 
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.AccountActivity;
@@ -30,12 +24,6 @@ import osu.edu.cashout.activities.MakeReviewActivity;
 import osu.edu.cashout.dataModels.Product;
 
 public class InfoFragment extends Fragment implements View.OnClickListener {
-    private TextView mProductTitle;
-    private TextView mHighPrice;
-    private TextView mLowPrice;
-    private TextView mCurrentPrice;
-    private TextView mCustomerReview;
-    private ImageView mProductImage;
     private Product mProduct;
     private String mProductUPC;
 
@@ -55,12 +43,12 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         Button mAccountButton = v.findViewById(R.id.account_button);
         mAccountButton.setOnClickListener(this);
 
-        mProductTitle = v.findViewById(R.id.productTitle);
-        mHighPrice = v.findViewById(R.id.highPrice);
-        mLowPrice = v.findViewById(R.id.lowPrice);
-        mCurrentPrice = v.findViewById(R.id.currentPrice);
-        mCustomerReview = v.findViewById(R.id.customerReview);
-        mProductImage = v.findViewById(R.id.item_icon);
+        TextView mProductTitle = v.findViewById(R.id.productTitle);
+        TextView mHighPrice = v.findViewById(R.id.highPrice);
+        TextView mLowPrice = v.findViewById(R.id.lowPrice);
+        TextView  mCurrentPrice = v.findViewById(R.id.currentPrice);
+        TextView mCustomerReview = v.findViewById(R.id.customerReview);
+        ImageView mProductImage = v.findViewById(R.id.item_icon);
 
         Bundle arguments = getArguments();
         if(arguments != null){
@@ -76,7 +64,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
             mProduct.setHighestPrice(arguments.getDouble("highest"));
         }
 
-        if(mProduct != null){
+        if(mProduct != null && getContext() != null){
             if(mProduct.getImage() != null) {
                 Picasso.get().load(mProduct.getImage()).into(mProductImage);
             }
@@ -88,22 +76,22 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                 mHighPrice.setText(R.string.no_highest_price);
             }
             else{
-                mHighPrice.setText(String.format(Locale.getDefault(),"Highest Price: $%.2f", mProduct.getHighestPrice()));
+                mHighPrice.setText(getContext().getString(R.string.highest_price, mProduct.getHighestPrice()));
             }
             if(mProduct.getLowestPrice() == 0.0){
                 mLowPrice.setText(R.string.no_lowest_price);
             }
             else{
-                mLowPrice.setText(String.format(Locale.getDefault(),"Lowest Price: $%.2f", mProduct.getLowestPrice()));
+                mLowPrice.setText(getContext().getString(R.string.lowest_price, mProduct.getLowestPrice()));
             }
             if(mProduct.getCurrentPrice() == 0.0){
                 mCurrentPrice.setText(R.string.no_current_price);
             }
             else if (mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() != null){
-                mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()) + " at " + mProduct.getStore());
+                mCurrentPrice.setText(getContext().getString(R.string.current_price_with_merchant, mProduct.getCurrentPrice(), mProduct.getStore()));
             }
             else if(mProduct.getCurrentPrice() > 0.0 && mProduct.getStore() == null){
-                mCurrentPrice.setText(String.format(Locale.getDefault(),"Current Price: $%.2f", mProduct.getCurrentPrice()));
+                mCurrentPrice.setText(getContext().getString(R.string.current_price_no_merchant, mProduct.getCurrentPrice()));
             }
             if(mProduct.getRating() == 0.0){
                 mCustomerReview.setText(R.string.no_average_rating);
@@ -111,7 +99,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
             else{
                 DecimalFormat format = new DecimalFormat("#.##");
                 String formatted = format.format(mProduct.getRating());
-                mCustomerReview.setText("Average Rating: " + formatted + "/5.0");
+                mCustomerReview.setText(getContext().getString(R.string.average_rating, formatted));
             }
         }
 
