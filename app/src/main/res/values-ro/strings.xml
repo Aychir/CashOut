@@ -32,4 +32,12 @@
     <string name="no_highest_price">Cel Mai Mare Pret: N/A</string>
     <string name="no_current_price">Pretul Curent: N/A</string>
     <string name="no_average_rating">Evaluarea Medie: N/A</string>
+    <string name="accountActivity">Informatie de Cont</string>
+    <string name="historyActivity">Produse Scanate</string>
+    <string name="infoActivity">Informatiile Produsului</string>
+    <string name="listReviewsActivity">Toate Recenziile Produsului</string>
+    <string name="manualSearchActivity">Cautare Manuala de Produse</string>
+    <string name="reviewDetailActivity">Recenzia Produsului</string>
+    <string name="scanActivity">Scaneaza Produsul</string>
+
 </resources>

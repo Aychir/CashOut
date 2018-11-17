@@ -19,6 +19,8 @@ public class SignupActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        setTitle(R.string.sign_up);
+
         Log.v(TAG, "Logging onCreate() method");
 
         //If there is an existing state, we do not need to create a new fragment

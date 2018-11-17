@@ -19,6 +19,8 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        setTitle(R.string.login);
+
         Log.v(TAG, "Logging onCreate() method");
 
         FragmentManager fm = getSupportFragmentManager();

@@ -32,4 +32,11 @@
     <string name="no_highest_price">Highest Price: N/A</string>
     <string name="no_current_price">Current Price: N/A</string>
     <string name="no_average_rating">Average Rating: N/A</string>
+    <string name="accountActivity">Account Information</string>
+    <string name="historyActivity">Previously Scanned Products</string>
+    <string name="infoActivity">Product Information</string>
+    <string name="listReviewsActivity">All Product Reviews</string>
+    <string name="manualSearchActivity">Manual Product Search</string>
+    <string name="reviewDetailActivity">Product Review</string>
+    <string name="scanActivity">Scan Product</string>
 </resources>
