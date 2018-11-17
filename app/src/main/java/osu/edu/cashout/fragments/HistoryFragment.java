@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
     private String mCurrentUserUID;
 
     private DatabaseReference mScannedProductsReference;
-    private Set<Product> mScannedProducts;
+    private ArrayList<Product> mScannedProducts;
     private Map<String, Product> mProducts;
 
     @Override
@@ -54,7 +56,7 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         mScanButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
 
-        mScannedProducts = new HashSet<>();
+        mScannedProducts = new ArrayList<>();
         mProducts = new HashMap<>();
 
         FirebaseAuth mUserAuth = FirebaseAuth.getInstance();
@@ -71,15 +73,18 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
                     for (DataSnapshot product : dataSnapshot.getChildren()) {
                         mProducts.put(product.child("upc").getValue(String.class), product.getValue(Product.class));
                     }
-                    mScannedProductsReference.orderByChild("uid").equalTo(mCurrentUserUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mScannedProductsReference.orderByChild("date").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for(DataSnapshot scannedProduct : dataSnapshot.getChildren()){
-                                mScannedProducts.add(mProducts.get(scannedProduct.child("upc").getValue(String.class)));
-                                Log.v("SCANNED: ", mScannedProducts.toString());
+                                if(scannedProduct.child("uid").getValue(String.class).equals(mCurrentUserUID)) {
+                                    mScannedProducts.add(mProducts.get(scannedProduct.child("upc").getValue(String.class)));
+                                    Log.v("SCANNED: ", scannedProduct.child("date").getValue(String.class));
+                                }
 
                             }
-                            Log.v("SCANNED PRODUCTS Set: ", mScannedProducts.toString());
+                            //Sort the history by date
+                            Collections.reverse(mScannedProducts);
                             mProductArray = mScannedProducts.toArray(new Product[mScannedProducts.size()]);
                             mRecyclerView.hasFixedSize();
                             mLayoutManager = new LinearLayoutManager(getActivity());

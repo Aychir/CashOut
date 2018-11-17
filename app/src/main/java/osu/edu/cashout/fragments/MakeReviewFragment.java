@@ -310,7 +310,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
 
         //Receiving the date that the object was reviewed on
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         String date = sdf.format(calendar.getTime());
         mReview.setDate(date);
 

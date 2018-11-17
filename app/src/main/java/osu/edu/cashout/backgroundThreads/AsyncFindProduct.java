@@ -171,7 +171,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
                         ScannedProducts scanned = new ScannedProducts();
                         //Receiving the date that the object was scanned on
                         Calendar calendar = Calendar.getInstance();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
                         String date = sdf.format(calendar.getTime());
                         scanned.setUid(userId);
                         scanned.setUpc(product.getUpc());
