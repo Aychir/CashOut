@@ -33,6 +33,7 @@
     <string name="no_current_price">Pretul Curent: N/A</string>
     <string name="no_average_rating">Evaluarea Medie: N/A</string>
     <string name="average_rating">Evaluarea Medie: %1s/5.0</string>
+    <string name="given_rating">Evaluarea: %1s/5.0</string>
     <string name="lowest_price">Cel Mai Mic Pret: $%1.2f</string>
     <string name="highest_price">Cel Mai Mare Pret: $%1.2f</string>
     <string name="current_price_no_merchant">Pretul Curent: $%1.2f</string>
@@ -44,5 +45,6 @@
     <string name="manualSearchActivity">Cautare Manuala de Produse</string>
     <string name="reviewDetailActivity">Recenzia Produsului</string>
     <string name="scanActivity">Scaneaza Produsul</string>
-
+    <string name="productTitle">Titlu: %1s</string>
+    <string name="user">Utilizator: %1s</string>
 </resources>

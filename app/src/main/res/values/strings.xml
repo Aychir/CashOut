@@ -33,6 +33,7 @@
     <string name="no_current_price">Current Price: N/A</string>
     <string name="no_average_rating">Average Rating: N/A</string>
     <string name="average_rating">Average Rating: %1s/5.0</string>
+    <string name="given_rating">Rating: %1s/5.0</string>
     <string name="lowest_price">Lowest Price: $%1.2f</string>
     <string name="highest_price">Highest Price: $%1.2f</string>
     <string name="current_price_no_merchant">Current Price: $%1.2f</string>
@@ -44,4 +45,6 @@
     <string name="manualSearchActivity">Manual Product Search</string>
     <string name="reviewDetailActivity">Product Review</string>
     <string name="scanActivity">Scan Product</string>
+    <string name="productTitle">Title: %1s</string>
+    <string name="user">User: %1s</string>
 </resources>

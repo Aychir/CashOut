@@ -2,12 +2,14 @@ package osu.edu.cashout.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import osu.edu.cashout.R;
@@ -20,15 +22,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     private Context mContext;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView mReviewerUsername;
-        public TextView mReviewTitle;
-        public TextView mReviewRating;
+        TextView mReviewerUsername;
+        TextView mReviewTitle;
+        TextView mReviewRating;
 
         private Context mContext;
         private Review[] mReviewList;
         private Map<String, String> mUidToUsername;
 
-        public MyViewHolder(View v, Review[] reviews, Map<String, String> idToUsername, Context context){
+         MyViewHolder(View v, Review[] reviews, Map<String, String> idToUsername, Context context){
             super(v);
             mReviewerUsername = v.findViewById(R.id.reviewer_username);
             mReviewTitle = v.findViewById(R.id.review_title);
@@ -45,7 +47,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
         public void onClick(View v){
             Intent reviewIntent = new Intent(mContext, ReviewDetailActivity.class);
             Review review = mReviewList[getAdapterPosition()];
-            reviewIntent.putExtra("rating", Double.toString(review.getScore()));
+            reviewIntent.putExtra("rating", review.getScore());
             reviewIntent.putExtra("title", review.getTitle());
             reviewIntent.putExtra("username", mUidToUsername.get(review.getUserId()));
             String desc;
@@ -68,18 +70,25 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
         mContext = context;
     }
 
+    @NonNull
     @Override
-    public ReviewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public ReviewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_review_item, parent, false);
-        MyViewHolder vh = new MyViewHolder(v, mDataset, mUIDToUsername, mContext);
-        return vh;
+        return new MyViewHolder(v, mDataset, mUIDToUsername, mContext);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position){
         holder.mReviewerUsername.setText(mUIDToUsername.get(mDataset[position].getUserId()));
-        holder.mReviewTitle.setText("Title: " + mDataset[position].getTitle());
-        holder.mReviewRating.setText("Rating: " + Double.toString(mDataset[position].getScore()));
+        holder.mReviewTitle.setText(mContext.getString(R.string.productTitle, mDataset[position].getTitle()));
+        if(mDataset[position].getScore() == 0.0){
+            holder.mReviewRating.setText(R.string.no_average_rating);
+        }
+        else{
+            DecimalFormat format = new DecimalFormat("#.##");
+            String formatted = format.format(mDataset[position].getScore());
+            holder.mReviewRating.setText(mContext.getString(R.string.given_rating, formatted));
+        }
     }
 
     @Override

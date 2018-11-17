@@ -97,10 +97,17 @@ public class ListReviewsFragment extends Fragment {
         mProductDbReference.orderByChild("upc").equalTo(mProductUPC).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DecimalFormat format = new DecimalFormat("#.##");
                 for (DataSnapshot product : dataSnapshot.getChildren()) {
-                    String formatted = format.format(product.child("rating").getValue(Double.class));
-                    mAverageRating.setText("Average Rating: " + formatted + "/5.0");
+                    if(product.child("rating").getValue(Double.class) == 0.0){
+                        mAverageRating.setText(R.string.no_average_rating);
+                    }
+                    else{
+                        if(getContext() != null) {
+                            DecimalFormat format = new DecimalFormat("#.##");
+                            String formatted = format.format(product.child("rating").getValue(Double.class));
+                            mAverageRating.setText(getContext().getString(R.string.average_rating, formatted));
+                        }
+                    }
                     mProductName.setText(product.child("name").getValue(String.class));
                     break;
                 }
