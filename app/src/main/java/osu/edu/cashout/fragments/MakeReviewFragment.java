@@ -262,6 +262,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                         }
                     });
                     Intent historyActivity = new Intent(getContext(), HistoryActivity.class);
+                    historyActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(historyActivity);
                 }
                 break;
