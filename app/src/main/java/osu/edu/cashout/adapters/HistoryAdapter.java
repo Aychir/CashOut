@@ -80,7 +80,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             Picasso.get().load(mDataset[position].getImage()).fit().into(holder.mItemIcon);
         }
         else {
-            holder.mItemIcon.setImageResource(R.drawable.test_icon);
+            Picasso.get().load(R.drawable.no_image).fit().into(holder.mItemIcon);
         }
         holder.mItemName.setText(mDataset[position].getName());
         if(mDataset[position].getRating() == 0.0){

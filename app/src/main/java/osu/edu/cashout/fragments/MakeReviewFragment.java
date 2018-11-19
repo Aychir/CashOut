@@ -82,9 +82,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         mSaveReviewButton.setOnClickListener(this);
 
         if (getActivity() != null) {
-            Log.v(TAG, "getting upc");
             Intent called = getActivity().getIntent();
             upcCode = called.getStringExtra("upc");
+            Log.v(TAG, "getting upc " + upcCode);
         }
 
         DatabaseReference productDatabase = FirebaseDatabase.getInstance().getReference("products");
@@ -125,8 +125,9 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                     Log.v(TAG, userId + " in the reviews loop");
                     if (product.child("userId").getValue(String.class) != null && userId != null) {
                         Log.v(TAG, userId + " in the reviews loop first if");
-                        if (product.child("userId").getValue(String.class).equals(userId)) {
-                            Log.v(TAG, userId + " in the reviews loop second if");
+                        if (product.child("userId").getValue(String.class).equals(userId) &&
+                                product.child("upc").getValue(String.class).equals(upcCode)) {
+                            Log.v(TAG, userId + " in the reviews loop second if " + product.getValue(Review.class).getTitle());
                             setOfReviews.add(product.getValue(Review.class));
                             //Add the key of each review the user has made into a set
                             setOfReviewIds.add(product.getKey());
@@ -149,6 +150,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         Log.v(TAG, "setting edit texts");
         //loop through the set, set edit text fields if the user has made a review for the product
         for (Review rev : setOfReviews) {
+            Log.v(TAG, "in for each loop");
             if (rev.getUpc().equals(upcCode)) {
                 DecimalFormat format = new DecimalFormat("#.##");
                 String formatted = format.format(rev.getScore());
@@ -174,19 +176,23 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
 
                     //Product has been reviewed by the user if we find the upc of the product in the set of reviews they made
                     boolean isReviewed = false;
+                    Log.v(TAG, "set of reviews length: " + setOfReviews.size());
+                    Log.v(TAG, "set of review ids length: " + setOfReviewIds.size());
                     Iterator i = setOfReviews.iterator();
                     Iterator i2 = setOfReviewIds.iterator();
                     while (i.hasNext() && i2.hasNext()) {
+                        Log.v(TAG, "iterating reviews");
                         Review r = (Review) i.next();
                         String reviewId = i2.next().toString();
                         if (r.getUpc().equals(upcCode)) {
+                            Log.v(TAG, "boolean set to true");
                             isReviewed = true;
                             mReview.setReviewId(reviewId);
                         }
                     }
 
                     //User has not made a review of this product yet
-                    if (!isReviewed) {
+                    if (isReviewed == false) {
                         mDbReference.push().setValue(mReview);
                     }
                     //Update the review the user has made of the product
