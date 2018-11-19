@@ -58,6 +58,8 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_review, container, false);
 
+        Log.v(TAG, "onCreateView");
+
         //Get the current user
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
@@ -80,15 +82,16 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
         mSaveReviewButton.setOnClickListener(this);
 
         if (getActivity() != null) {
+            Log.v(TAG, "getting upc");
             Intent called = getActivity().getIntent();
             upcCode = called.getStringExtra("upc");
         }
 
         DatabaseReference productDatabase = FirebaseDatabase.getInstance().getReference("products");
-        productDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        productDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.v("onDataChange", "in here");
+                Log.v(TAG, "on data change product");
                 for (DataSnapshot product : dataSnapshot.getChildren()) {
                     //Find the product and get its information to show in make review
                     if (product.child("upc").getValue(String.class) != null && upcCode != null) {
@@ -110,24 +113,21 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
             }
         });
 
+        Log.v(TAG, "between db references");
         //Set up an instance to the database and get some of the data
         mDbReference = FirebaseDatabase.getInstance().getReference("reviews");
-        mDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.v("onDataChange", "in here");
+                Log.v(TAG, "on data change reviews");
                 for (DataSnapshot product : dataSnapshot.getChildren()) {
                     //Create the set of reviews the user has created
+                    Log.v(TAG, userId + " in the reviews loop");
                     if (product.child("userId").getValue(String.class) != null && userId != null) {
+                        Log.v(TAG, userId + " in the reviews loop first if");
                         if (product.child("userId").getValue(String.class).equals(userId)) {
-                            if (setOfReviews.size() > 0) {
-                                setOfReviews.clear();
-                            }
+                            Log.v(TAG, userId + " in the reviews loop second if");
                             setOfReviews.add(product.getValue(Review.class));
-
-                            if (setOfReviewIds.size() > 0) {
-                                setOfReviewIds.clear();
-                            }
                             //Add the key of each review the user has made into a set
                             setOfReviewIds.add(product.getKey());
                         }
@@ -146,6 +146,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     }
 
     private void setEditTexts() {
+        Log.v(TAG, "setting edit texts");
         //loop through the set, set edit text fields if the user has made a review for the product
         for (Review rev : setOfReviews) {
             if (rev.getUpc().equals(upcCode)) {

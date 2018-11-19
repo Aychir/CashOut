@@ -80,7 +80,6 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
                             for(DataSnapshot scannedProduct : dataSnapshot.getChildren()){
                                 if(scannedProduct.child("uid").getValue(String.class).equals(mCurrentUserUID)) {
                                     mScannedProducts.add(mProducts.get(scannedProduct.child("upc").getValue(String.class)));
-                                    Log.v("SCANNED: ", scannedProduct.child("date").getValue(String.class));
                                 }
 
                             }
