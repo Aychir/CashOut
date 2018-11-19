@@ -68,5 +68,6 @@
     <string name="must_enter_code">Trebuie sa intii un cod ca sa cauti.</string>
     <string name="failed_to_create_account">Nu am reusit sa te cream un cont.</string>
     <string name="getting_product_information">Cautam pentru produsul aceasta&#8230;</string>
-    <string name="getting_account_information">Cautam your account info&#8230;</string>
+    <string name="getting_account_information">Cautam pentru contul tau.&#8230;</string>
+    <string name="account_retrieval_failed">Nu am reusit sa luam informatie de contul tau.</string>
 </resources>

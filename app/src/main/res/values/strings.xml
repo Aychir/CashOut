@@ -69,4 +69,5 @@
     <string name="failed_to_create_account">We failed to create your account.</string>
     <string name="getting_product_information">Searching for this product&#8230;</string>
     <string name="getting_account_information">Getting your account info&#8230;</string>
+    <string name="account_retrieval_failed">Failed to get account information at this time.</string>
 </resources>

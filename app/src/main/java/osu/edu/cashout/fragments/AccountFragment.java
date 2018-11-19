@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -83,8 +84,19 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         mSignoutButton.setOnClickListener(this);
 
         dialog = new ProgressDialog(getActivity());
-        dialog.setMessage("Getting your account info...");
+        dialog.setMessage(getString(R.string.getting_account_information));
         dialog.show();
+
+        //Setting up a timer to make sure the dialog closes if we can't get account info
+        Runnable progressRunnable = new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+                Toast.makeText(getContext(), R.string.account_retrieval_failed, Toast.LENGTH_SHORT).show();
+            }
+        };
+        Handler pdCanceller = new Handler();
+        pdCanceller.postDelayed(progressRunnable, 5000);
         //Set up necessary FireBase components
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
