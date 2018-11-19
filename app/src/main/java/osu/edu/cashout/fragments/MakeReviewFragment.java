@@ -105,6 +105,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                             mProductName.setText(product.child("name").getValue(String.class));
                         }
                     }
+
                 }
             }
 
@@ -192,7 +193,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                     }
 
                     //User has not made a review of this product yet
-                    if (isReviewed == false) {
+                    if (!isReviewed) {
                         mDbReference.push().setValue(mReview);
                     }
                     //Update the review the user has made of the product
@@ -234,6 +235,7 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
                                                 for (DataSnapshot review : dataSnapshot.getChildren()) {
                                                     if (review.child("upc").getValue(String.class).equals(upcCode)) {
                                                         count += 1;
+
                                                         sum += review.child("score").getValue(Double.class);
                                                     }
                                                 }
