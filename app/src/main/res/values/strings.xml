@@ -67,4 +67,6 @@
     <string name="score_must_be_number">Score must be a number</string>
     <string name="must_enter_code">You must enter a code to search.</string>
     <string name="failed_to_create_account">We failed to create your account.</string>
+    <string name="getting_product_information">Searching for this product&#8230;</string>
+    <string name="getting_account_information">Getting your account info&#8230;</string>
 </resources>

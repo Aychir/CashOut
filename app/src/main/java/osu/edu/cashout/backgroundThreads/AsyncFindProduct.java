@@ -65,7 +65,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
 
     @Override
     protected void onPreExecute() {
-        progress.setMessage("Searching for this product...");
+        progress.setMessage(activityReference.get().getString(R.string.getting_product_information));
         progress.show();
     }
 
