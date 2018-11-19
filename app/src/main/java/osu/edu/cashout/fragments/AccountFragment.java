@@ -3,6 +3,8 @@ package osu.edu.cashout.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -35,7 +37,7 @@ import osu.edu.cashout.activities.ScanActivity;
 import osu.edu.cashout.dataModels.User;
 
 
-public class AccountFragment extends Fragment implements View.OnClickListener{
+public class AccountFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mUserAuth;
     private DatabaseReference mDbReference;
     private EditText mFirstName;
@@ -53,7 +55,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "AccountFragment";
 
     @Override
-    public void onAttach(Context c){
+    public void onAttach(Context c) {
         super.onAttach(getContext());
         mContext = c;
     }
@@ -91,8 +93,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         Runnable progressRunnable = new Runnable() {
             @Override
             public void run() {
-                dialog.dismiss();
-                Toast.makeText(getContext(), R.string.account_retrieval_failed, Toast.LENGTH_SHORT).show();
+                if (dialog.isShowing()) {
+                    //Only dismiss and say something if the dialog is still going
+                    dialog.dismiss();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), R.string.account_retrieval_failed, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         };
         Handler pdCanceller = new Handler();
@@ -100,7 +107,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         //Set up necessary FireBase components
         mUserAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mUserAuth.getCurrentUser();
-        if(currentUser != null) {
+        if (currentUser != null) {
             //get the reference to the user that is signed-in
             mDbReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
 
@@ -114,9 +121,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     //If there is a current user and all fields are empty (on fragment creation) will we want to pull info from the database
                     curUser = dataSnapshot.getValue(User.class);
                     if (curUser != null && mFirstName.getText().toString().isEmpty() && mLastName.getText().toString().isEmpty()
-                            && mUsername.getText().toString().isEmpty() && mEmailField.getText().toString().isEmpty()){
+                            && mUsername.getText().toString().isEmpty() && mEmailField.getText().toString().isEmpty()) {
 
-                        if(dialog.isShowing()){
+                        if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
 
@@ -124,9 +131,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                         mLastName.setText(curUser.getLastName());
                         mUsername.setText(curUser.getUsername());
                         mEmailField.setText(curUser.getEmail());
-                    }
-                    else{
-                        if(dialog.isShowing()){
+                    } else {
+                        if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
                     }
@@ -146,7 +152,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
         mDbReferenceUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot user: dataSnapshot.getChildren()){
+                for (DataSnapshot user : dataSnapshot.getChildren()) {
                     userEmails.add(user.child("email").getValue(String.class));
                     mUsernames.add(user.child("username").getValue(String.class));
                 }
@@ -161,46 +167,64 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.update_button:
-                if(!validateForms()){
+                if (!validateForms()) {
                     return;
-                }
-                else {
-                    curUser.setEmail(mEmailField.getText().toString());
-                    curUser.setFirstName(mFirstName.getText().toString());
-                    curUser.setLastName(mLastName.getText().toString());
-                    curUser.setUsername(mUsername.getText().toString());
-                    if(mUserAuth.getCurrentUser() != null) {
-                        //Change the user's email
-                        mUserAuth.getCurrentUser().updateEmail(curUser.getEmail());
+                } else {
+                    ConnectivityManager cm =
+                            (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                        //Change the user's password
-                        if (!mPasswordField.getText().toString().isEmpty()) {
-                            mUserAuth.getCurrentUser().updatePassword(mPasswordField.getText().toString());
+                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null &&
+                            activeNetwork.isConnectedOrConnecting();
+
+                    if(isConnected) {
+                        curUser.setEmail(mEmailField.getText().toString());
+                        curUser.setFirstName(mFirstName.getText().toString());
+                        curUser.setLastName(mLastName.getText().toString());
+                        curUser.setUsername(mUsername.getText().toString());
+                        if (mUserAuth.getCurrentUser() != null) {
+                            //Change the user's email
+                            mUserAuth.getCurrentUser().updateEmail(curUser.getEmail());
+
+                            //Change the user's password
+                            if (!mPasswordField.getText().toString().isEmpty()) {
+                                mUserAuth.getCurrentUser().updatePassword(mPasswordField.getText().toString());
+                            }
+
+                            //Set the value of the referenced user to the updated user values
+                            mDbReference.setValue(curUser);
+
+                            Toast.makeText(getActivity(), R.string.account_updated,
+                                    Toast.LENGTH_SHORT).show();
+
+                            //Start the scan activity after a successful update
+                            Intent scanActivity = new Intent(getContext(), ScanActivity.class);
+                            startActivity(scanActivity);
+                        } else {
+                            Toast.makeText(getActivity(), R.string.unable_to_update,
+                                    Toast.LENGTH_SHORT).show();
                         }
 
-                        //Set the value of the referenced user to the updated user values
-                        mDbReference.setValue(curUser);
-
-                        Toast.makeText(getActivity(), R.string.account_updated,
-                                Toast.LENGTH_SHORT).show();
-
-                        //Start the scan activity after a successful update
-                        Intent scanActivity = new Intent(getContext(), ScanActivity.class);
-                        startActivity(scanActivity);
                     }
                     else{
-                        Toast.makeText(getActivity(), R.string.unable_to_update,
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.cannot_update_account, Toast.LENGTH_SHORT).show();
                     }
+
                 }
                 break;
             case R.id.delete_button:
+                ConnectivityManager cm =
+                        (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
                 //Delete the user in all tables as long as getting the current user is not null
-                if(mUserAuth.getCurrentUser() != null) {
+                if (isConnected) {
                     mUserAuth.getCurrentUser().delete();
 
                     //Delete the instance of the user in the realtime database
@@ -212,8 +236,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     Intent loginIntent = new Intent(mContext, LoginActivity.class);
                     loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(loginIntent);
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity(), R.string.unable_to_delete,
                             Toast.LENGTH_SHORT).show();
                 }
@@ -234,48 +257,51 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
     private boolean validateForms() {
         boolean valid = true;
 
-        String email = mEmailField.getText().toString();
-        if (email.isEmpty()) {
-            mEmailField.setError(getString(R.string.email_required));
-            valid = false;
-        }
-        //Check the format of the email address
-        else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            mEmailField.setError(getString(R.string.enter_valid_email));
-            valid = false;
-        }
-        //Check if email address is already taken
-        else if(!email.equals(curUser.getEmail()) && userEmails.contains(email)){
-            mEmailField.setError(getString(R.string.account_exists));
-            valid = false;
-        }
+        if (curUser != null) {
+            String email = mEmailField.getText().toString();
+            if (email.isEmpty()) {
+                mEmailField.setError(getString(R.string.email_required));
+                valid = false;
+            }
+            //Check the format of the email address
+            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                mEmailField.setError(getString(R.string.enter_valid_email));
+                valid = false;
+            }
+            //Check if email address is already taken
+            else if (!email.equals(curUser.getEmail()) && userEmails.contains(email)) {
+                mEmailField.setError(getString(R.string.account_exists));
+                valid = false;
+            }
 
-        //Verify a long enough password and its confirmation
-        String password = mPasswordField.getText().toString();
-        if(!password.isEmpty() && password.length() < 6){
-            mPasswordField.setError(getString(R.string.password_length));
-            valid = false;
-        }
+            //Verify a long enough password and its confirmation
+            String password = mPasswordField.getText().toString();
+            if (!password.isEmpty() && password.length() < 6) {
+                mPasswordField.setError(getString(R.string.password_length));
+                valid = false;
+            }
 
-        String passwordConfirmation = mConfirmPasswordField.getText().toString();
-        if (!password.isEmpty() && passwordConfirmation.isEmpty()) {
-            mConfirmPasswordField.setError(getString(R.string.confirm_password_warning));
-            valid = false;
-        }
-        else if(!passwordConfirmation.equals(password)){
-            mConfirmPasswordField.setError(getString(R.string.unmatched_passwords));
-            valid = false;
-        }
+            String passwordConfirmation = mConfirmPasswordField.getText().toString();
+            if (!password.isEmpty() && passwordConfirmation.isEmpty()) {
+                mConfirmPasswordField.setError(getString(R.string.confirm_password_warning));
+                valid = false;
+            } else if (!passwordConfirmation.equals(password)) {
+                mConfirmPasswordField.setError(getString(R.string.unmatched_passwords));
+                valid = false;
+            }
 
-        //Validate existence and uniqueness of the username attribute
-        String username = mUsername.getText().toString();
-        if(username.isEmpty()){
-            mUsername.setError(getString(R.string.username_required));
+            //Validate existence and uniqueness of the username attribute
+            String username = mUsername.getText().toString();
+            if (username.isEmpty()) {
+                mUsername.setError(getString(R.string.username_required));
+                valid = false;
+            } else if (!username.equals(curUser.getUsername()) && mUsernames.contains(username)) {
+                mUsername.setError(getString(R.string.username_taken));
+                valid = false;
+            }
+        } else {
             valid = false;
-        }
-        else if(!username.equals(curUser.getUsername()) && mUsernames.contains(username)){
-            mUsername.setError(getString(R.string.username_taken));
-            valid = false;
+            Toast.makeText(mContext, R.string.cannot_update_account, Toast.LENGTH_SHORT).show();
         }
 
         return valid;

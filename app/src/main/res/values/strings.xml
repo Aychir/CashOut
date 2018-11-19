@@ -70,4 +70,6 @@
     <string name="getting_product_information">Searching for this product&#8230;</string>
     <string name="getting_account_information">Getting your account info&#8230;</string>
     <string name="account_retrieval_failed">Failed to get account information at this time.</string>
+    <string name="cannot_update_account">We could not update your account.</string>
+    <string name="unable_to_make_review">Unable to make your review at this time.</string>
 </resources>

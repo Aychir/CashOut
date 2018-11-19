@@ -70,4 +70,6 @@
     <string name="getting_product_information">Cautam pentru produsul aceasta&#8230;</string>
     <string name="getting_account_information">Cautam pentru contul tau.&#8230;</string>
     <string name="account_retrieval_failed">Nu am reusit sa luam informatie de contul tau.</string>
+    <string name="cannot_update_account">Nu n-am putut sa actualizam contul tau.</string>
+    <string name="unable_to_make_review">Nu putem crea recenzia ta acum.</string>
 </resources>
