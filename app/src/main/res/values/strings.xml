@@ -47,4 +47,24 @@
     <string name="scanActivity">Scan Product</string>
     <string name="productTitle">Title: %1s</string>
     <string name="user">User: %1s</string>
+    <string name="no_product_found">Couldn\'t find that product!</string>
+    <string name="account_updated">Account successfully updated.</string>
+    <string name ="unable_to_update">Currently unable to update email and/or password, try again later.</string>
+    <string name="unable_to_delete">Currently unable to delete your account, try again later.</string>
+    <string name="email_required">An email is required.</string>
+    <string name="enter_valid_email">Please enter a valid email.</string>
+    <string name="account_exists">An account with that email address already exists.</string>
+    <string name="password_length">Your password must be at least 6 characters long.</string>
+    <string name="confirm_password_warning">You must confirm your password.</string>
+    <string name="unmatched_passwords">Your password entries did not match, please try again.</string>
+    <string name="username_required">A username is required.</string>
+    <string name="username_taken">That username is already taken.</string>
+    <string name="failed_to_login">Failed to sign in, please try again.</string>
+    <string name="password_required">A password is required.</string>
+    <string name="review_needs_title">Review must have a title.</string>
+    <string name="review_needs_score">Review needs a score.</string>
+    <string name="score_bounds">Score must be between 1.0 and 5.0.</string>
+    <string name="score_must_be_number">Score must be a number</string>
+    <string name="must_enter_code">You must enter a code to search.</string>
+    <string name="failed_to_create_account">We failed to create your account.</string>
 </resources>

@@ -47,4 +47,24 @@
     <string name="scanActivity">Scaneaza Produsul</string>
     <string name="productTitle">Titlu: %1s</string>
     <string name="user">Utilizator: %1s</string>
+    <string name="no_product_found">Nu a putut gasi produsul aceasta!</string>
+    <string name="account_updated">Contul e actualizat.</string>
+    <string name ="unable_to_update">Nu putem actualiza contul momentan, te rog- incerci mai tarsiu.</string>
+    <string name="unable_to_delete">Nu putem sterge contul tau, te rog- incerci mai tarsiu.</string>
+    <string name="email_required">Ai nevoie de un email.</string>
+    <string name="enter_valid_email">Scrii un email valid.</string>
+    <string name="account_exists">Un cont cu emailul aceasta exista deja.</string>
+    <string name="password_length">Parola ta trebuie minimum 6 cifre.</string>
+    <string name="confirm_password_warning">Trebuie sa confirmi parola ta.</string>
+    <string name="unmatched_passwords">Parolele care ai intrat nu sunt la fele, incerci din nou.</string>
+    <string name="username_required">Ai nevoie de o porecla.</string>
+    <string name="username_taken">Aceasta porecla exista deja.</string>
+    <string name="failed_to_login">Nu a reusit sa intrii in cont.</string>
+    <string name="password_required">Trebuie sa scrii parola ta.</string>
+    <string name="review_needs_title">Recenzie trebuie titlu.</string>
+    <string name="review_needs_score">Review trebuie o nota.</string>
+    <string name="score_bounds">Nota trebuie sa fie intra 1.0 si 5.0.</string>
+    <string name="score_must_be_number">Nota trebuie sa fie un numer.</string>
+    <string name="must_enter_code">Trebuie sa intii un cod ca sa cauti.</string>
+    <string name="failed_to_create_account">Nu am reusit sa te cream un cont.</string>
 </resources>

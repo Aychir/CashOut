@@ -274,21 +274,21 @@ public class MakeReviewFragment extends Fragment implements View.OnClickListener
     private boolean validateForm() {
         boolean validated = true;
         if (mTitle.getText().toString().isEmpty()) {
-            mTitle.setError("Review must have a title");
+            mTitle.setError(getString(R.string.review_needs_title));
             validated = false;
         }
         if (mRating.getText().toString().isEmpty()) {
-            mRating.setError("Review must have a score");
+            mRating.setError(getString(R.string.review_needs_score));
             validated = false;
         }
         try{
             double d = Double.parseDouble(mRating.getText().toString());
             if(d < 1.0 || d > 5.0){
-                mRating.setError("Score must be between 1.0 and 5.0");
+                mRating.setError(getString(R.string.score_bounds));
                 validated = false;
             }
         } catch (Exception e){
-            mRating.setError("Score must be a number");
+            mRating.setError(getString(R.string.score_must_be_number));
             validated = false;
         }
         return validated;

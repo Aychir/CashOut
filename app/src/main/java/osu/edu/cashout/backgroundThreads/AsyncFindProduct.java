@@ -223,7 +223,7 @@ public class AsyncFindProduct extends AsyncTask<String, Void, Product> {
         } else {
             //If it fails, we must launch scan activity again
             Log.v(TAG, "Object not found, relaunching the fragment the user used to find the product");
-            Toast.makeText(referencedActivity.getApplicationContext(), "Couldn't find that product!",
+            Toast.makeText(referencedActivity.getApplicationContext(), R.string.no_product_found,
                     Toast.LENGTH_LONG).show();
 
             //Find the fragment that called the asynctask and start it again

@@ -147,8 +147,6 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI and launch Scan Activity
-                                Toast.makeText(mContext, "Authentication success!",
-                                        Toast.LENGTH_SHORT).show();
 
                                 //Here we want to create a user object for our database
                                 User user = createUser();
@@ -174,7 +172,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                             } else {
                                 // If sign in fails, display a message to the user.
                                 //Update the UI in any way?
-                                Toast.makeText(mContext, "Authentication failed.",
+                                Toast.makeText(mContext, R.string.failed_to_create_account,
                                         Toast.LENGTH_SHORT).show();
                             }
 
@@ -182,8 +180,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                     });
         }
         else{
-            Toast.makeText(mContext, "Fragment not attached to activity.",
-                    Toast.LENGTH_SHORT).show();
+            Log.v(TAG, "Failed to attach activity");
         }
     }
 
@@ -196,49 +193,49 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
 
         String email = mEmailField.getText().toString();
         if (email.isEmpty()) {
-            mEmailField.setError("An email is required.");
+            mEmailField.setError(getString(R.string.email_required));
             valid = false;
         }
         //Check the format of the email address
         else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            mEmailField.setError("Please enter a valid email.");
+            mEmailField.setError(getString(R.string.enter_valid_email));
             valid = false;
         }
         //Check if email address is already taken
         else if(mEmails.contains(email)){
-            mEmailField.setError("An account with that email address already exists.");
+            mEmailField.setError(getString(R.string.account_exists));
             valid = false;
         }
 
         //Verify a long enough password and its confirmation
         String password = mPasswordField.getText().toString();
         if (password.isEmpty()) {
-            mPasswordField.setError("A password is required.");
+            mPasswordField.setError(getString(R.string.password_required));
             valid = false;
         }
         else if(password.length() < 6){
-            mEmailField.setError("Your password must be at least 6 characters long.");
+            mEmailField.setError(getString(R.string.password_length));
             valid = false;
         }
 
         String passwordConfirmation = mConfirmPasswordField.getText().toString();
         if (passwordConfirmation.isEmpty()) {
-            mConfirmPasswordField.setError("You must confirm your password.");
+            mConfirmPasswordField.setError(getString(R.string.confirm_password_warning));
             valid = false;
         }
         else if(!passwordConfirmation.equals(password)){
-            mConfirmPasswordField.setError("Your password entries did not match, please try again.");
+            mConfirmPasswordField.setError(getString(R.string.unmatched_passwords));
             valid = false;
         }
 
         //Validate existence and uniqueness of the username attribute
         String username = mUsername.getText().toString();
         if(username.isEmpty()){
-            mUsername.setError("A username is required.");
+            mUsername.setError(getString(R.string.username_required));
             valid = false;
         }
         else if(mUsernames.contains(username)){
-            mUsername.setError("That username is already taken.");
+            mUsername.setError(getString(R.string.username_taken));
             valid = false;
         }
         return valid;

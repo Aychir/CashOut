@@ -51,8 +51,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "AccountFragment";
 
-    //TODO: Rotating screen and being on first name field is wonky
-
     @Override
     public void onAttach(Context c){
         super.onAttach(getContext());
@@ -175,7 +173,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                         //Set the value of the referenced user to the updated user values
                         mDbReference.setValue(curUser);
 
-                        Toast.makeText(getActivity(), "Account successfully updated.",
+                        Toast.makeText(getActivity(), R.string.account_updated,
                                 Toast.LENGTH_SHORT).show();
 
                         //Start the scan activity after a successful update
@@ -183,7 +181,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                         startActivity(scanActivity);
                     }
                     else{
-                        Toast.makeText(getActivity(), "Currently unable to update email and/or password, try again later.",
+                        Toast.makeText(getActivity(), R.string.unable_to_update,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -204,7 +202,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
                     startActivity(loginIntent);
                 }
                 else{
-                    Toast.makeText(getActivity(), "Currently unable to delete your account, try again later.",
+                    Toast.makeText(getActivity(), R.string.unable_to_delete,
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -226,45 +224,45 @@ public class AccountFragment extends Fragment implements View.OnClickListener{
 
         String email = mEmailField.getText().toString();
         if (email.isEmpty()) {
-            mEmailField.setError("An email is required.");
+            mEmailField.setError(getString(R.string.email_required));
             valid = false;
         }
         //Check the format of the email address
         else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            mEmailField.setError("Please enter a valid email.");
+            mEmailField.setError(getString(R.string.enter_valid_email));
             valid = false;
         }
         //Check if email address is already taken
         else if(!email.equals(curUser.getEmail()) && userEmails.contains(email)){
-            mEmailField.setError("An account with that email address already exists.");
+            mEmailField.setError(getString(R.string.account_exists));
             valid = false;
         }
 
         //Verify a long enough password and its confirmation
         String password = mPasswordField.getText().toString();
         if(!password.isEmpty() && password.length() < 6){
-            mPasswordField.setError("Your password must be at least 6 characters long.");
+            mPasswordField.setError(getString(R.string.password_length));
             valid = false;
         }
 
         String passwordConfirmation = mConfirmPasswordField.getText().toString();
         if (!password.isEmpty() && passwordConfirmation.isEmpty()) {
-            mConfirmPasswordField.setError("You must confirm your password.");
+            mConfirmPasswordField.setError(getString(R.string.confirm_password_warning));
             valid = false;
         }
         else if(!passwordConfirmation.equals(password)){
-            mConfirmPasswordField.setError("Your password entries did not match, please try again.");
+            mConfirmPasswordField.setError(getString(R.string.unmatched_passwords));
             valid = false;
         }
 
         //Validate existence and uniqueness of the username attribute
         String username = mUsername.getText().toString();
         if(username.isEmpty()){
-            mUsername.setError("A username is required.");
+            mUsername.setError(getString(R.string.username_required));
             valid = false;
         }
         else if(!username.equals(curUser.getUsername()) && mUsernames.contains(username)){
-            mUsername.setError("That username is already taken.");
+            mUsername.setError(getString(R.string.username_taken));
             valid = false;
         }
 

@@ -125,7 +125,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     private boolean validateForm() {
         boolean valid = true;
         if (mSearchField.getText().toString().isEmpty()) {
-            mSearchField.setError("You must enter a code to search.");
+            mSearchField.setError(getString(R.string.must_enter_code));
             valid = false;
         }
         return valid;

@@ -132,16 +132,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                                 startScanActivity();
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast.makeText(getContext(), "Failed to sign in, please try again.",
+                                Toast.makeText(getContext(), R.string.failed_to_login,
                                         Toast.LENGTH_SHORT).show();
                             }
 
                         }
                     });
-        }
-        else{
-            Toast.makeText(getContext(), "Failed to attach activity.",
-                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -150,17 +146,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         boolean valid = true;
 
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("An email is required.");
+            mEmailField.setError(getString(R.string.email_required));
             valid = false;
         }
         //Check the format of the email address
         else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            mEmailField.setError("Please enter a valid email.");
+            mEmailField.setError(getString(R.string.enter_valid_email));
             valid = false;
         }
 
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("A password is required.");
+            mPasswordField.setError(getString(R.string.password_required));
             valid = false;
         }
 
