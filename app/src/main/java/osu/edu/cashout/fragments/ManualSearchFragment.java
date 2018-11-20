@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,13 +20,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.activities.HistoryActivity;
+import osu.edu.cashout.activities.InfoActivity;
 import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.R;
+import osu.edu.cashout.dataModels.Product;
 
 public class ManualSearchFragment extends Fragment implements View.OnClickListener {
     private EditText mSearchField;
@@ -35,6 +39,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
     private String userId;
     private DatabaseReference mScannedDatabase;
     private Map mRatingMapping;
+    private Set<Product> mListOfProducts;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
         mListOfUpcs = new HashSet<>();
         mListOfUserScans = new HashSet<>();
         mRatingMapping = new HashMap();
+        mListOfProducts = new HashSet<>();
 
         //The database table associated with all scanned products
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
@@ -65,6 +71,7 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
                     //Use this to check for uniqueness of the item being scanned (to avoid adding it again)
                     mListOfUpcs.add(upc);
                     mRatingMapping.put(upc, product.child("rating").getValue(Double.class));
+                    mListOfProducts.add(product.getValue(Product.class));
                 }
             }
 
@@ -110,9 +117,34 @@ public class ManualSearchFragment extends Fragment implements View.OnClickListen
             startActivity(historyIntent);
         } else if (id == R.id.manual_search_button) {
             if (validateForm()) {
-                AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase, mListOfUpcs,
-                        mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
-                findProduct.execute(mSearchField.getText().toString());
+                if(mListOfUserScans.contains(mSearchField.getText().toString())){
+                    Intent infoActivity = new Intent(getContext(), InfoActivity.class);
+                    if(mListOfProducts.size() > 0){
+                        Iterator i = mListOfProducts.iterator();
+                        while(i.hasNext()){
+                            Product p = (Product) i.next();
+                            if(p.getUpc().equals(mSearchField.getText().toString())){
+                                infoActivity.putExtra("upc", mSearchField.getText().toString());
+                                infoActivity.putExtra("name", p.getName());
+                                infoActivity.putExtra("merchant", p.getStore());
+                                infoActivity.putExtra("image", p.getImage());
+                                infoActivity.putExtra("rating", p.getRating());
+                                infoActivity.putExtra("current", p.getCurrentPrice());
+                                infoActivity.putExtra("lowest", p.getLowestPrice());
+                                infoActivity.putExtra("highest", p.getHighestPrice());
+                                getActivity().startActivity(infoActivity);
+                            }
+                        }
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Couldn't find product", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
+                            mListOfUpcs, mScannedDatabase, mListOfUserScans, userId, mRatingMapping);
+                    findProduct.execute(mSearchField.getText().toString());
+                }
             }
         } else if (id == R.id.account_button) {
             Intent accountIntent = new Intent(getActivity(), AccountActivity.class);

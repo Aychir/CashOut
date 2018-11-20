@@ -27,6 +27,7 @@ import com.google.zxing.Result;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ import osu.edu.cashout.backgroundThreads.AsyncFindProduct;
 import osu.edu.cashout.activities.AccountActivity;
 import osu.edu.cashout.R;
 import osu.edu.cashout.activities.ManualSearchActivity;
+import osu.edu.cashout.dataModels.Product;
 
 //TODO: Abstract the database stuff out between here and manual search
 
@@ -52,6 +54,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     private String userId;
     private Set<String> mListOfUserScans;
     private Map mRatingMapping;
+    private Set<Product> mListOfProducts;
 
     @Override
     public void onAttach(Context c) {
@@ -74,6 +77,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
         mListOfUpcs = new HashSet<>();
         mListOfUserScans = new HashSet<>();
         mRatingMapping = new HashMap();
+        mListOfProducts = new HashSet<>();
 
         //The database table associated with all scanned products
         mProductsDatabase = FirebaseDatabase.getInstance().getReference("products");
@@ -85,6 +89,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                     mListOfUpcs.add(product.child("upc").getValue(String.class));
                     mRatingMapping.put(product.child("upc").getValue(String.class),
                             product.child("rating").getValue(Double.class));
+                    mListOfProducts.add(product.getValue(Product.class));
                 }
             }
 
@@ -131,8 +136,26 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                         Log.v(TAG, result.getText());
                         if(mListOfUserScans.contains(result.getText())){
                             Intent infoActivity = new Intent(getContext(), InfoActivity.class);
-                            infoActivity.putExtra("upc", result.getText());
-                            getActivity().startActivity(infoActivity);
+                            if(mListOfProducts.size() > 0){
+                                Iterator i = mListOfProducts.iterator();
+                                while(i.hasNext()){
+                                    Product p = (Product) i.next();
+                                    if(p.getUpc().equals(result.getText())){
+                                        infoActivity.putExtra("upc", result.getText());
+                                        infoActivity.putExtra("name", p.getName());
+                                        infoActivity.putExtra("merchant", p.getStore());
+                                        infoActivity.putExtra("image", p.getImage());
+                                        infoActivity.putExtra("rating", p.getRating());
+                                        infoActivity.putExtra("current", p.getCurrentPrice());
+                                        infoActivity.putExtra("lowest", p.getLowestPrice());
+                                        infoActivity.putExtra("highest", p.getHighestPrice());
+                                        getActivity().startActivity(infoActivity);
+                                    }
+                                }
+                            }
+                            else{
+                                Toast.makeText(mContext, "Couldn't find product", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else {
                             AsyncFindProduct findProduct = new AsyncFindProduct(getActivity(), mProductsDatabase,
