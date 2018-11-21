@@ -80,7 +80,6 @@ public class ListReviewsFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        //:P
                     }
                 });
 
@@ -89,7 +88,6 @@ public class ListReviewsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                //:P
             }
         });
 
@@ -115,7 +113,6 @@ public class ListReviewsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                //:P
             }
         });
 

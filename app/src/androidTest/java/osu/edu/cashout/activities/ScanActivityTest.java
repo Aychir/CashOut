@@ -12,24 +12,24 @@ import osu.edu.cashout.R;
 
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.*;
+import static junit.framework.Assert.assertNull;
 
-public class InfoActivityTest {
+public class ScanActivityTest {
     @Rule
-    public ActivityTestRule<InfoActivity> mActivity = new ActivityTestRule<>(InfoActivity.class);
+    public ActivityTestRule<ScanActivity> mActivity = new ActivityTestRule<>(ScanActivity.class);
 
     @Before
     public void setup() throws Exception {
         Intents.init();
     }
 
-    //Test to make sure that "upc" is a key for an extra on the intent launched when the user clicks the read reviews button
+    //Test to make sure the account button on the scan screen launches an intent for the account activity
     @Test
-    public void testIntentExtraForReadReviews() {
-        Espresso.onView(withId(R.id.read_reviews_button)).perform(click());
-        intended(hasExtraWithKey("upc"));
+    public void testAccountButtonFromScan() {
+        Espresso.onView(withId(R.id.account_button)).perform(click());
+        intended(hasComponent(AccountActivity.class.getName()));
     }
 
     @After

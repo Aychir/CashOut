@@ -1,40 +1,34 @@
 package osu.edu.cashout.activities;
 
-import android.app.Activity;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 import osu.edu.cashout.R;
 
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.action.ViewActions.typeTextIntoFocusedView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.*;
 
-public class LoginActivityTest{
+public class LoginActivityTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivity = new ActivityTestRule<>(LoginActivity.class);
 
-    @Before
-    public void setup() throws Exception {
-        Intents.init();
-    }
-
-    //Test to make sure the signup button on the login screen launches an intent for the signup activity
+    //Test to make sure the email and password views are visible and that they can be edited
     @Test
-    public void testSignupButton() {
-        Espresso.onView(withId(R.id.signup_button)).perform(click());
-        intended(hasComponent(SignupActivity.class.getName()));
+    public void testEditTextFields() {
+        Espresso.onView(withId(R.id.email)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.password)).check(matches(isDisplayed()));
+        Espresso.onView(withId(R.id.email)).perform(replaceText("test_email@gmail.com"));
+        Espresso.onView(withId(R.id.password)).perform(replaceText("testpassword123"));
+        Espresso.onView(withId(R.id.email)).check(matches(withText("test_email@gmail.com")));
+        Espresso.onView(withId(R.id.password)).check(matches(withText("testpassword123")));
     }
 
-    @After
-    public void teardown() throws Exception {
-        Intents.release();
-    }
 }
